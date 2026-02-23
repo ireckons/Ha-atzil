@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 180" fill="white">
+  <!-- Bull head silhouette -->
+  <!-- Horns -->
+  <path d="M35 55 Q15 20 25 10 Q35 5 42 30 L52 50 Z" />
+  <path d="M165 55 Q185 20 175 10 Q165 5 158 30 L148 50 Z" />
+  <!-- Head -->
+  <ellipse cx="100" cy="110" rx="68" ry="72" />
+  <!-- Snout / muzzle -->
+  <ellipse cx="100" cy="148" rx="40" ry="28" fill="#1F1F1F" />
+  <ellipse cx="100" cy="148" rx="36" ry="24" fill="white" />
+  <!-- Nostrils -->
+  <ellipse cx="85" cy="152" rx="8" ry="6" fill="#1F1F1F" />
+  <ellipse cx="115" cy="152" rx="8" ry="6" fill="#1F1F1F" />
+  <!-- Eyes -->
+  <circle cx="72" cy="100" r="11" fill="#1F1F1F" />
+  <circle cx="128" cy="100" r="11" fill="#1F1F1F" />
+  <circle cx="69" cy="97" r="4" fill="white" />
+  <circle cx="125" cy="97" r="4" fill="white" />
+  <!-- Ears -->
+  <ellipse cx="34" cy="82" rx="14" ry="20" transform="rotate(-20 34 82)" />
+  <ellipse cx="166" cy="82" rx="14" ry="20" transform="rotate(20 166 82)" />
+  <!-- Forehead detail (arc between horns) -->
+  <path d="M52 50 Q100 40 148 50" fill="none" stroke="white" stroke-width="3" />
+</svg>

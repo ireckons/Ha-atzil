@@ -1,0 +1,2 @@
+﻿src/db/client.ts(22,37): error TS2344: Type 'T' does not satisfy the constraint 'QueryResultRow'.
+src/db/client.ts(24,34): error TS2344: Type 'T' does not satisfy the constraint 'QueryResultRow'.

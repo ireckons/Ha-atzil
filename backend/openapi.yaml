@@ -1,0 +1,400 @@
+openapi: "3.0.3"
+info:
+  title: HaAtzil Butcher Shop API
+  description: REST API for האציל butcher shop – product catalog, orders, pickup slots, and admin auth.
+  version: "1.0.0"
+  contact:
+    name: HaAtzil Store
+    phone: "04-6226677"
+
+servers:
+  - url: http://localhost:4000/api
+    description: Local development
+  - url: https://api.haatzil.co.il/api
+    description: Production
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Product:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        category_id: { type: integer }
+        name_he: { type: string, example: "אנטריקוט" }
+        name_en: { type: string, example: "Ribeye Steak" }
+        description_he: { type: string }
+        description_en: { type: string }
+        price_nis: { type: number, format: float, example: 189.00 }
+        weight_options:
+          type: array
+          items:
+            type: object
+            properties:
+              label: { type: string, example: "500g" }
+              grams: { type: integer, example: 500 }
+        unit: { type: string, enum: [kg, unit, portion] }
+        is_available: { type: boolean }
+        is_kosher: { type: boolean }
+        kosher_cert_text: { type: string }
+        image_url: { type: string }
+
+    Order:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        order_number: { type: string, example: "HA-20240224-1234" }
+        customer_name: { type: string }
+        customer_phone: { type: string }
+        customer_email: { type: string }
+        pickup_slot_id: { type: string, format: uuid }
+        slot_date: { type: string, format: date }
+        slot_time: { type: string }
+        status:
+          type: string
+          enum: [pending, confirmed, ready, collected, cancelled]
+        total_nis: { type: number }
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderItem"
+        created_at: { type: string, format: date-time }
+
+    OrderItem:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name_he: { type: string }
+        name_en: { type: string }
+        quantity: { type: integer }
+        weight_g: { type: integer }
+        price_nis: { type: number }
+        subtotal_nis: { type: number }
+
+    PickupSlot:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        slot_date: { type: string, format: date }
+        slot_time: { type: string }
+        capacity: { type: integer }
+        booked_count: { type: integer }
+        available_count: { type: integer }
+        is_active: { type: boolean }
+
+    Error:
+      type: object
+      properties:
+        error: { type: string }
+
+paths:
+  /auth/login:
+    post:
+      summary: Admin login
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string, minLength: 6 }
+      responses:
+        "200":
+          description: JWT token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token: { type: string }
+                  isAdmin: { type: boolean }
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
+  /auth/me:
+    get:
+      summary: Get current user
+      tags: [Auth]
+      security: [{ BearerAuth: [] }]
+      responses:
+        "200": { description: Current user }
+        "401": { description: Unauthorized }
+
+  /products:
+    get:
+      summary: List all products
+      tags: [Products]
+      parameters:
+        - in: query
+          name: category
+          schema: { type: string }
+          description: Filter by category slug (beef, lamb, etc.)
+        - in: query
+          name: available
+          schema: { type: boolean }
+      responses:
+        "200":
+          description: Array of products
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Product" }
+    post:
+      summary: Create product (admin)
+      tags: [Products]
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/Product" }
+      responses:
+        "201": { description: Created product }
+        "401": { description: Unauthorized }
+        "403": { description: Admin required }
+
+  /products/{id}:
+    get:
+      summary: Get product by ID
+      tags: [Products]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200": { description: Product }
+        "404": { description: Not found }
+    put:
+      summary: Update product (admin)
+      tags: [Products]
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/Product" }
+      responses:
+        "200": { description: Updated product }
+    delete:
+      summary: Delete product (admin)
+      tags: [Products]
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200": { description: Deleted }
+
+  /products/{id}/availability:
+    patch:
+      summary: Toggle product availability (admin)
+      tags: [Products]
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                is_available: { type: boolean }
+      responses:
+        "200": { description: Updated product }
+
+  /products/export/csv:
+    get:
+      summary: Export products as CSV (admin)
+      tags: [Products]
+      security: [{ BearerAuth: [] }]
+      responses:
+        "200":
+          description: CSV file
+          content:
+            text/csv: {}
+
+  /products/import/csv:
+    post:
+      summary: Import products from CSV (admin)
+      tags: [Products]
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file: { type: string, format: binary }
+      responses:
+        "200":
+          description: Import results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  imported: { type: integer }
+
+  /orders:
+    get:
+      summary: List orders (admin)
+      tags: [Orders]
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - in: query
+          name: status
+          schema: { type: string }
+        - in: query
+          name: date
+          schema: { type: string, format: date }
+        - in: query
+          name: search
+          schema: { type: string }
+          description: Customer name or phone
+        - in: query
+          name: page
+          schema: { type: integer, default: 1 }
+        - in: query
+          name: limit
+          schema: { type: integer, default: 50 }
+      responses:
+        "200":
+          description: Array of orders
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Order" }
+    post:
+      summary: Create order (customer)
+      tags: [Orders]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [customer_name, customer_phone, pickup_slot_id, items]
+              properties:
+                customer_name: { type: string }
+                customer_phone: { type: string }
+                customer_email: { type: string }
+                pickup_slot_id: { type: string, format: uuid }
+                notes: { type: string }
+                items:
+                  type: array
+                  items:
+                    type: object
+                    required: [product_id, quantity]
+                    properties:
+                      product_id: { type: string, format: uuid }
+                      quantity: { type: integer }
+                      weight_g: { type: integer }
+      responses:
+        "201": { description: Created order }
+        "400": { description: Slot full or invalid }
+        "429": { description: Rate limit exceeded }
+
+  /orders/stream:
+    get:
+      summary: SSE stream for real-time order events (admin)
+      tags: [Orders]
+      security: [{ BearerAuth: [] }]
+      responses:
+        "200":
+          description: Server-Sent Events stream
+          content:
+            text/event-stream: {}
+
+  /orders/{id}:
+    get:
+      summary: Get order by ID
+      tags: [Orders]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200": { description: Order }
+
+  /orders/{id}/status:
+    patch:
+      summary: Update order status (admin)
+      tags: [Orders]
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [pending, confirmed, ready, collected, cancelled]
+      responses:
+        "200": { description: Updated order }
+
+  /pickup-slots:
+    get:
+      summary: List available pickup slots (customer)
+      tags: [Pickup Slots]
+      parameters:
+        - in: query
+          name: from
+          schema: { type: string, format: date }
+        - in: query
+          name: to
+          schema: { type: string, format: date }
+      responses:
+        "200":
+          description: Available slots with capacity info
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/PickupSlot" }
+    post:
+      summary: Create pickup slot (admin)
+      tags: [Pickup Slots]
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [slot_date, slot_time]
+              properties:
+                slot_date: { type: string, format: date }
+                slot_time: { type: string }
+                capacity: { type: integer, default: 10 }
+      responses:
+        "201": { description: Created slot }

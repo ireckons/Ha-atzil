@@ -1,0 +1,2 @@
+﻿src/api/client.ts(3,30): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/pages/AdminPage.tsx(34,33): error TS2339: Property 'env' does not exist on type 'ImportMeta'.

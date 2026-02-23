@@ -1,0 +1,27 @@
+{
+  "name": "haatzil",
+  "version": "1.0.0",
+  "private": true,
+  "description": "HaAtzil Butcher Shop – Full-stack monorepo",
+  "workspaces": [
+    "frontend",
+    "backend",
+    "qa-db-bridge"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace=backend\" \"npm run dev --workspace=frontend\"",
+    "build": "npm run build --workspace=backend && npm run build --workspace=frontend",
+    "test": "npm run test --workspace=backend && npm run test --workspace=frontend",
+    "lint": "npm run lint --workspace=backend && npm run lint --workspace=frontend",
+    "typecheck": "npm run typecheck --workspace=backend && npm run typecheck --workspace=frontend",
+    "seed": "npm run seed --workspace=backend",
+    "migrate": "npm run migrate --workspace=backend"
+  },
+  "devDependencies": {
+    "eslint": "8.56.0",
+    "eslint-plugin-react-hooks": "4.6.2",
+    "@typescript-eslint/eslint-plugin": "7.18.0",
+    "@typescript-eslint/parser": "7.18.0",
+    "concurrently": "^8.2.2"
+  }
+}

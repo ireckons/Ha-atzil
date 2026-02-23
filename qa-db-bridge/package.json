@@ -1,0 +1,17 @@
+{
+    "name": "haatzil-qa-db-bridge",
+    "version": "1.0.0",
+    "private": true,
+    "description": "QA Database Bridge – isolated from production config",
+    "scripts": {
+        "connect": "tsx index.ts",
+        "seed-qa": "tsx seedQA.ts"
+    },
+    "devDependencies": {
+        "@types/pg": "^8.11.11",
+        "dotenv": "^16.4.5",
+        "pg": "^8.13.3",
+        "tsx": "^4.19.2",
+        "typescript": "^5.7.3"
+    }
+}
