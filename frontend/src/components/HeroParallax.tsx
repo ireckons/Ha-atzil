@@ -1,32 +1,20 @@
 export default function HeroParallax() {
     return (
         <section className="relative w-full overflow-hidden bg-[#0c0c0c] min-h-[500px] h-[500px]">
-            {/* ── Background Pattern ── */}
-            <div className="absolute inset-0 z-0 pointer-events-none">
-                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        {/* Perfect replica of the poster's dense icon grid */}
-                        <pattern id="butcherPattern" x="0" y="0" width="400" height="200" patternUnits="userSpaceOnUse">
-                            {/* Row 1 */}
-                            <g transform="translate(0, 10)">
-                                <image href="/images/parallax/olive.svg" x="20" y="30" width="25" height="25" opacity="0.6" />
-                                <image href="/images/parallax/bull-head.svg" x="90" y="60" width="70" height="50" opacity="0.85" />
-                                <image href="/images/parallax/grill.svg" x="210" y="20" width="35" height="35" opacity="0.6" />
-                                <image href="/images/parallax/bull-head.svg" x="290" y="60" width="70" height="50" opacity="0.85" />
-                            </g>
-                            {/* Row 2 */}
-                            <g transform="translate(0, 110)">
-                                <image href="/images/parallax/wine-glass.svg" x="50" y="20" width="30" height="30" opacity="0.6" />
-                                <image href="/images/parallax/bull-head.svg" x="-20" y="60" width="70" height="50" opacity="0.85" />
-                                <image href="/images/parallax/bull-head.svg" x="190" y="60" width="70" height="50" opacity="0.85" />
-                                <image href="/images/parallax/steak.svg" x="120" y="10" width="40" height="40" opacity="0.6" />
-                                <image href="/images/parallax/bull-head.svg" x="390" y="60" width="70" height="50" opacity="0.85" />
-                                <image href="/images/parallax/sausage.svg" x="290" y="20" width="45" height="45" opacity="0.6" />
-                            </g>
-                        </pattern>
-                    </defs>
-                    <rect width="100%" height="100%" fill="url(#butcherPattern)" />
-                </svg>
+            {/* ── Background Banners ── */}
+            <div className="absolute inset-0 z-0 pointer-events-none flex flex-col">
+                {/* Upper banner */}
+                <img
+                    src="/images/parallax/banner1.svg"
+                    alt=""
+                    className="w-full h-1/2 object-cover object-bottom"
+                />
+                {/* Lower banner */}
+                <img
+                    src="/images/parallax/banner2.svg"
+                    alt=""
+                    className="w-full h-1/2 object-cover object-top"
+                />
             </div>
 
             {/* ── Main Layout Container ── */}
@@ -90,13 +78,13 @@ export default function HeroParallax() {
                     {/* Foreground Content Wrapper (Absolute pixel placements within the 300px height) */}
                     <div className="absolute w-full max-w-[1200px] h-[300px] z-20 mx-auto">
 
-                        {/* Bull Logo - centered and intersecting the top flat red plateau */}
-                        <div className="absolute top-[-10px] left-1/2 -translate-x-1/2 flex justify-center z-30">
+                        {/* Bull Logo - centered below the top flat red plateau */}
+                        <div className="absolute top-[8px] left-1/2 -translate-x-1/2 flex justify-center z-30">
                             <img src="/bull-silhouette.svg" alt="Bull Logo" className="w-[60px]" />
                         </div>
 
                         {/* Since 2005 - inside the top bump, just below the plateau */}
-                        <div className="absolute top-[35px] w-full flex items-center justify-center gap-2 z-20">
+                        <div className="absolute top-[48px] w-full flex items-center justify-center gap-2 z-20">
                             <svg width="35" height="4" viewBox="0 0 40 4" fill="none"><path d="M40,2 L0,2" stroke="#fff" opacity="0.8" strokeWidth="1" /></svg>
                             <span className="text-[#E31C23] font-serif italic text-[12px] tracking-wider font-bold">since 2005</span>
                             <svg width="35" height="4" viewBox="0 0 40 4" fill="none"><path d="M0,2 L40,2" opacity="0.8" stroke="#fff" strokeWidth="1" /></svg>
