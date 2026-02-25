@@ -82,7 +82,7 @@ export const strings = {
         },
     },
     en: {
-        siteTitle: 'HaAtzil',
+        siteTitle: 'האציל',
         tagline: 'Meats that honour hospitality',
         since: 'since 2005',
         nav: {
@@ -92,7 +92,7 @@ export const strings = {
             privacy: 'Privacy',
         },
         hero: {
-            headline: 'HaAtzil since 2005',
+            headline: 'האציל since 2005',
             sub: 'Meats that honour hospitality',
             cta: 'Order Now',
             storeName: 'Palmach 77, Safed · 04-6226677',
@@ -163,4 +163,4 @@ export const strings = {
     },
 } as const;
 
-export type Strings = typeof strings.he;
+export type Strings = typeof strings.en;

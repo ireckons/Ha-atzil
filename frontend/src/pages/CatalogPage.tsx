@@ -1,22 +1,45 @@
-import { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams, Link, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { productApi, type Product } from '../api/client';
 import ProductCard from '../components/ProductCard';
 
 const CATEGORIES = [
-    { slug: '', label: 'הכל' },
-    { slug: 'beef', label: 'בקר' },
-    { slug: 'lamb', label: 'כבש וטלה' },
-    { slug: 'poultry', label: 'עוף והודו' },
-    { slug: 'prepared', label: 'מוכן לבישול' },
-    { slug: 'kosher-special', label: 'מיוחדי כשרות' },
+    { slug: '', label: 'All' },
+    { slug: 'beef', label: 'Beef' },
+    { slug: 'lamb', label: 'Lamb' },
+    { slug: 'poultry', label: 'Poultry' },
+    { slug: 'prepared', label: 'Prepared' },
+    { slug: 'kosher-special', label: 'Kosher Specials' },
 ];
 
 export default function CatalogPage() {
     const { category: urlCategory } = useParams<{ category: string }>();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [activeCategory, setActiveCategory] = useState(urlCategory ?? '');
-    const [search, setSearch] = useState('');
+    const [search, setSearch] = useState(searchParams.get('q') || '');
+
+    // Sync search state with URL parameters
+    useEffect(() => {
+        const q = searchParams.get('q');
+        if (q !== null) {
+            setSearch(q);
+        }
+    }, [searchParams]);
+
+    // Update URL when search changes
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const val = e.target.value;
+        setSearch(val);
+
+        // Update the URL without reloading the page
+        if (val) {
+            setSearchParams({ q: val });
+        } else {
+            searchParams.delete('q');
+            setSearchParams(searchParams);
+        }
+    };
 
     const { data: products, isLoading, isError } = useQuery({
         queryKey: ['products', activeCategory],
@@ -34,26 +57,26 @@ export default function CatalogPage() {
             <div className="max-w-7xl mx-auto">
                 {/* Page header */}
                 <div className="mb-8">
-                    <h1 className="section-title">תפריט הבשרים</h1>
+                    <h1 className="section-title">Meat Menu</h1>
                     <div className="section-divider w-24" />
-                    <p className="text-white/60 text-sm">בשרים כשרים מהדרין · טריים יומיומי</p>
+                    <p className="text-white/60 text-sm">Mehadrin Kosher Meats · Fresh Daily</p>
                 </div>
 
                 {/* Search */}
                 <div className="mb-6 relative">
                     <input
                         type="search"
-                        placeholder="חיפוש מוצר…"
+                        placeholder="Search product..."
                         value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        className="input pe-10"
-                        aria-label="חיפוש מוצרים"
+                        onChange={handleSearchChange}
+                        className="input pr-10"
+                        aria-label="Search products"
                     />
-                    <span className="absolute start-4 top-1/2 -translate-y-1/2 text-white/30" aria-hidden="true">🔍</span>
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" aria-hidden="true">🔍</span>
                 </div>
 
                 {/* Category filter */}
-                <div className="flex gap-2 overflow-x-auto pb-2 mb-8 no-scrollbar" role="tablist" aria-label="קטגוריות">
+                <div className="flex gap-2 overflow-x-auto pb-2 mb-8 no-scrollbar" role="tablist" aria-label="Categories">
                     {CATEGORIES.map((cat) => (
                         <button
                             key={cat.slug}
@@ -61,8 +84,8 @@ export default function CatalogPage() {
                             aria-selected={activeCategory === cat.slug}
                             onClick={() => setActiveCategory(cat.slug)}
                             className={`whitespace-nowrap px-5 py-2 rounded-full text-sm font-semibold transition-all flex-shrink-0 ${activeCategory === cat.slug
-                                    ? 'bg-brand-red text-white shadow-lg shadow-brand-red/30'
-                                    : 'bg-white/10 text-white/70 hover:bg-white/20'
+                                ? 'bg-brand-red text-white shadow-lg shadow-brand-red/30'
+                                : 'bg-white/10 text-white/70 hover:bg-white/20'
                                 }`}
                         >
                             {cat.label}
@@ -80,20 +103,20 @@ export default function CatalogPage() {
                 )}
                 {isError && (
                     <div className="text-center py-20">
-                        <p className="text-white/50 text-lg">שגיאה בטעינת המוצרים. נסה שוב.</p>
+                        <p className="text-white/50 text-lg">Error loading products. Please try again.</p>
                     </div>
                 )}
                 {!isLoading && !isError && (
                     <>
                         {filtered.length === 0 ? (
                             <div className="text-center py-20">
-                                <p className="text-white/50 text-lg">לא נמצאו מוצרים</p>
-                                <Link to="/catalog" className="btn-ghost mt-4" onClick={() => setSearch('')}>נקה חיפוש</Link>
+                                <p className="text-white/50 text-lg">No products found</p>
+                                <Link to="/catalog" className="btn-ghost mt-4" onClick={() => { setSearch(''); searchParams.delete('q'); setSearchParams(searchParams); }}>Clear search</Link>
                             </div>
                         ) : (
                             <div
                                 className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-fade-in"
-                                aria-label={`${filtered.length} מוצרים`}
+                                aria-label={`${filtered.length} products`}
                             >
                                 {filtered.map((product: Product) => (
                                     <ProductCard key={product.id} product={product} />

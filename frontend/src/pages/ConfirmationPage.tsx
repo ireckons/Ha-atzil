@@ -16,7 +16,7 @@ export default function ConfirmationPage() {
       <html lang="he" dir="rtl">
       <head>
         <meta charset="UTF-8"/>
-        <title>תלוש איסוף – ${order?.order_number}</title>
+        <title>Pickup Slip – ${order?.order_number}</title>
         <style>
           body { font-family: 'Heebo', Arial, sans-serif; direction: rtl; padding: 24px; color: #000; }
           h1 { font-size: 28px; margin-bottom: 4px; }
@@ -38,14 +38,14 @@ export default function ConfirmationPage() {
     if (!order) {
         return (
             <div className="min-h-screen bg-brand-black flex flex-col items-center justify-center gap-6">
-                <p className="text-white/50">לא נמצאה הזמנה</p>
-                <Link to="/" className="btn-primary">חזרה לדף הבית</Link>
+                <p className="text-white/50">Order not found</p>
+                <Link to="/" className="btn-primary">Back to Home</Link>
             </div>
         );
     }
 
     const pickupDate = order.slot_date
-        ? new Date(order.slot_date + 'T00:00:00').toLocaleDateString('he-IL', {
+        ? new Date(order.slot_date + 'T00:00:00').toLocaleDateString('en-US', {
             weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
         })
         : '';
@@ -58,36 +58,36 @@ export default function ConfirmationPage() {
                     <div className="w-20 h-20 rounded-full bg-emerald-900/30 border-2 border-emerald-500/50 flex items-center justify-center mx-auto mb-4 text-4xl" aria-hidden="true">
                         ✅
                     </div>
-                    <h1 className="text-3xl font-black text-white mb-2">ההזמנה התקבלה!</h1>
-                    <p className="text-white/60">נשמח לראותך בזמן האיסוף</p>
+                    <h1 className="text-3xl font-black text-white mb-2">Order Confirmed!</h1>
+                    <p className="text-white/60">We look forward to seeing you at pickup</p>
                 </div>
 
                 {/* Printable slip */}
                 <div ref={printRef} className="card p-6 mb-6">
                     <div className="text-center mb-4">
-                        <p className="text-xs text-white/40 uppercase tracking-widest">האציל – since 2005</p>
-                        <p className="text-xs text-white/30">בשרים שמכבדים אירוח · הפלמ"ח 77, צפת</p>
+                        <p className="text-xs text-white/40 uppercase tracking-widest">HaAtzil – since 2005</p>
+                        <p className="text-xs text-white/30">Meats that honour hospitality · Palmach 77, Safed</p>
                     </div>
                     <div className="h-px bg-gradient-to-r from-transparent via-brand-red to-transparent mb-4" />
 
                     <div className="space-y-3 mb-4">
-                        <InfoRow label="מספר הזמנה" value={order.order_number} highlight />
-                        <InfoRow label="שם" value={order.customer_name} />
-                        <InfoRow label="טלפון" value={order.customer_phone} />
-                        <InfoRow label="תאריך איסוף" value={pickupDate} />
-                        <InfoRow label="שעת איסוף" value={order.slot_time?.slice(0, 5) ?? ''} />
-                        {order.notes && <InfoRow label="הערות" value={order.notes} />}
+                        <InfoRow label="Order Number" value={order.order_number} highlight />
+                        <InfoRow label="Name" value={order.customer_name} />
+                        <InfoRow label="Phone" value={order.customer_phone} />
+                        <InfoRow label="Pickup Date" value={pickupDate} />
+                        <InfoRow label="Pickup Time" value={order.slot_time?.slice(0, 5) ?? ''} />
+                        {order.notes && <InfoRow label="Notes" value={order.notes} />}
                     </div>
 
                     <div className="h-px bg-white/10 mb-4" />
 
                     {/* Items */}
                     <div className="space-y-2 mb-4">
-                        <p className="text-xs text-white/40 uppercase tracking-wider mb-2">פרטי ההזמנה</p>
+                        <p className="text-xs text-white/40 uppercase tracking-wider mb-2">Order Details</p>
                         {(order.items ?? []).map((item) => (
                             <div key={item.id} className="flex items-center justify-between text-sm">
                                 <span className="text-white/80">
-                                    {item.name_he} {item.weight_g ? `(${item.weight_g}g)` : ''} × {item.quantity}
+                                    {item.name_en} {item.weight_g ? `(${item.weight_g}g)` : ''} × {item.quantity}
                                 </span>
                                 <span className="text-white font-semibold">₪{Number(item.subtotal_nis).toFixed(2)}</span>
                             </div>
@@ -96,22 +96,22 @@ export default function ConfirmationPage() {
 
                     <div className="h-px bg-white/10 mb-4" />
                     <div className="flex items-center justify-between">
-                        <span className="text-white font-bold text-lg">סה"כ לתשלום</span>
+                        <span className="text-white font-bold text-lg">Total to Pay</span>
                         <span className="text-2xl font-black text-brand-red">₪{Number(order.total_nis).toFixed(2)}</span>
                     </div>
-                    <p className="text-xs text-white/30 mt-2 text-center">תשלום במזומן/כרטיס בחנות בעת האיסוף</p>
+                    <p className="text-xs text-white/30 mt-2 text-center">Payment by cash/card in-store upon pickup</p>
 
                     <div className="h-px bg-gradient-to-r from-transparent via-brand-red to-transparent mt-4" />
-                    <p className="text-center text-xs text-white/30 mt-3">הפלמ"ח 77, צפת · 04-6226677</p>
+                    <p className="text-center text-xs text-white/30 mt-3">Palmach 77, Safed · 04-6226677</p>
                 </div>
 
                 {/* Actions */}
                 <div className="flex flex-col sm:flex-row gap-3">
                     <button onClick={handlePrint} className="btn-secondary flex-1 justify-center no-print">
-                        🖨️ הדפס תלוש
+                        🖨️ Print Slip
                     </button>
                     <Link to="/" className="btn-primary flex-1 justify-center no-print">
-                        ← חזרה לדף הבית
+                        ← Back to Home
                     </Link>
                 </div>
             </div>

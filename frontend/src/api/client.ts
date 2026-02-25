@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE = import.meta.env.VITE_API_URL ?? '';
+const API_BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:4001';
 
 export const api = axios.create({
     baseURL: `${API_BASE}/api`,
@@ -102,16 +102,35 @@ export interface Order {
 // API calls
 // ─────────────────────────────────────
 export const productApi = {
-    list: (params?: { category?: string; available?: boolean }) =>
-        api.get<Product[]>('/products', { params }).then((r) => r.data),
-    get: (id: string) => api.get<Product>(`/products/${id}`).then((r) => r.data),
-    categories: () => api.get<Category[]>('/products/categories/all').then((r) => r.data),
+    list: (params?: { category?: string; available?: boolean }) => {
+        // Serve from local data — no backend required
+        import('../data/products').then(() => { }); // warm import
+        return import('../data/products').then(({ LOCAL_PRODUCTS }) => {
+            let products = LOCAL_PRODUCTS;
+            if (params?.category) products = products.filter(p => p.category_slug === params.category);
+            if (params?.available) products = products.filter(p => p.is_available);
+            return products;
+        });
+    },
+    categories: () =>
+        import('../data/products').then(({ LOCAL_CATEGORIES }) => LOCAL_CATEGORIES),
+    get: (id: string) =>
+        import('../data/products').then(({ LOCAL_PRODUCTS }) => {
+            const p = LOCAL_PRODUCTS.find(p => p.id === id);
+            if (!p) throw new Error('Product not found');
+            return p;
+        }),
     create: (data: Partial<Product>) => api.post<Product>('/products', data).then((r) => r.data),
     update: (id: string, data: Partial<Product>) => api.put<Product>(`/products/${id}`, data).then((r) => r.data),
     delete: (id: string) => api.delete(`/products/${id}`),
     toggleAvailability: (id: string, is_available: boolean) =>
         api.patch<Product>(`/products/${id}/availability`, { is_available }).then((r) => r.data),
     exportCsv: () => api.get('/products/export/csv', { responseType: 'blob' }).then((r) => r.data),
+    uploadImage: (file: File) => {
+        const fd = new FormData();
+        fd.append('image', file);
+        return api.post<{ url: string }>('/upload/image', fd, { headers: { 'Content-Type': 'multipart/form-data' } }).then((r) => r.data);
+    }
 };
 
 export const orderApi = {
@@ -143,6 +162,8 @@ export const slotApi = {
 export const authApi = {
     login: (email: string, password: string) =>
         api.post<{ token: string; isAdmin: boolean }>('/auth/login', { email, password }).then((r) => r.data),
+    register: (name: string, email: string, password: string) =>
+        api.post<{ token: string; isAdmin: boolean }>('/auth/register', { name, email, password }).then((r) => r.data),
     me: () => api.get('/auth/me').then((r) => r.data),
     logout: () => api.post('/auth/logout'),
 };

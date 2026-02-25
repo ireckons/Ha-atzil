@@ -7,6 +7,7 @@ import authRouter from './routes/auth';
 import productsRouter from './routes/products';
 import ordersRouter from './routes/orders';
 import pickupSlotsRouter from './routes/pickupSlots';
+import uploadRouter from './routes/upload';
 
 const app = express();
 
@@ -31,11 +32,15 @@ app.get('/health', (_req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString(), service: 'haatzil-backend' });
 });
 
+// Serve uploaded product images from disk
+app.use('/uploads', express.static('uploads'));
+
 // Routes
 app.use('/api/auth', authRouter);
 app.use('/api/products', productsRouter);
 app.use('/api/orders', ordersRouter);
 app.use('/api/pickup-slots', pickupSlotsRouter);
+app.use('/api/upload', uploadRouter);
 
 // 404 handler
 app.use((_req, res) => {

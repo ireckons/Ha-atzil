@@ -9,6 +9,9 @@ export default defineConfig({
             '@': resolve(__dirname, './src'),
         },
     },
+    optimizeDeps: {
+        include: ['framer-motion']
+    },
     server: {
         host: '127.0.0.1',
         port: 5173,
@@ -18,7 +21,7 @@ export default defineConfig({
         },
         proxy: {
             '/api': {
-                target: process.env.VITE_API_URL ?? 'http://localhost:4000',
+                target: process.env.VITE_API_URL ?? 'http://localhost:4001',
                 changeOrigin: true,
             },
         },

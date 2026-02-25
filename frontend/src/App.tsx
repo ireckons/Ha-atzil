@@ -10,20 +10,20 @@ const CartPage = lazy(() => import('./pages/CartPage'));
 const CheckoutPage = lazy(() => import('./pages/CheckoutPage'));
 const ConfirmationPage = lazy(() => import('./pages/ConfirmationPage'));
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
-const AdminLoginPage = lazy(() => import('./pages/AdminLoginPage'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
 const AdminPage = lazy(() => import('./pages/AdminPage'));
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
     const isAdmin = useAuthStore((s) => s.isAdmin);
     const token = useAuthStore((s) => s.token);
-    if (!token || !isAdmin) return <Navigate to="/admin/login" replace />;
+    if (!token || !isAdmin) return <Navigate to="/login" replace />;
     return <>{children}</>;
 }
 
 function Loading() {
     return (
         <div className="flex items-center justify-center min-h-screen bg-brand-black">
-            <div className="w-12 h-12 border-4 border-brand-dark-gray border-t-brand-red rounded-full animate-spin" aria-label="טוען..." />
+            <div className="w-12 h-12 border-4 border-brand-dark-gray border-t-brand-red rounded-full animate-spin" aria-label="Loading..." />
         </div>
     );
 }
@@ -33,8 +33,9 @@ export default function App() {
         <BrowserRouter>
             <Suspense fallback={<Loading />}>
                 <Routes>
-                    {/* Admin routes – no main navbar */}
-                    <Route path="/admin/login" element={<AdminLoginPage />} />
+                    {/* General/Admin Login */}
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/admin/login" element={<Navigate to="/login" replace />} />
                     <Route
                         path="/admin"
                         element={
@@ -48,7 +49,7 @@ export default function App() {
                     <Route
                         path="*"
                         element={
-                            <>
+                            <div dir="ltr" className="min-h-screen font-sans text-brand-white bg-brand-black">
                                 <Navbar />
                                 <main>
                                     <Routes>
@@ -63,7 +64,7 @@ export default function App() {
                                         <Route path="*" element={<Navigate to="/" replace />} />
                                     </Routes>
                                 </main>
-                            </>
+                            </div>
                         }
                     />
                 </Routes>

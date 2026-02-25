@@ -15,6 +15,12 @@ const LoginSchema = z.object({
     password: z.string().min(6),
 });
 
+const RegisterSchema = z.object({
+    name: z.string().min(2),
+    email: z.string().email(),
+    password: z.string().min(6),
+});
+
 // POST /api/auth/login
 router.post('/login', authLimiter, validate(LoginSchema), async (req: Request, res: Response) => {
     const { email, password } = req.body as z.infer<typeof LoginSchema>;
@@ -41,6 +47,37 @@ router.post('/login', authLimiter, validate(LoginSchema), async (req: Request, r
         res.json({ token, isAdmin: user.is_admin });
     } catch (err) {
         console.error('[Auth] Login error:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// POST /api/auth/register
+router.post('/register', authLimiter, validate(RegisterSchema), async (req: Request, res: Response) => {
+    const { email, password, name } = req.body as z.infer<typeof RegisterSchema>;
+    try {
+        const existing = await query('SELECT id FROM users WHERE email = $1', [email]);
+        if (existing.rowCount > 0) {
+            res.status(400).json({ error: 'Email already registered' });
+            return;
+        }
+
+        const hash = await bcrypt.hash(password, 10);
+        const { v4: uuidv4 } = require('uuid');
+        const id = uuidv4();
+
+        await query(
+            'INSERT INTO users (id, email, password_hash, name, is_admin) VALUES ($1, $2, $3, $4, 0)',
+            [id, email, hash, name]
+        );
+
+        const token = jwt.sign(
+            { userId: id, isAdmin: false },
+            config.jwtSecret,
+            { expiresIn: config.jwtExpiresIn } as jwt.SignOptions
+        );
+        res.json({ token, isAdmin: false });
+    } catch (err) {
+        console.error('[Auth] Register error:', err);
         res.status(500).json({ error: 'Internal server error' });
     }
 });

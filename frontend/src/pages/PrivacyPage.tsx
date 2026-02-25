@@ -2,67 +2,67 @@ export default function PrivacyPage() {
     return (
         <div className="min-h-screen bg-brand-black py-10 px-4">
             <div className="max-w-2xl mx-auto animate-fade-in">
-                <h1 className="section-title mb-2">מדיניות פרטיות</h1>
+                <h1 className="section-title mb-2">Privacy Policy</h1>
                 <div className="section-divider w-24" />
 
                 <div className="prose prose-invert max-w-none space-y-6 text-white/70 text-sm leading-relaxed">
                     <p>
-                        אנחנו ב<strong className="text-white">האציל</strong> מכבדים את פרטיותכם.
-                        מסמך זה מסביר אילו מידע אנו אוספים וכיצד אנו משתמשים בו.
+                        We at <strong className="text-white">HaAtzil</strong> respect your privacy.
+                        This document explains what information we collect and how we use it.
                     </p>
 
                     <section aria-labelledby="data-heading">
-                        <h2 id="data-heading" className="text-lg font-bold text-white mb-2">מידע שאנו אוספים</h2>
-                        <p>בעת ביצוע הזמנה, אנו אוספים:</p>
+                        <h2 id="data-heading" className="text-lg font-bold text-white mb-2">Information We Collect</h2>
+                        <p>When placing an order, we collect:</p>
                         <ul className="list-disc list-inside space-y-1 mt-2">
-                            <li>שם מלא</li>
-                            <li>מספר טלפון</li>
-                            <li>כתובת אימייל (אופציונלי)</li>
-                            <li>פרטי ההזמנה ומועד האיסוף</li>
+                            <li>Full Name</li>
+                            <li>Phone Number</li>
+                            <li>Email Address (optional)</li>
+                            <li>Order details and pickup time</li>
                         </ul>
                         <p className="mt-2">
-                            אנו <strong className="text-white">לא</strong> אוספים מידע על כרטיסי אשראי – התשלום מתבצע פיזית בחנות.
+                            We do <strong className="text-white">not</strong> collect credit card information - payment is processed physically in the store.
                         </p>
                     </section>
 
                     <section aria-labelledby="usage-heading">
-                        <h2 id="usage-heading" className="text-lg font-bold text-white mb-2">שימוש במידע</h2>
-                        <p>המידע משמש אך ורק לצורך:</p>
+                        <h2 id="usage-heading" className="text-lg font-bold text-white mb-2">Use of Information</h2>
+                        <p>The information is used solely for:</p>
                         <ul className="list-disc list-inside space-y-1 mt-2">
-                            <li>עיבוד ואישור ההזמנה</li>
-                            <li>יצירת קשר במקרה הצורך</li>
-                            <li>ניהול תור האיסוף</li>
+                            <li>Processing and confirming the order</li>
+                            <li>Contacting you if necessary</li>
+                            <li>Managing the pickup queue</li>
                         </ul>
                     </section>
 
                     <section aria-labelledby="retention-heading">
-                        <h2 id="retention-heading" className="text-lg font-bold text-white mb-2">שמירת מידע</h2>
+                        <h2 id="retention-heading" className="text-lg font-bold text-white mb-2">Data Retention</h2>
                         <p>
-                            אנו שומרים מידע על הזמנות <strong className="text-white">עד 90 יום</strong> לאחר האיסוף,
-                            לצרכי שירות לקוחות וניהול עסקי. לאחר מכן המידע נמחק.
+                            We keep order information for <strong className="text-white">up to 90 days</strong> after pickup,
+                            for customer service and business management purposes. After that, the information is deleted.
                         </p>
                     </section>
 
                     <section aria-labelledby="rights-heading">
-                        <h2 id="rights-heading" className="text-lg font-bold text-white mb-2">זכויותיכם</h2>
+                        <h2 id="rights-heading" className="text-lg font-bold text-white mb-2">Your Rights</h2>
                         <p>
-                            יש לכם זכות לבקש גישה, תיקון או מחיקה של המידע האישי שלכם.
-                            לפנייה: <a href="tel:04-6226677" className="text-brand-red hover:underline">04-6226677</a> או
-                            בביקור בחנות.
+                            You have the right to request access, correction, or deletion of your personal information.
+                            To contact us: <a href="tel:04-6226677" className="text-brand-red hover:underline">04-6226677</a> or
+                            by visiting the store.
                         </p>
                     </section>
 
                     <section aria-labelledby="contact-heading">
-                        <h2 id="contact-heading" className="text-lg font-bold text-white mb-2">צור קשר</h2>
+                        <h2 id="contact-heading" className="text-lg font-bold text-white mb-2">Contact Us</h2>
                         <address className="not-italic space-y-1">
-                            <p>האציל</p>
-                            <p>הפלמ"ח 77, צפת</p>
+                            <p>HaAtzil</p>
+                            <p>Palmach 77, Safed</p>
                             <p><a href="tel:04-6226677" className="text-brand-red hover:underline">04-6226677</a></p>
                         </address>
                     </section>
 
                     <p className="text-white/30 text-xs border-t border-white/10 pt-4">
-                        עדכון אחרון: פברואר 2025
+                        Last updated: February 2025
                     </p>
                 </div>
             </div>

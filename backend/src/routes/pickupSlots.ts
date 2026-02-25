@@ -18,19 +18,32 @@ router.get('/', async (req, res) => {
     try {
         const { from, to } = req.query;
         let sql = `
-      SELECT id, slot_date, slot_time, capacity, booked_count, is_active,
-             capacity - booked_count AS available_count
-      FROM pickup_slots
-      WHERE is_active = true AND booked_count < capacity
-    `;
+            SELECT id, slot_date, slot_time, capacity, booked_count, is_active,
+                   capacity - booked_count AS available_count
+            FROM pickup_slots
+            WHERE is_active = true AND booked_count < capacity
+        `;
         const params: unknown[] = [];
-        if (from) { params.push(from); sql += ` AND slot_date >= $${params.length}`; }
-        if (to) { params.push(to); sql += ` AND slot_date <= $${params.length}`; }
+
+        if (from) {
+            params.push(from);
+            sql += ` AND slot_date >= $${params.length}`;
+        }
+        if (to) {
+            params.push(to);
+            sql += ` AND slot_date <= $${params.length}`;
+        }
+
         // Only show future slots
         sql += ` AND (slot_date > CURRENT_DATE OR (slot_date = CURRENT_DATE AND slot_time > CURRENT_TIME))`;
         sql += ' ORDER BY slot_date, slot_time';
+
         const result = await query(sql, params);
-        res.json(result.rows);
+        const rows = result.rows.map(row => ({
+            ...row,
+            is_active: Boolean(row.is_active)
+        }));
+        res.json(rows);
     } catch (err) {
         console.error('[Slots] GET error:', err);
         res.status(500).json({ error: 'Internal server error' });

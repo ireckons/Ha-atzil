@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Google Fonts ── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@400;700;900&family=Heebo:wght@400;500;700;900&display=swap');
+
 @layer base {
   * {
     box-sizing: border-box;
@@ -12,69 +15,202 @@
   }
 
   body {
-    @apply font-hebrew bg-brand-black text-brand-white antialiased;
+    @apply bg-[#111] text-white antialiased;
+    font-family: 'Inter', 'Helvetica Neue', system-ui, sans-serif;
     font-feature-settings: 'kern' 1, 'liga' 1;
   }
 
   ::-webkit-scrollbar {
-    width: 6px;
+    width: 4px;
   }
+
   ::-webkit-scrollbar-track {
-    @apply bg-brand-dark-gray;
+    background: #0a0a0a;
   }
+
   ::-webkit-scrollbar-thumb {
-    @apply bg-brand-red rounded-full;
+    background: #C8102E;
+    border-radius: 2px;
   }
 
   /* Focus visible for keyboard nav */
   *:focus-visible {
-    @apply outline-2 outline-offset-2 outline-brand-red;
+    outline: 2px solid #C8102E;
+    outline-offset: 2px;
   }
 
   /* Print styles */
   @media print {
-    nav, footer, .no-print { display: none !important; }
-    body { @apply bg-white text-black; }
+
+    nav,
+    footer,
+    .no-print {
+      display: none !important;
+    }
+
+    body {
+      background: white;
+      color: black;
+    }
   }
 }
 
 @layer components {
+
+  /* ── Buttons ── */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-red text-white font-semibold rounded-lg
-           hover:bg-brand-red-dark active:scale-95 transition-all duration-150
-           focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-red
-           disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#C8102E] text-white font-bold text-xs tracking-[0.12em] uppercase hover:bg-[#a00c24] active:scale-95 transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3 border border-brand-red text-brand-red font-semibold rounded-lg
-           hover:bg-brand-red hover:text-white active:scale-95 transition-all duration-150;
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#C8102E] text-[#C8102E] font-bold text-xs tracking-[0.12em] uppercase hover:bg-[#C8102E] hover:text-white active:scale-95 transition-all duration-150;
   }
 
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2 text-brand-light-gray font-medium rounded-lg
-           hover:bg-white/10 active:scale-95 transition-all duration-150;
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 text-white/60 font-medium hover:bg-white/10 active:scale-95 transition-all duration-150;
   }
 
+  /* ── Cards ── */
   .card {
-    @apply bg-brand-dark-gray rounded-xl border border-white/10 overflow-hidden
-           hover:border-brand-red/50 transition-colors duration-200;
+    background: #1a1a1a;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    overflow: hidden;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
   }
 
+  .card:hover {
+    border-color: rgba(200, 16, 46, 0.5);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  }
+
+  /* ── Form input ── */
   .input {
-    @apply w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-brand-white placeholder-white/40
-           focus:outline-none focus:border-brand-red focus:bg-white/10 transition-colors duration-150;
+    @apply w-full px-4 py-3 bg-white/5 border border-white/15 text-white placeholder-white/30 focus:outline-none focus:border-[#C8102E] focus:bg-white/[0.08] transition-colors duration-150;
   }
 
+  /* ── Kosher badge ── */
   .badge-kosher {
-    @apply inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium bg-emerald-900/60 text-emerald-300 rounded-full border border-emerald-700/50;
+    @apply inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium bg-emerald-900/60 text-emerald-300 border border-emerald-700/50;
+  }
+
+  /* ── Section headings ── */
+  .section-label {
+    color: #C8102E;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
   }
 
   .section-title {
-    @apply text-2xl md:text-3xl font-bold text-white mb-1;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    color: #fff;
   }
 
   .section-divider {
-    @apply h-0.5 bg-gradient-to-r from-brand-red via-brand-red/50 to-transparent mb-8;
+    width: 40px;
+    height: 3px;
+    background: #C8102E;
+    margin: 16px 0;
+  }
+
+  /* ── Category card ── */
+  .category-card {
+    background: #1a1a1a;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    overflow: hidden;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .category-card:hover {
+    border-color: #C8102E;
+    box-shadow: 0 0 0 1px rgba(200, 16, 46, 0.3), 0 8px 24px rgba(0, 0, 0, 0.4);
+  }
+
+  /* ── Shop card (old style kept for backward compat) ── */
+  .shop-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .shop-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(200, 16, 46, 0.4);
+  }
+
+  /* ── WordPress / WooCommerce boxy product card ── */
+  .woo-card {
+    background: #161616;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+
+  .woo-card:hover {
+    border-color: rgba(200, 16, 46, 0.5);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+  }
+
+  .woo-card-body {
+    border-top: 2px solid #C8102E;
+  }
+
+  .woo-btn-add {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 14px;
+    background: #C8102E;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: background 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .woo-btn-add:hover {
+    background: #A00C24;
+  }
+}
+
+@keyframes neonPulse {
+
+  0%,
+  100% {
+    filter: drop-shadow(0 0 5px #C8102E) drop-shadow(0 0 12px #C8102E88);
+  }
+
+  50% {
+    filter: drop-shadow(0 0 10px #E5193D) drop-shadow(0 0 28px #C8102EAA) drop-shadow(0 0 50px #C8102E44);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
   }
 }

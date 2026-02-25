@@ -9,7 +9,7 @@ type AdminTab = 'orders' | 'items';
 type OrderStatus = 'pending' | 'confirmed' | 'ready' | 'collected' | 'cancelled';
 
 const STATUS_LABELS: Record<OrderStatus, string> = {
-    pending: 'ממתין', confirmed: 'מאושר', ready: 'מוכן', collected: 'נאסף', cancelled: 'בוטל',
+    pending: 'Pending', confirmed: 'Confirmed', ready: 'Ready', collected: 'Collected', cancelled: 'Cancelled',
 };
 const STATUS_COLORS: Record<OrderStatus, string> = {
     pending: 'bg-yellow-900/40 text-yellow-300 border-yellow-700/40',
@@ -42,7 +42,7 @@ export default function AdminPage() {
         return () => { es.close(); };
     }, [token, qc]);
 
-    const handleLogout = () => { clearAuth(); toast.success('התנתקת'); navigate('/admin/login'); };
+    const handleLogout = () => { clearAuth(); toast.success('Logged out'); navigate('/admin/login'); };
 
     return (
         <div className="min-h-screen bg-brand-black flex flex-col">
@@ -52,17 +52,17 @@ export default function AdminPage() {
                     <img src="/bull-silhouette.svg" alt="" className="w-7 h-7 opacity-80" aria-hidden="true" />
                     <div>
                         <span className="font-black text-white font-hebrew">האציל</span>
-                        <span className="text-xs text-white/40 me-2">ממשק ניהול</span>
+                        <span className="text-xs text-white/40 mr-2">Admin Dashboard</span>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
                     <button onClick={() => setTab('orders')} className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${tab === 'orders' ? 'bg-brand-red text-white' : 'text-white/60 hover:bg-white/10'}`} aria-pressed={tab === 'orders'}>
-                        📦 הזמנות
+                        📦 Orders
                     </button>
                     <button onClick={() => setTab('items')} className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${tab === 'items' ? 'bg-brand-red text-white' : 'text-white/60 hover:bg-white/10'}`} aria-pressed={tab === 'items'}>
-                        🥩 פריטים
+                        🥩 Items
                     </button>
-                    <button onClick={handleLogout} className="btn-ghost text-sm" aria-label="התנתק">יציאה</button>
+                    <button onClick={handleLogout} className="btn-ghost text-sm" aria-label="Logout">Logout</button>
                 </div>
             </header>
 
@@ -92,26 +92,26 @@ function OrdersPanel({ search, setSearch, status, setStatus }: {
 
     const statusMutation = useMutation({
         mutationFn: ({ id, s }: { id: string; s: OrderStatus }) => orderApi.updateStatus(id, s),
-        onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-orders'] }); toast.success('הסטטוס עודכן'); },
-        onError: () => toast.error('שגיאה בעדכון הסטטוס'),
+        onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-orders'] }); toast.success('Status updated'); },
+        onError: () => toast.error('Error updating status'),
     });
 
     return (
         <div>
             <div className="flex flex-wrap items-center gap-3 mb-6">
-                <h2 className="section-title text-xl mb-0">הזמנות</h2>
+                <h2 className="section-title text-xl mb-0">Orders</h2>
                 <div className="flex-1 relative min-w-[200px]">
-                    <input type="search" placeholder="חיפוש לפי שם או טלפון…" value={search} onChange={(e) => setSearch(e.target.value)}
-                        className="input py-2 pe-4 text-sm w-full" aria-label="חיפוש הזמנות" />
+                    <input type="search" placeholder="Search by name or phone…" value={search} onChange={(e) => setSearch(e.target.value)}
+                        className="input py-2 pr-4 text-sm w-full" aria-label="Search orders" />
                 </div>
                 <select value={status} onChange={(e) => setStatus(e.target.value)}
-                    className="input py-2 text-sm w-auto" aria-label="סינון לפי סטטוס">
-                    <option value="">כל הסטטוסים</option>
+                    className="input py-2 text-sm w-auto" aria-label="Filter by status">
+                    <option value="">All statuses</option>
                     {Object.entries(STATUS_LABELS).map(([s, l]) => <option key={s} value={s}>{l}</option>)}
                 </select>
                 <div className="flex items-center gap-1.5">
                     <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" aria-hidden="true" />
-                    <span className="text-xs text-white/40">עדכון בזמן אמת</span>
+                    <span className="text-xs text-white/40">Live updates</span>
                 </div>
             </div>
 
@@ -120,9 +120,9 @@ function OrdersPanel({ search, setSearch, status, setStatus }: {
                     {Array.from({ length: 5 }).map((_, i) => <div key={i} className="h-20 rounded-xl bg-white/5 animate-pulse" />)}
                 </div>
             ) : !orders?.length ? (
-                <div className="text-center py-20 text-white/40">אין הזמנות להצגה</div>
+                <div className="text-center py-20 text-white/40">No orders to display</div>
             ) : (
-                <div className="space-y-3" role="list" aria-label="רשימת הזמנות">
+                <div className="space-y-3" role="list" aria-label="Order list">
                     {orders.map((order: Order) => (
                         <div key={order.id} role="listitem" className="card p-4 lg:p-5 animate-fade-in">
                             <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
@@ -148,26 +148,25 @@ function OrdersPanel({ search, setSearch, status, setStatus }: {
                                 <div className="bg-white/5 rounded-lg p-3 mb-3 text-xs text-white/60 space-y-1">
                                     {order.items.filter(Boolean).map((item) => (
                                         <div key={item.id} className="flex justify-between">
-                                            <span>{item.name_he} {item.weight_g ? `(${item.weight_g}g)` : ''} × {item.quantity}</span>
+                                            <span>{item.name_en} {item.weight_g ? `(${item.weight_g}g)` : ''} × {item.quantity}</span>
                                             <span>₪{Number(item.subtotal_nis).toFixed(2)}</span>
                                         </div>
                                     ))}
                                 </div>
                             )}
 
-                            {/* Quick status actions */}
                             <div className="flex flex-wrap gap-2">
                                 {order.status === 'pending' && (
-                                    <QuickBtn label="✅ אשר" onClick={() => statusMutation.mutate({ id: order.id, s: 'confirmed' })} color="blue" />
+                                    <QuickBtn label="✅ Confirm" onClick={() => statusMutation.mutate({ id: order.id, s: 'confirmed' })} color="blue" />
                                 )}
                                 {(order.status === 'pending' || order.status === 'confirmed') && (
-                                    <QuickBtn label="🔔 מוכן לאיסוף" onClick={() => statusMutation.mutate({ id: order.id, s: 'ready' })} color="green" />
+                                    <QuickBtn label="🔔 Ready" onClick={() => statusMutation.mutate({ id: order.id, s: 'ready' })} color="green" />
                                 )}
                                 {order.status === 'ready' && (
-                                    <QuickBtn label="📦 נאסף" onClick={() => statusMutation.mutate({ id: order.id, s: 'collected' })} color="gray" />
+                                    <QuickBtn label="📦 Collected" onClick={() => statusMutation.mutate({ id: order.id, s: 'collected' })} color="gray" />
                                 )}
                                 {order.status !== 'cancelled' && order.status !== 'collected' && (
-                                    <QuickBtn label="✕ בטל" onClick={() => statusMutation.mutate({ id: order.id, s: 'cancelled' })} color="red" />
+                                    <QuickBtn label="✕ Cancel" onClick={() => statusMutation.mutate({ id: order.id, s: 'cancelled' })} color="red" />
                                 )}
                             </div>
                         </div>
@@ -212,8 +211,8 @@ function ItemsPanel() {
 
     const deleteMutation = useMutation({
         mutationFn: (id: string) => productApi.delete(id),
-        onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-products'] }); toast.success('המוצר נמחק'); },
-        onError: () => toast.error('שגיאה במחיקה'),
+        onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-products'] }); toast.success('Product deleted'); },
+        onError: () => toast.error('Error deleting product'),
     });
 
     const toggleMutation = useMutation({
@@ -231,11 +230,11 @@ function ItemsPanel() {
     return (
         <div>
             <div className="flex flex-wrap items-center gap-3 mb-6">
-                <h2 className="section-title text-xl mb-0">ניהול פריטים</h2>
+                <h2 className="section-title text-xl mb-0">Manage Items</h2>
                 <div className="flex-1" />
-                <button onClick={exportCsv} className="btn-ghost border border-white/10 text-sm py-2">📥 ייצוא CSV</button>
+                <button onClick={exportCsv} className="btn-ghost border border-white/10 text-sm py-2">📥 Export CSV</button>
                 <label className="btn-ghost border border-white/10 text-sm py-2 cursor-pointer">
-                    📤 ייבוא CSV
+                    📤 Import CSV
                     <input ref={fileInputRef} type="file" accept=".csv" className="hidden"
                         onChange={async (e) => {
                             const file = e.target.files?.[0]; if (!file) return;
@@ -243,12 +242,12 @@ function ItemsPanel() {
                             try {
                                 const { api } = await import('../api/client');
                                 const res = await api.post('/products/import/csv', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
-                                toast.success(`יובאו ${res.data.imported} מוצרים`);
+                                toast.success(`Imported ${res.data.imported} products`);
                                 qc.invalidateQueries({ queryKey: ['admin-products'] });
-                            } catch { toast.error('שגיאה בייבוא CSV'); }
+                            } catch { toast.error('Error importing CSV'); }
                         }} />
                 </label>
-                <button onClick={() => { setEditing(null); setShowForm(true); }} className="btn-primary py-2 text-sm">+ מוצר חדש</button>
+                <button onClick={() => { setEditing(null); setShowForm(true); }} className="btn-primary py-2 text-sm">+ New Product</button>
             </div>
 
             {/* Product form modal */}
@@ -274,26 +273,26 @@ function ItemsPanel() {
                             </div>
                             <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2">
-                                    <span className="font-bold text-white truncate">{product.name_he}</span>
+                                    <span className="font-bold text-white truncate">{product.name_en}</span>
                                     {product.is_kosher && <span className="badge-kosher">✡️</span>}
                                 </div>
-                                <p className="text-white/40 text-xs">{product.category_name_he} · ₪{product.price_nis} / {product.unit === 'kg' ? 'ק"ג' : 'יחידה'}</p>
+                                <p className="text-white/40 text-xs">{product.category_name_en} · ₪{product.price_nis} / {product.unit === 'kg' ? 'kg' : 'unit'}</p>
                             </div>
 
                             {/* Availability toggle */}
                             <button
                                 onClick={() => toggleMutation.mutate({ id: product.id, v: !product.is_available })}
                                 className={`text-xs px-3 py-1.5 rounded-full border font-medium transition-all min-h-[36px] ${product.is_available ? 'bg-emerald-900/30 text-emerald-300 border-emerald-700/40' : 'bg-white/5 text-white/40 border-white/10'}`}
-                                aria-label={product.is_available ? 'השבת מוצר' : 'הפעל מוצר'}
+                                aria-label={product.is_available ? 'Disable product' : 'Enable product'}
                             >
-                                {product.is_available ? '✓ זמין' : 'לא זמין'}
+                                {product.is_available ? '✓ Available' : 'Unavailable'}
                             </button>
 
                             <div className="flex gap-2">
-                                <button onClick={() => { setEditing(product); setShowForm(true); }} className="btn-ghost text-sm py-2 px-3 min-h-[44px]" aria-label={`ערוך ${product.name_he}`}>✏️</button>
-                                <button onClick={() => { if (confirm(`מחק את "${product.name_he}"?`)) deleteMutation.mutate(product.id); }}
+                                <button onClick={() => { setEditing(product); setShowForm(true); }} className="btn-ghost text-sm py-2 px-3 min-h-[44px]" aria-label={`Edit ${product.name_en}`}>✏️</button>
+                                <button onClick={() => { if (confirm(`Delete "${product.name_en}"?`)) deleteMutation.mutate(product.id); }}
                                     className="text-red-400/60 hover:text-red-400 transition-colors p-2 rounded min-h-[44px] min-w-[44px] flex items-center justify-center"
-                                    aria-label={`מחק ${product.name_he}`}>🗑️</button>
+                                    aria-label={`Delete ${product.name_en}`}>🗑️</button>
                             </div>
                         </div>
                     ))}
@@ -329,47 +328,74 @@ function ProductFormModal({ product, categories, onClose, onSaved }: {
         mutationFn: () => isEdit
             ? productApi.update(product!.id, { ...form, weight_options: product?.weight_options ?? [] })
             : productApi.create({ ...form, weight_options: [] }),
-        onSuccess: () => { toast.success(isEdit ? 'המוצר עודכן' : 'המוצר נוצר'); onSaved(); },
-        onError: () => toast.error('שגיאה בשמירה'),
+        onSuccess: () => { toast.success(isEdit ? 'Product updated' : 'Product created'); onSaved(); },
+        onError: () => toast.error('Error saving'),
     });
 
     return (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="modal-title">
             <div className="bg-brand-dark-gray border border-white/20 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6" onClick={(e) => e.stopPropagation()}>
                 <div className="flex items-center justify-between mb-6">
-                    <h3 id="modal-title" className="text-xl font-bold text-white">{isEdit ? 'ערוך מוצר' : 'מוצר חדש'}</h3>
-                    <button onClick={onClose} className="text-white/40 hover:text-white transition-colors text-xl" aria-label="סגור">✕</button>
+                    <h3 id="modal-title" className="text-xl font-bold text-white">{isEdit ? 'Edit Product' : 'New Product'}</h3>
+                    <button onClick={onClose} className="text-white/40 hover:text-white transition-colors text-xl" aria-label="Close">✕</button>
                 </div>
 
                 <div className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-white/60 mb-1">קטגוריה</label>
+                        <label className="block text-sm font-medium text-white/60 mb-1">Category</label>
                         <select value={form.category_id} onChange={(e) => setForm((f) => ({ ...f, category_id: Number(e.target.value) }))} className="input">
-                            {categories.map((c) => <option key={c.id} value={c.id}>{c.name_he}</option>)}
+                            {categories.map((c) => <option key={c.id} value={c.id}>{c.name_en}</option>)}
                         </select>
                     </div>
-                    <FormRow label="שם בעברית *" value={form.name_he} onChange={(v) => setForm((f) => ({ ...f, name_he: v }))} />
-                    <FormRow label="שם באנגלית *" value={form.name_en} onChange={(v) => setForm((f) => ({ ...f, name_en: v }))} dir="ltr" />
-                    <FormRow label="תיאור עברית" value={form.description_he} onChange={(v) => setForm((f) => ({ ...f, description_he: v }))} textarea />
-                    <FormRow label="מחיר ₪ *" type="number" value={String(form.price_nis)} onChange={(v) => setForm((f) => ({ ...f, price_nis: parseFloat(v) }))} dir="ltr" />
+                    <FormRow label="Name (Hebrew) *" value={form.name_he} onChange={(v) => setForm((f) => ({ ...f, name_he: v }))} />
+                    <FormRow label="Name (English) *" value={form.name_en} onChange={(v) => setForm((f) => ({ ...f, name_en: v }))} dir="ltr" />
+                    <FormRow label="Description (Hebrew)" value={form.description_he} onChange={(v) => setForm((f) => ({ ...f, description_he: v }))} textarea />
+                    <FormRow label="Price ₪ *" type="number" value={String(form.price_nis)} onChange={(v) => setForm((f) => ({ ...f, price_nis: parseFloat(v) }))} dir="ltr" />
                     <div>
-                        <label className="block text-sm font-medium text-white/60 mb-1">יחידה</label>
+                        <label className="block text-sm font-medium text-white/60 mb-1">Unit</label>
                         <select value={form.unit} onChange={(e) => setForm((f) => ({ ...f, unit: e.target.value as 'kg' | 'unit' | 'portion' }))} className="input">
-                            <option value="kg">ק"ג</option><option value="unit">יחידה</option><option value="portion">מנה</option>
+                            <option value="kg">kg</option><option value="unit">unit</option><option value="portion">portion</option>
                         </select>
                     </div>
-                    <FormRow label="כתובת תמונה" value={form.image_url} onChange={(v) => setForm((f) => ({ ...f, image_url: v }))} dir="ltr" />
-                    <FormRow label="אישור כשרות" value={form.kosher_cert_text} onChange={(v) => setForm((f) => ({ ...f, kosher_cert_text: v }))} />
+                    <div className="flex gap-4 items-end">
+                        <div className="flex-1">
+                            <FormRow label="Image URL" value={form.image_url} onChange={(v) => setForm((f) => ({ ...f, image_url: v }))} dir="ltr" />
+                        </div>
+                        <div className="pb-1">
+                            <label className="btn-secondary h-11 text-sm cursor-pointer whitespace-nowrap">
+                                📤 Upload
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={async (e) => {
+                                        const file = e.target.files?.[0];
+                                        if (!file) return;
+                                        try {
+                                            toast.loading('Uploading image...', { id: 'img-upload' });
+                                            const { url } = await productApi.uploadImage(file);
+                                            setForm(f => ({ ...f, image_url: url }));
+                                            toast.success('Image uploaded', { id: 'img-upload' });
+                                        } catch (err) {
+                                            console.error(err);
+                                            toast.error('Failed to upload image', { id: 'img-upload' });
+                                        }
+                                    }}
+                                />
+                            </label>
+                        </div>
+                    </div>
+                    <FormRow label="Kosher Certificate" value={form.kosher_cert_text} onChange={(v) => setForm((f) => ({ ...f, kosher_cert_text: v }))} />
                     <div className="flex gap-6">
-                        <Toggle label="זמין" checked={form.is_available} onChange={(v) => setForm((f) => ({ ...f, is_available: v }))} />
-                        <Toggle label="כשר" checked={form.is_kosher} onChange={(v) => setForm((f) => ({ ...f, is_kosher: v }))} />
+                        <Toggle label="Available" checked={form.is_available} onChange={(v) => setForm((f) => ({ ...f, is_available: v }))} />
+                        <Toggle label="Kosher" checked={form.is_kosher} onChange={(v) => setForm((f) => ({ ...f, is_kosher: v }))} />
                     </div>
                 </div>
 
                 <div className="flex gap-3 mt-6">
-                    <button onClick={onClose} className="btn-ghost flex-1 justify-center border border-white/10">ביטול</button>
+                    <button onClick={onClose} className="btn-ghost flex-1 justify-center border border-white/10">Cancel</button>
                     <button onClick={() => saveMutation.mutate()} disabled={saveMutation.isPending} className="btn-primary flex-1 justify-center">
-                        {saveMutation.isPending ? 'שומר…' : 'שמור'}
+                        {saveMutation.isPending ? 'Saving…' : 'Save'}
                     </button>
                 </div>
             </div>

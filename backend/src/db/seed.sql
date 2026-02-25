@@ -1,215 +1,215 @@
--- ═══════════════════════════════════════════════════
--- HaAtzil Butcher Shop – Seed Data
+﻿-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+-- HaAtzil Butcher Shop â€“ Seed Data
 -- Run AFTER schema.sql
--- ═══════════════════════════════════════════════════
+-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
--- ─────────────────────────────────────
+-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 -- Categories
--- ─────────────────────────────────────
+-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 INSERT INTO categories (slug, name_he, name_en, sort_order) VALUES
-  ('beef',           'בקר',           'Beef',            1),
-  ('lamb',           'כבש וטלה',       'Lamb',            2),
-  ('poultry',        'עוף והודו',       'Poultry',         3),
-  ('prepared',       'מוכן לבישול',    'Prepared Foods',  4),
-  ('kosher-special', 'מיוחדי כשרות',   'Kosher Specials', 5)
+  ('beef',           '×‘×§×¨',           'Beef',            1),
+  ('lamb',           '×›×‘×© ×•×˜×œ×”',       'Lamb',            2),
+  ('poultry',        '×¢×•×£ ×•×”×•×“×•',       'Poultry',         3),
+  ('prepared',       '×ž×•×›×Ÿ ×œ×‘×™×©×•×œ',    'Prepared Foods',  4),
+  ('kosher-special', '×ž×™×•×—×“×™ ×›×©×¨×•×ª',   'Kosher Specials', 5)
 ON CONFLICT (slug) DO NOTHING;
 
--- ─────────────────────────────────────
--- Products – Beef (5)
--- ─────────────────────────────────────
+-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+-- Products â€“ Beef (5)
+-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 INSERT INTO products (category_id, name_he, name_en, description_he, description_en, price_nis, weight_options, unit, is_kosher, kosher_cert_text, image_url) VALUES
 (
   (SELECT id FROM categories WHERE slug='beef'),
-  'אנטריקוט טרי', 'Ribeye Steak',
-  'נתח פרמיום מהצלעות, עם שיוש מעולה ותוצאה אידאלית על הגריל.',
+  '×× ×˜×¨×™×§×•×˜ ×˜×¨×™', 'Ribeye Steak',
+  '× ×ª×— ×¤×¨×ž×™×•× ×ž×”×¦×œ×¢×•×ª, ×¢× ×©×™×•×© ×ž×¢×•×œ×” ×•×ª×•×¦××” ××™×“××œ×™×ª ×¢×œ ×”×’×¨×™×œ.',
   'Premium ribeye cut, beautifully marbled, ideal for grilling.',
   189.00, '[{"label":"300g","grams":300},{"label":"500g","grams":500},{"label":"1kg","grams":1000}]',
-  'kg', true, 'בד"ץ מהדרין עיר שמש', '/images/ribeye.jpg'
+  'kg', true, 'Badatz Mehadrin Beit Shemesh', '/images/products/beef/ribeye.jpg'
 ),
 (
   (SELECT id FROM categories WHERE slug='beef'),
-  'פילה בקר מובחר', 'Beef Tenderloin',
-  'הנתח הרך ביותר – מושלם לצלייה מהירה ולסטייק בשיטת sous vide.',
-  'The most tender cut – perfect for quick searing or sous vide.',
+  '×¤×™×œ×” ×‘×§×¨ ×ž×•×‘×—×¨', 'Beef Tenderloin',
+  '×”× ×ª×— ×”×¨×š ×‘×™×•×ª×¨ â€“ ×ž×•×©×œ× ×œ×¦×œ×™×™×” ×ž×”×™×¨×” ×•×œ×¡×˜×™×™×§ ×‘×©×™×˜×ª sous vide.',
+  'The most tender cut â€“ perfect for quick searing or sous vide.',
   229.00, '[{"label":"250g","grams":250},{"label":"500g","grams":500}]',
-  'kg', true, 'בד"ץ מהדרין עיר שמש', '/images/tenderloin.jpg'
+  'kg', true, 'Badatz Mehadrin Beit Shemesh', '/images/products/beef/tenderloin.jpg'
 ),
 (
   (SELECT id FROM categories WHERE slug='beef'),
-  'צלי כתף בקר', 'Chuck Roast',
-  'נתח כתף שמנמן, מומלץ לבישול ממושך בתנור או בסיר לחץ.',
+  '×¦×œ×™ ×›×ª×£ ×‘×§×¨', 'Chuck Roast',
+  '× ×ª×— ×›×ª×£ ×©×ž× ×ž×Ÿ, ×ž×•×ž×œ×¥ ×œ×‘×™×©×•×œ ×ž×ž×•×©×š ×‘×ª× ×•×¨ ××• ×‘×¡×™×¨ ×œ×—×¥.',
   'Fatty shoulder roast, ideal for slow cooking or pressure pot.',
   89.00, '[{"label":"500g","grams":500},{"label":"1kg","grams":1000},{"label":"2kg","grams":2000}]',
-  'kg', true, 'בד"ץ מהדרין עיר שמש', '/images/chuck_roast.jpg'
+  'kg', true, 'Badatz Mehadrin Beit Shemesh', '/images/products/beef/chuck_roast.jpg'
 ),
 (
   (SELECT id FROM categories WHERE slug='beef'),
-  'שפיץ צ׳אק', 'Chuck Eye Roll',
-  'נתח תוסס עם טעם עשיר – מעולה לסטייק ולבישול ארוך.',
-  'Flavourful chuck eye roll – great as steak or slow cooked.',
+  '×©×¤×™×¥ ×¦×³××§', 'Chuck Eye Roll',
+  '× ×ª×— ×ª×•×¡×¡ ×¢× ×˜×¢× ×¢×©×™×¨ â€“ ×ž×¢×•×œ×” ×œ×¡×˜×™×™×§ ×•×œ×‘×™×©×•×œ ××¨×•×š.',
+  'Flavourful chuck eye roll â€“ great as steak or slow cooked.',
   119.00, '[{"label":"500g","grams":500},{"label":"1kg","grams":1000}]',
-  'kg', true, 'בד"ץ מהדרין עיר שמש', '/images/chuck_eye.jpg'
+  'kg', true, 'Badatz Mehadrin Beit Shemesh', '/images/products/beef/chuck_eye.jpg'
 ),
 (
   (SELECT id FROM categories WHERE slug='beef'),
-  'כבד בקר טרי', 'Fresh Beef Liver',
-  'כבד בקר טרי ואיכותי – עשיר בברזל וניוטריאנטים חיוניים.',
-  'Fresh quality beef liver – rich in iron and essential nutrients.',
+  '×›×‘×“ ×‘×§×¨ ×˜×¨×™', 'Fresh Beef Liver',
+  '×›×‘×“ ×‘×§×¨ ×˜×¨×™ ×•××™×›×•×ª×™ â€“ ×¢×©×™×¨ ×‘×‘×¨×–×œ ×•× ×™×•×˜×¨×™×× ×˜×™× ×—×™×•× ×™×™×.',
+  'Fresh quality beef liver â€“ rich in iron and essential nutrients.',
   59.00, '[{"label":"500g","grams":500},{"label":"1kg","grams":1000}]',
-  'kg', true, 'בד"ץ מהדרין עיר שמש', '/images/liver.jpg'
+  'kg', true, 'Badatz Mehadrin Beit Shemesh', '/images/products/beef/liver.jpg'
 );
 
--- ─────────────────────────────────────
--- Products – Lamb (4)
--- ─────────────────────────────────────
+-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+-- Products â€“ Lamb (4)
+-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 INSERT INTO products (category_id, name_he, name_en, description_he, description_en, price_nis, weight_options, unit, is_kosher, kosher_cert_text, image_url) VALUES
 (
   (SELECT id FROM categories WHERE slug='lamb'),
-  'צלעות כבש', 'Lamb Chops',
-  'צלעות כבש עסיסיות, מתובלות בתבלינים טריים מהבית.',
+  '×¦×œ×¢×•×ª ×›×‘×©', 'Lamb Chops',
+  '×¦×œ×¢×•×ª ×›×‘×© ×¢×¡×™×¡×™×•×ª, ×ž×ª×•×‘×œ×•×ª ×‘×ª×‘×œ×™× ×™× ×˜×¨×™×™× ×ž×”×‘×™×ª.',
   'Juicy lamb chops, seasoned with fresh Mediterranean spices.',
   149.00, '[{"label":"400g","grams":400},{"label":"800g","grams":800}]',
-  'kg', true, 'בד"ץ מהדרין עיר שמש', '/images/lamb_chops.jpg'
+  'kg', true, 'Badatz Mehadrin Beit Shemesh', '/images/products/lamb/lamb_chops.jpg'
 ),
 (
   (SELECT id FROM categories WHERE slug='lamb'),
-  'קבב טלה', 'Lamb Kebab',
-  'קבב טלה הכן לצלייה – על שיפוד, פאטה ותבלינים מיוחדים.',
+  '×§×‘×‘ ×˜×œ×”', 'Lamb Kebab',
+  '×§×‘×‘ ×˜×œ×” ×”×›×Ÿ ×œ×¦×œ×™×™×” â€“ ×¢×œ ×©×™×¤×•×“, ×¤××˜×” ×•×ª×‘×œ×™× ×™× ×ž×™×•×—×“×™×.',
   'Ready-to-grill lamb kebab with special spice blend on skewers.',
   79.00, '[{"label":"500g","grams":500},{"label":"1kg","grams":1000}]',
-  'kg', true, 'בד"ץ מהדרין עיר שמש', '/images/lamb_kebab.jpg'
+  'kg', true, 'Badatz Mehadrin Beit Shemesh', '/images/products/lamb/lamb_kebab.jpg'
 ),
 (
   (SELECT id FROM categories WHERE slug='lamb'),
-  'כתף טלה שלמה', 'Whole Lamb Shoulder',
-  'כתף טלה שלמה – מומלצת לצלייה איטית בתנור, עסיסית ומפנקת.',
-  'Whole lamb shoulder – slow roast for a rich and tender result.',
+  '×›×ª×£ ×˜×œ×” ×©×œ×ž×”', 'Whole Lamb Shoulder',
+  '×›×ª×£ ×˜×œ×” ×©×œ×ž×” â€“ ×ž×•×ž×œ×¦×ª ×œ×¦×œ×™×™×” ××™×˜×™×ª ×‘×ª× ×•×¨, ×¢×¡×™×¡×™×ª ×•×ž×¤× ×§×ª.',
+  'Whole lamb shoulder â€“ slow roast for a rich and tender result.',
   199.00, '[{"label":"1.5kg","grams":1500},{"label":"2.5kg","grams":2500}]',
-  'kg', true, 'בד"ץ מהדרין עיר שמש', '/images/lamb_shoulder.jpg'
+  'kg', true, 'Badatz Mehadrin Beit Shemesh', '/images/products/lamb/lamb_shoulder.jpg'
 ),
 (
   (SELECT id FROM categories WHERE slug='lamb'),
-  'שוק כבש', 'Lamb Leg',
-  'שוק כבש מדרגה ראשונה – מושלם לאוכל חגיגי בשבת.',
-  'First-grade lamb leg – perfect for a festive Shabbat meal.',
+  '×©×•×§ ×›×‘×©', 'Lamb Leg',
+  '×©×•×§ ×›×‘×© ×ž×“×¨×’×” ×¨××©×•× ×” â€“ ×ž×•×©×œ× ×œ××•×›×œ ×—×’×™×’×™ ×‘×©×‘×ª.',
+  'First-grade lamb leg â€“ perfect for a festive Shabbat meal.',
   169.00, '[{"label":"1kg","grams":1000},{"label":"2kg","grams":2000}]',
-  'kg', true, 'בד"ץ מהדרין עיר שמש', '/images/lamb_leg.jpg'
+  'kg', true, 'Badatz Mehadrin Beit Shemesh', '/images/products/lamb/lamb_leg.jpg'
 );
 
--- ─────────────────────────────────────
--- Products – Poultry (5)
--- ─────────────────────────────────────
+-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+-- Products â€“ Poultry (5)
+-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 INSERT INTO products (category_id, name_he, name_en, description_he, description_en, price_nis, weight_options, unit, is_kosher, kosher_cert_text, image_url) VALUES
 (
   (SELECT id FROM categories WHERE slug='poultry'),
-  'שניצל עוף', 'Chicken Schnitzel',
-  'פרגיות עוף פרוסות ומוכנות לשניצל – רכות ועסיסיות לבישול ביתי.',
-  'Sliced chicken breasts ready for schnitzel – tender and juicy.',
+  '×©× ×™×¦×œ ×¢×•×£', 'Chicken Schnitzel',
+  '×¤×¨×’×™×•×ª ×¢×•×£ ×¤×¨×•×¡×•×ª ×•×ž×•×›× ×•×ª ×œ×©× ×™×¦×œ â€“ ×¨×›×•×ª ×•×¢×¡×™×¡×™×•×ª ×œ×‘×™×©×•×œ ×‘×™×ª×™.',
+  'Sliced chicken breasts ready for schnitzel â€“ tender and juicy.',
   56.00, '[{"label":"500g","grams":500},{"label":"1kg","grams":1000}]',
-  'kg', true, 'בד"ץ מהדרין עיר שמש', '/images/chicken_schnitzel.jpg'
+  'kg', true, 'Badatz Mehadrin Beit Shemesh', '/images/products/poultry/chicken_schnitzel.jpg'
 ),
 (
   (SELECT id FROM categories WHERE slug='poultry'),
-  'שווארמה הודו', 'Turkey Shawarma',
-  'תערובת שווארמה הודו טחונה עם תבלינים ייחודיים של האציל.',
+  '×©×•×•××¨×ž×” ×”×•×“×•', 'Turkey Shawarma',
+  '×ª×¢×¨×•×‘×ª ×©×•×•××¨×ž×” ×”×•×“×• ×˜×—×•× ×” ×¢× ×ª×‘×œ×™× ×™× ×™×™×—×•×“×™×™× ×©×œ ×”××¦×™×œ.',
   'Ground turkey shawarma blend with HaAtzil signature spices.',
   69.00, '[{"label":"500g","grams":500},{"label":"1kg","grams":1000}]',
-  'kg', true, 'בד"ץ מהדרין עיר שמש', '/images/turkey_shawarma.jpg'
+  'kg', true, 'Badatz Mehadrin Beit Shemesh', '/images/products/poultry/turkey_shawarma.jpg'
 ),
 (
   (SELECT id FROM categories WHERE slug='poultry'),
-  'עוף שלם טרי', 'Whole Fresh Chicken',
-  'עוף שלם גדול, מגודל ללא אנטיביוטיקה – מומלץ לתבשיל או צלייה.',
-  'Large whole chicken, antibiotic-free – great for stew or roast.',
+  '×¢×•×£ ×©×œ× ×˜×¨×™', 'Whole Fresh Chicken',
+  '×¢×•×£ ×©×œ× ×’×“×•×œ, ×ž×’×•×“×œ ×œ×œ× ×× ×˜×™×‘×™×•×˜×™×§×” â€“ ×ž×•×ž×œ×¥ ×œ×ª×‘×©×™×œ ××• ×¦×œ×™×™×”.',
+  'Large whole chicken, antibiotic-free â€“ great for stew or roast.',
   48.00, '[{"label":"1.2kg","grams":1200},{"label":"1.8kg","grams":1800}]',
-  'unit', true, 'בד"ץ מהדרין עיר שמש', '/images/whole_chicken.jpg'
+  'unit', true, 'Badatz Mehadrin Beit Shemesh', '/images/products/poultry/whole_chicken.jpg'
 ),
 (
   (SELECT id FROM categories WHERE slug='poultry'),
-  'כרעיים עוף', 'Chicken Legs',
-  'כרעיים עוף שמינות – מצוינות לתנור עם עשבי תיבול.',
-  'Plump chicken legs – excellent oven-roasted with fresh herbs.',
+  '×›×¨×¢×™×™× ×¢×•×£', 'Chicken Legs',
+  '×›×¨×¢×™×™× ×¢×•×£ ×©×ž×™× ×•×ª â€“ ×ž×¦×•×™× ×•×ª ×œ×ª× ×•×¨ ×¢× ×¢×©×‘×™ ×ª×™×‘×•×œ.',
+  'Plump chicken legs â€“ excellent oven-roasted with fresh herbs.',
   39.00, '[{"label":"1kg","grams":1000},{"label":"2kg","grams":2000}]',
-  'kg', true, 'בד"ץ מהדרין עיר שמש', '/images/chicken_legs.jpg'
+  'kg', true, 'Badatz Mehadrin Beit Shemesh', '/images/products/poultry/chicken_legs.jpg'
 ),
 (
   (SELECT id FROM categories WHERE slug='poultry'),
-  'חזה הודו פרוס', 'Sliced Turkey Breast',
-  'חזה הודו פרוס דק, מעולה לסנדוויצ׳ים ולבישול קל.',
-  'Thinly sliced turkey breast – great for sandwiches and light cooking.',
+  '×—×–×” ×”×•×“×• ×¤×¨×•×¡', 'Sliced Turkey Breast',
+  '×—×–×” ×”×•×“×• ×¤×¨×•×¡ ×“×§, ×ž×¢×•×œ×” ×œ×¡× ×“×•×•×™×¦×³×™× ×•×œ×‘×™×©×•×œ ×§×œ.',
+  'Thinly sliced turkey breast â€“ great for sandwiches and light cooking.',
   59.00, '[{"label":"300g","grams":300},{"label":"600g","grams":600}]',
-  'kg', true, 'בד"ץ מהדרין עיר שמש', '/images/turkey_breast.jpg'
+  'kg', true, 'Badatz Mehadrin Beit Shemesh', '/images/products/poultry/turkey_breast.jpg'
 );
 
--- ─────────────────────────────────────
--- Products – Prepared Foods (4)
--- ─────────────────────────────────────
+-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+-- Products â€“ Prepared Foods (4)
+-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 INSERT INTO products (category_id, name_he, name_en, description_he, description_en, price_nis, weight_options, unit, is_kosher, kosher_cert_text, image_url) VALUES
 (
   (SELECT id FROM categories WHERE slug='prepared'),
-  'קציצות בקר הכן', 'Ready Beef Patties',
-  'קציצות בקר תבולות, מוכנות לצלייה – מתכון הבית של האציל.',
-  'Seasoned beef patties ready to pan-fry – HaAtzil house recipe.',
+  '×§×¦×™×¦×•×ª ×‘×§×¨ ×”×›×Ÿ', 'Ready Beef Patties',
+  '×§×¦×™×¦×•×ª ×‘×§×¨ ×ª×‘×•×œ×•×ª, ×ž×•×›× ×•×ª ×œ×¦×œ×™×™×” â€“ ×ž×ª×›×•×Ÿ ×”×‘×™×ª ×©×œ ×”××¦×™×œ.',
+  'Seasoned beef patties ready to pan-fry â€“ HaAtzil house recipe.',
   72.00, '[{"label":"500g","grams":500},{"label":"1kg","grams":1000}]',
-  'kg', true, 'בד"ץ מהדרין עיר שמש', '/images/beef_patties.jpg'
+  'kg', true, 'Badatz Mehadrin Beit Shemesh', '/images/products/prepared/beef_patties.jpg'
 ),
 (
   (SELECT id FROM categories WHERE slug='prepared'),
-  'מרינדה אנטריקוט', 'Marinated Ribeye',
-  'אנטריקוט במרינדת שום ועשבי תיבול – ישר לגריל ללא הכנה.',
-  'Ribeye in garlic and herb marinade – grill-ready, no prep needed.',
+  '×ž×¨×™× ×“×” ×× ×˜×¨×™×§×•×˜', 'Marinated Ribeye',
+  '×× ×˜×¨×™×§×•×˜ ×‘×ž×¨×™× ×“×ª ×©×•× ×•×¢×©×‘×™ ×ª×™×‘×•×œ â€“ ×™×©×¨ ×œ×’×¨×™×œ ×œ×œ× ×”×›× ×”.',
+  'Ribeye in garlic and herb marinade â€“ grill-ready, no prep needed.',
   199.00, '[{"label":"400g","grams":400},{"label":"800g","grams":800}]',
-  'kg', true, 'בד"ץ מהדרין עיר שמש', '/images/marinated_ribeye.jpg'
+  'kg', true, 'Badatz Mehadrin Beit Shemesh', '/images/products/prepared/marinated_ribeye.jpg'
 ),
 (
   (SELECT id FROM categories WHERE slug='prepared'),
-  'נקניקיות בקר', 'Beef Sausages',
-  'נקניקיות בקר ביתיות עם תבלינים – מושלמות לברביקיו.',
-  'Homestyle beef sausages with spices – perfect for the barbecue.',
+  '× ×§× ×™×§×™×•×ª ×‘×§×¨', 'Beef Sausages',
+  '× ×§× ×™×§×™×•×ª ×‘×§×¨ ×‘×™×ª×™×•×ª ×¢× ×ª×‘×œ×™× ×™× â€“ ×ž×•×©×œ×ž×•×ª ×œ×‘×¨×‘×™×§×™×•.',
+  'Homestyle beef sausages with spices â€“ perfect for the barbecue.',
   64.00, '[{"label":"500g","grams":500},{"label":"1kg","grams":1000}]',
-  'kg', true, 'בד"ץ מהדרין עיר שמש', '/images/beef_sausages.jpg'
+  'kg', true, 'Badatz Mehadrin Beit Shemesh', '/images/products/prepared/beef_sausages.jpg'
 ),
 (
   (SELECT id FROM categories WHERE slug='prepared'),
-  'מרק עצמות', 'Beef Bone Broth Kit',
-  'עצמות מרק עם ירקות שורש לבחירתכם – בסיס מושלם למרק.',
-  'Soup bones with root vegetables – the perfect soup base.',
+  '×ž×¨×§ ×¢×¦×ž×•×ª', 'Beef Bone Broth Kit',
+  '×¢×¦×ž×•×ª ×ž×¨×§ ×¢× ×™×¨×§×•×ª ×©×•×¨×© ×œ×‘×—×™×¨×ª×›× â€“ ×‘×¡×™×¡ ×ž×•×©×œ× ×œ×ž×¨×§.',
+  'Soup bones with root vegetables â€“ the perfect soup base.',
   45.00, '[{"label":"1kg","grams":1000},{"label":"2kg","grams":2000}]',
-  'kg', true, 'בד"ץ מהדרין עיר שמש', '/images/bone_broth.jpg'
+  'kg', true, 'Badatz Mehadrin Beit Shemesh', '/images/products/prepared/bone_broth.jpg'
 );
 
--- ─────────────────────────────────────
--- Products – Kosher Specials (3)
--- ─────────────────────────────────────
+-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+-- Products â€“ Kosher Specials (3)
+-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 INSERT INTO products (category_id, name_he, name_en, description_he, description_en, price_nis, weight_options, unit, is_kosher, kosher_cert_text, image_url) VALUES
 (
   (SELECT id FROM categories WHERE slug='kosher-special'),
-  'בשר בקר מהדרין', 'Mehadrin Beef Selection',
-  'מבחר נתחי בקר מהדרין – כשרות מחמירה עם תעודה מוכרת.',
-  'Mehadrin beef selection – strict kosher with certified documentation.',
+  '×‘×©×¨ ×‘×§×¨ ×ž×”×“×¨×™×Ÿ', 'Mehadrin Beef Selection',
+  '×ž×‘×—×¨ × ×ª×—×™ ×‘×§×¨ ×ž×”×“×¨×™×Ÿ â€“ ×›×©×¨×•×ª ×ž×—×ž×™×¨×” ×¢× ×ª×¢×•×“×” ×ž×•×›×¨×ª.',
+  'Mehadrin beef selection â€“ strict kosher with certified documentation.',
   249.00, '[{"label":"500g","grams":500},{"label":"1kg","grams":1000}]',
-  'kg', true, 'בד"ץ מהדרין עיר שמש – מהדרין מן המהדרין', '/images/mehadrin_beef.jpg'
+  'kg', true, 'Badatz Mehadrin Beit Shemesh - Mehadrin min HaMehadrin', '/images/products/kosher-special/mehadrin_beef.jpg'
 ),
 (
   (SELECT id FROM categories WHERE slug='kosher-special'),
-  'כבש מהדרין לר"ה', 'Mehadrin Lamb for Rosh Hashana',
-  'כבש שלם או חצי לפי המסורת – כשרות מהדרין לחגים.',
-  'Whole or half lamb per tradition – mehadrin kosher for the holidays.',
+  '×›×‘×© ×ž×”×“×¨×™×Ÿ ×œ×¨"×”', 'Mehadrin Lamb for Rosh Hashana',
+  '×›×‘×© ×©×œ× ××• ×—×¦×™ ×œ×¤×™ ×”×ž×¡×•×¨×ª â€“ ×›×©×¨×•×ª ×ž×”×“×¨×™×Ÿ ×œ×—×’×™×.',
+  'Whole or half lamb per tradition â€“ mehadrin kosher for the holidays.',
   899.00, '[{"label":"half","grams":4000},{"label":"whole","grams":8000}]',
-  'unit', true, 'בד"ץ מהדרין עיר שמש – מהדרין מן המהדרין', '/images/mehadrin_lamb.jpg'
+  'unit', true, 'Badatz Mehadrin Beit Shemesh - Mehadrin min HaMehadrin', '/images/products/kosher-special/mehadrin_lamb.jpg'
 ),
 (
   (SELECT id FROM categories WHERE slug='kosher-special'),
-  'הודו שלם לחג', 'Whole Turkey for Holiday',
-  'הודו שלם מהדרין – אידאלי לצלייה חגיגית בחגים ובארוחות גדולות.',
-  'Whole mehadrin turkey – ideal for festive holiday roasting.',
+  '×”×•×“×• ×©×œ× ×œ×—×’', 'Whole Turkey for Holiday',
+  '×”×•×“×• ×©×œ× ×ž×”×“×¨×™×Ÿ â€“ ××™×“××œ×™ ×œ×¦×œ×™×™×” ×—×’×™×’×™×ª ×‘×—×’×™× ×•×‘××¨×•×—×•×ª ×’×“×•×œ×•×ª.',
+  'Whole mehadrin turkey â€“ ideal for festive holiday roasting.',
   289.00, '[{"label":"4kg","grams":4000},{"label":"6kg","grams":6000}]',
-  'unit', true, 'בד"ץ מהדרין עיר שמש', '/images/whole_turkey.jpg'
+  'unit', true, 'Badatz Mehadrin Beit Shemesh', '/images/products/kosher-special/whole_turkey.jpg'
 );
 
--- ─────────────────────────────────────
--- Pickup Slots (next 7 days, 09:00–19:00 every hour, 10 capacity)
--- ─────────────────────────────────────
+-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+-- Pickup Slots (next 7 days, 09:00â€“19:00 every hour, 10 capacity)
+-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 INSERT INTO pickup_slots (slot_date, slot_time, capacity)
 SELECT
   CURRENT_DATE + i AS slot_date,
@@ -219,10 +219,10 @@ FROM generate_series(1, 7) AS i,
      generate_series(9, 18) AS h
 ON CONFLICT (slot_date, slot_time) DO NOTHING;
 
--- ─────────────────────────────────────
+-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 -- Admin User (password: Admin1234!)
 -- bcrypt hash generated with rounds=12
--- ─────────────────────────────────────
+-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 INSERT INTO users (email, password_hash, is_admin) VALUES
   (
     'admin@haatzil.co.il',
