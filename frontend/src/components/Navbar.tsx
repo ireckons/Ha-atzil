@@ -16,7 +16,7 @@ export default function Navbar() {
     };
 
     return (
-        <header className="sticky top-0 z-50 bg-[#B21B21] md:bg-[#1A1A1A] border-b border-white/10 shadow-md font-sans">
+        <header className="sticky top-0 z-50 bg-[#B21B21] md:bg-[#000000] border-b border-white/10 shadow-md font-sans">
             <div className="max-w-7xl mx-auto px-4 h-[70px] flex items-center justify-between gap-2 md:gap-4">
 
 

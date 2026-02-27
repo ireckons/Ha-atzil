@@ -19,7 +19,7 @@ export default function HeroParallax() {
                 <img
                     src="/images/parallax/banner2.svg"
                     alt=""
-                    className="w-full h-1/2 object-fill"
+                    className="w-full h-1/2 object-cover object-bottom"
                 />
             </div>
 
@@ -96,7 +96,7 @@ export default function HeroParallax() {
                         {/* ── Hebrew Text Placements (Responsive Stacking for Mobile, Absolute RTL Layout for Desktop) ── */}
 
                         {/* Left Text (Mehadrin) */}
-                        <div className="absolute top-[242px] md:top-[210px] left-0 md:left-[120px] w-full md:w-[300px] text-white/90 font-hebrew text-[15px] md:text-[22px] font-bold tracking-widest text-center md:text-left z-20">
+                        <div className="absolute top-[242px] md:top-[185px] left-0 md:left-[120px] w-full md:w-[300px] text-white/90 font-hebrew text-[15px] md:text-[22px] font-bold tracking-widest text-center md:text-left z-20">
                             למהדרין
                         </div>
 
