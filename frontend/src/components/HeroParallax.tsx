@@ -1,19 +1,25 @@
 export default function HeroParallax() {
     return (
-        <section className="relative w-full overflow-hidden bg-[#0c0c0c] min-h-[500px] h-[500px]">
+        <section className="relative w-full overflow-hidden bg-[#1A1A1A] min-h-[500px] h-[500px]">
             {/* ── Background Banners ── */}
             <div className="absolute inset-0 z-0 pointer-events-none flex flex-col">
                 {/* Upper banner */}
+                {/* Upper banner — mobile uses dedicated SVG, desktop uses original */}
+                <img
+                    src="/images/parallax/mobile-preview banner1.svg"
+                    alt=""
+                    className="md:hidden w-full h-1/2 object-contain object-top"
+                />
                 <img
                     src="/images/parallax/banner1.svg"
                     alt=""
-                    className="w-full h-1/2 object-cover object-bottom"
+                    className="hidden md:block w-full h-1/2 object-cover object-top"
                 />
                 {/* Lower banner */}
                 <img
                     src="/images/parallax/banner2.svg"
                     alt=""
-                    className="w-full h-1/2 object-cover object-top"
+                    className="w-full h-1/2 object-fill"
                 />
             </div>
 
@@ -46,7 +52,7 @@ export default function HeroParallax() {
                                  L 1270 70 
                                  L 2000 70 
                                  L 2000 300 
-                                 L 0 300 Z" fill="#141414" />
+                                 L 0 300 Z" fill="#1A1A1A" />
 
                         {/* Top Red Line (geometric stair-step bump upwards) */}
                         <path d="
@@ -59,7 +65,7 @@ export default function HeroParallax() {
                                  C 1140 10, 1150 30, 1170 50 
                                  L 1240 50 
                                  L 1270 70 
-                                 L 2000 70" stroke="#E31C23" strokeWidth="5" fill="none" strokeLinejoin="round" />
+                                 L 2000 70" stroke="#B21B21" strokeWidth="5" fill="none" strokeLinejoin="round" />
 
                         {/* Bottom Red Line (geometric stair-step bump downwards) */}
                         <path d="
@@ -72,51 +78,31 @@ export default function HeroParallax() {
                                  C 1140 290, 1150 270, 1170 250 
                                  L 1240 250 
                                  L 1270 230 
-                                 L 2000 230" stroke="#E31C23" strokeWidth="5" fill="none" strokeLinejoin="round" />
+                                 L 2000 230" stroke="#B21B21" strokeWidth="5" fill="none" strokeLinejoin="round" />
                     </svg>
 
                     {/* Foreground Content Wrapper (Absolute pixel placements within the 300px height) */}
                     <div className="absolute w-full max-w-[1200px] h-[300px] z-20 mx-auto">
 
-                        {/* Bull Logo - centered below the top flat red plateau */}
-                        <div className="absolute top-[8px] left-1/2 -translate-x-1/2 flex justify-center z-30">
-                            <img src="/bull-silhouette.svg" alt="Bull Logo" className="w-[60px]" />
+                        {/* Main "Ha-atzil" Logo */}
+                        <div className="absolute top-[15px] w-full flex justify-center z-20 pointer-events-none px-4 md:px-0">
+                            <img
+                                src="/logo-haatzil.jpeg"
+                                alt="האציל Logo"
+                                className="w-full max-w-[320px] md:max-w-none h-[210px] md:h-[250px] object-contain mix-blend-lighten opacity-95 contrast-125"
+                            />
                         </div>
 
-                        {/* Since 2005 - inside the top bump, just below the plateau */}
-                        <div className="absolute top-[48px] w-full flex items-center justify-center gap-2 z-20">
-                            <svg width="35" height="4" viewBox="0 0 40 4" fill="none"><path d="M40,2 L0,2" stroke="#fff" opacity="0.8" strokeWidth="1" /></svg>
-                            <span className="text-[#E31C23] font-serif italic text-[12px] tracking-wider font-bold">since 2005</span>
-                            <svg width="35" height="4" viewBox="0 0 40 4" fill="none"><path d="M0,2 L40,2" opacity="0.8" stroke="#fff" strokeWidth="1" /></svg>
-                        </div>
+                        {/* ── Hebrew Text Placements (Responsive Stacking for Mobile, Absolute RTL Layout for Desktop) ── */}
 
-                        {/* Main "Ha-atzil" Logo - huge, stretched, perfectly centered inside the dark space */}
-                        <div className="absolute top-[80px] w-full flex justify-center z-20">
-                            <h1 className="text-white text-[120px] font-bold leading-none tracking-tight block"
-                                style={{
-                                    fontFamily: "'Playfair Display', serif",
-                                    transform: 'scaleY(1.3)',
-                                    textShadow: '0 4px 10px rgba(0,0,0,0.5)'
-                                }}>
-                                האציל
-                            </h1>
-                        </div>
-
-                        {/* ── Hebrew Text Placements (Exactly matching the poster's RTL layout & bump depths) ── */}
-
-                        {/* Right Text (Address) - sits safely above the y=230 straight line */}
-                        <div className="absolute top-[195px] right-[40px] md:right-[150px] w-[300px] text-white font-sans text-[12px] md:text-[14px] font-bold tracking-[0.1em] text-right z-20">
-                            הפלמ"ח 77 צפת // 04-6226677
-                        </div>
-
-                        {/* Center Red Text (Subtitle) - rests DEEP inside the bottom bump plateau (y=290 bounds) */}
-                        <div className="absolute top-[255px] left-1/2 -translate-x-1/2 w-[300px] text-[#E31C23] font-hebrew font-bold text-[14px] md:text-[15px] tracking-wide text-center z-20 whitespace-nowrap">
-                            בשרים שמכבדים אירוח
-                        </div>
-
-                        {/* Left Text (Mehadrin) - sits safely above the y=230 straight line */}
-                        <div className="absolute top-[190px] left-[40px] md:left-[150px] w-[300px] text-white font-hebrew text-[20px] md:text-[24px] font-bold tracking-widest text-left z-20">
+                        {/* Left Text (Mehadrin) */}
+                        <div className="absolute top-[242px] md:top-[210px] left-0 md:left-[120px] w-full md:w-[300px] text-white/90 font-hebrew text-[15px] md:text-[22px] font-bold tracking-widest text-center md:text-left z-20">
                             למהדרין
+                        </div>
+
+                        {/* Center Red Text (Subtitle) */}
+                        <div className="absolute top-[218px] md:top-[255px] left-1/2 -translate-x-1/2 w-full md:w-[300px] text-[#B21B21] font-hebrew font-bold text-[13px] md:text-[15px] tracking-wide text-center z-20 whitespace-nowrap">
+                            בשרים שמכבדים אירוח
                         </div>
 
                     </div>

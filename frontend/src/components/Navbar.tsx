@@ -6,10 +6,7 @@ export default function Navbar() {
     const count = useCartStore((s) => s.count());
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState('');
-    const [locationOpen, setLocationOpen] = useState(false);
-    const [location, setLocation] = useState('Safed');
-
-    const locations = ['Safed', 'Jerusalem', 'Tel Aviv', 'Haifa'];
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
@@ -19,117 +16,56 @@ export default function Navbar() {
     };
 
     return (
-        <header
-            className="sticky top-0 z-50"
-            style={{
-                background: 'rgba(8,8,8,0.97)',
-                backdropFilter: 'blur(12px)',
-                WebkitBackdropFilter: 'blur(12px)',
-                borderBottom: '1px solid rgba(200,16,46,0.3)',
-                boxShadow: '0 4px 24px rgba(0,0,0,0.5)',
-                fontFamily: "'Inter', 'Segoe UI', sans-serif",
-            }}
-        >
-            <div
-                className="max-w-7xl mx-auto px-4"
-                style={{
-                    height: 70,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 16,
-                }}
-            >
+        <header className="sticky top-0 z-50 bg-[#B21B21] md:bg-[#1A1A1A] border-b border-white/10 shadow-md font-sans">
+            <div className="max-w-7xl mx-auto px-4 h-[70px] flex items-center justify-between gap-2 md:gap-4">
+
+
                 {/* ── Logo ── */}
-                <Link to="/" style={{ display: 'block' }}>
-                    <div
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        }}
-                    >
-                        <span className="font-hebrew" style={{ fontSize: 28, fontWeight: 900, color: '#fff', letterSpacing: '0.05em' }}>
-                            האציל
-                        </span>
-                    </div>
+                <Link to="/" className="flex items-center justify-center shrink-0">
+                    <img src="/navbar-logo.svg" alt="Navbar Logo" className="h-[36px] md:h-[48px] object-contain text-[#C8102E]" />
                 </Link>
 
-                {/* ── Navigation Links ── */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 32, marginLeft: 24, flexShrink: 0 }}>
-                    <Link
-                        to="/"
-                        style={{
-                            color: '#fff',
-                            textDecoration: 'none',
-                            fontWeight: 700,
-                            fontSize: 14,
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.05em',
-                            transition: 'color 0.2s',
-                        }}
-                        onMouseEnter={e => (e.currentTarget.style.color = '#C8102E')}
-                        onMouseLeave={e => (e.currentTarget.style.color = '#fff')}
-                    >
-                        Home
-                    </Link>
-                    <Link
-                        to="/catalog"
-                        style={{
-                            color: '#fff',
-                            textDecoration: 'none',
-                            fontWeight: 700,
-                            fontSize: 14,
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.05em',
-                            transition: 'color 0.2s',
-                        }}
-                        onMouseEnter={e => (e.currentTarget.style.color = '#C8102E')}
-                        onMouseLeave={e => (e.currentTarget.style.color = '#fff')}
-                    >
-                        Menu
-                    </Link>
-                </div>
-
-                {/* ── Search Bar ── */}
+                {/* ── Mobile Search Bar ── */}
                 <form
                     onSubmit={handleSearch}
-                    style={{
-                        flex: 1,
-                        display: 'flex',
-                        alignItems: 'center',
-                        background: 'rgba(255,255,255,0.07)',
-                        borderRadius: 6,
-                        overflow: 'hidden',
-                        border: '1px solid rgba(255,255,255,0.12)',
-                        maxWidth: 520,
-                    }}
+                    className="md:hidden flex flex-1 items-center bg-white/10 rounded-md border border-white/20 overflow-hidden ml-2"
                 >
                     <input
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Explore Ha-Atzil's best picks..."
-                        style={{
-                            flex: 1,
-                            padding: '10px 16px',
-                            background: 'transparent',
-                            border: 'none',
-                            outline: 'none',
-                            fontSize: 13,
-                            color: '#fff',
-                        }}
+                        placeholder="Explore..."
+                        className="flex-1 px-3 py-2 bg-transparent border-none outline-none text-[13px] text-white placeholder-white/40"
                     />
-                    <button
-                        type="submit"
-                        style={{
-                            padding: '10px 16px',
-                            background: '#C8102E',
-                            border: 'none',
-                            cursor: 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        }}
-                    >
+                    <button type="submit" className="px-3 py-2 bg-transparent flex items-center justify-center text-white/60 hover:text-white">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                            <circle cx="11" cy="11" r="8" />
+                            <path d="m21 21-4.3-4.3" />
+                        </svg>
+                    </button>
+                </form>
+
+                {/* ── Navigation Links ── */}
+                <div className="hidden md:flex items-center gap-4 md:gap-8 mx-auto shrink-0">
+                    <Link to="/" className="text-white md:text-[#B21B21] font-bold text-sm uppercase tracking-wider hover:text-white md:hover:text-[#6B191E] transition-colors">
+                        Home
+                    </Link>
+                    <Link to="/catalog" className="text-white md:text-[#B21B21] font-bold text-sm uppercase tracking-wider hover:text-white md:hover:text-[#6B191E] transition-colors">
+                        Menu
+                    </Link>
+                </div>
+
+                {/* ── Search Bar (Desktop) ── */}
+                <form
+                    onSubmit={handleSearch}
+                    className="hidden md:flex flex-1 items-center bg-white/10 rounded-md border border-white/20 max-w-[400px] overflow-hidden mx-4"
+                >
+                    <input
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="Explore Ha-Atzil..."
+                        className="flex-1 px-4 py-2.5 bg-transparent border-none outline-none text-sm text-white placeholder-white/40"
+                    />
+                    <button type="submit" className="px-4 py-2.5 bg-[#B21B21] flex items-center justify-center hover:bg-[#6B191E] transition-colors">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round">
                             <circle cx="11" cy="11" r="8" />
                             <path d="m21 21-4.3-4.3" />
@@ -138,62 +74,38 @@ export default function Navbar() {
                 </form>
 
                 {/* ── Right Icons ── */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginLeft: 'auto', flexShrink: 0 }}>
-
+                <div className="hidden md:flex items-center gap-2 md:gap-3 shrink-0">
                     {/* Login */}
                     <Link
                         to="/login"
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 8,
-                            padding: '10px 16px',
-                            background: 'rgba(255,255,255,0.04)',
-                            border: '1px solid rgba(255,255,255,0.08)',
-                            textDecoration: 'none',
-                            color: 'rgba(255,255,255,0.95)',
-                            borderRadius: 8,
-                            transition: 'all 0.2s',
-                        }}
-                        onMouseEnter={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; }}
-                        onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.95)'; e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; }}
+                        className="flex items-center gap-2 px-3 py-2 md:px-4 md:py-2.5 bg-white/10 border border-white/20 text-white rounded-lg hover:bg-white/20 transition-all font-bold"
                     >
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                             <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
                             <circle cx="12" cy="7" r="4" />
                         </svg>
-                        <span style={{ fontSize: 13, fontWeight: 700, letterSpacing: '0.03em' }}>Login</span>
+                        <span className="hidden lg:inline text-[13px] font-bold tracking-wide">Login</span>
                     </Link>
 
                     {/* Cart */}
                     <Link
                         to="/cart"
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 10,
-                            padding: '10px 20px',
-                            background: '#C8102E', // Primary CTA button
-                            border: '1px solid #C8102E',
-                            textDecoration: 'none',
-                            color: '#fff',
-                            borderRadius: 8,
-                            transition: 'all 0.2s',
-                        }}
-                        onMouseEnter={e => { e.currentTarget.style.background = '#A00D24'; }}
-                        onMouseLeave={e => { e.currentTarget.style.background = '#C8102E'; }}
+                        className="flex items-center gap-2 px-3 py-2 md:px-5 md:py-2.5 bg-[#B21B21] border border-[#B21B21] text-white rounded-lg hover:bg-[#6B191E] hover:border-[#6B191E] transition-all whitespace-nowrap font-extrabold"
                     >
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                             <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
                             <line x1="3" y1="6" x2="21" y2="6" />
                             <path d="M16 10a4 4 0 0 1-8 0" />
                         </svg>
-                        <span style={{ fontSize: 14, fontWeight: 800, letterSpacing: '0.02em' }}>
-                            Cart {count > 0 ? `(${count})` : ''}
+                        <span className="text-[13px] md:text-[14px] font-extrabold tracking-wide">
+                            <span className="hidden lg:inline">Cart </span>
+                            {count > 0 ? `(${count})` : ''}
                         </span>
                     </Link>
                 </div>
             </div>
+
+
         </header>
     );
 }

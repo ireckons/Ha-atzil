@@ -13,7 +13,7 @@ export default function ProductCard({ product }: Props) {
             aria-label={`${product.name_en} – ₪${product.price_nis}`}
         >
             {/* ── Image block ── */}
-            <div className="relative overflow-hidden bg-[#111] aspect-square">
+            <div className="relative overflow-hidden bg-[#F8F9FA] aspect-square">
                 {product.image_url ? (
                     <img
                         src={product.image_url}
@@ -22,7 +22,7 @@ export default function ProductCard({ product }: Props) {
                         loading="lazy"
                     />
                 ) : (
-                    <div className="w-full h-full flex items-center justify-center text-6xl text-white/10" aria-hidden="true">
+                    <div className="w-full h-full flex items-center justify-center text-6xl text-black/5" aria-hidden="true">
                         🥩
                     </div>
                 )}
@@ -36,7 +36,7 @@ export default function ProductCard({ product }: Props) {
                         <span className="badge-kosher text-[10px] px-2 py-0.5">✡️ Kosher</span>
                     )}
                     {!product.is_available && (
-                        <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-semibold bg-black/75 text-white/70 rounded border border-white/15">
+                        <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-semibold bg-white/90 text-black/70 rounded border border-black/10">
                             Out of stock
                         </span>
                     )}
@@ -61,22 +61,22 @@ export default function ProductCard({ product }: Props) {
                 )}
 
                 {/* Product name */}
-                <h3 className="font-bold text-white text-base leading-snug group-hover:text-brand-red transition-colors duration-200 line-clamp-2">
+                <h3 className="font-bold text-[#111] text-base leading-snug group-hover:text-brand-red transition-colors duration-200 line-clamp-2">
                     {product.name_en}
                 </h3>
 
                 {/* Short description */}
                 {product.description_en && (
-                    <p className="text-white/45 text-xs leading-relaxed line-clamp-2 flex-1">
+                    <p className="text-[#555] text-xs leading-relaxed line-clamp-2 flex-1">
                         {product.description_en}
                     </p>
                 )}
 
                 {/* Price + CTA row */}
-                <div className="pt-3 border-t border-white/8 flex items-center justify-between gap-2 mt-auto">
+                <div className="pt-3 border-t border-black/10 flex items-center justify-between gap-2 mt-auto">
                     <div className="flex items-baseline gap-1">
-                        <span className="text-xl font-black text-white">₪{product.price_nis}</span>
-                        <span className="text-white/35 text-[10px] font-medium">
+                        <span className="text-xl font-black text-[#111]">₪{product.price_nis}</span>
+                        <span className="text-[#666] text-[10px] font-medium">
                             {product.unit === 'kg' ? '/ kg' : '/ item'}
                         </span>
                     </div>

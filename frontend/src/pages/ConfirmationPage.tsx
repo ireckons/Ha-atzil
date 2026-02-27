@@ -37,8 +37,8 @@ export default function ConfirmationPage() {
 
     if (!order) {
         return (
-            <div className="min-h-screen bg-brand-black flex flex-col items-center justify-center gap-6">
-                <p className="text-white/50">Order not found</p>
+            <div className="min-h-screen bg-transparent flex flex-col items-center justify-center gap-6">
+                <p className="text-[#666]">Order not found</p>
                 <Link to="/" className="btn-primary">Back to Home</Link>
             </div>
         );
@@ -51,22 +51,22 @@ export default function ConfirmationPage() {
         : '';
 
     return (
-        <div className="min-h-screen bg-brand-black py-10 px-4">
+        <div className="min-h-screen bg-transparent py-10 px-4">
             <div className="max-w-xl mx-auto animate-slide-up">
                 {/* Success banner */}
                 <div className="text-center mb-10">
-                    <div className="w-20 h-20 rounded-full bg-emerald-900/30 border-2 border-emerald-500/50 flex items-center justify-center mx-auto mb-4 text-4xl" aria-hidden="true">
+                    <div className="w-20 h-20 rounded-full bg-emerald-100 border-2 border-emerald-400 flex items-center justify-center mx-auto mb-4 text-4xl" aria-hidden="true">
                         ✅
                     </div>
-                    <h1 className="text-3xl font-black text-white mb-2">Order Confirmed!</h1>
-                    <p className="text-white/60">We look forward to seeing you at pickup</p>
+                    <h1 className="text-3xl font-black text-[#111] mb-2">Order Confirmed!</h1>
+                    <p className="text-[#555]">We look forward to seeing you at pickup</p>
                 </div>
 
                 {/* Printable slip */}
                 <div ref={printRef} className="card p-6 mb-6">
                     <div className="text-center mb-4">
-                        <p className="text-xs text-white/40 uppercase tracking-widest">HaAtzil – since 2005</p>
-                        <p className="text-xs text-white/30">Meats that honour hospitality · Palmach 77, Safed</p>
+                        <p className="text-xs text-[#555] uppercase tracking-widest">HaAtzil – since 2005</p>
+                        <p className="text-xs text-[#888]">Meats that honour hospitality · Palmach 77, Safed</p>
                     </div>
                     <div className="h-px bg-gradient-to-r from-transparent via-brand-red to-transparent mb-4" />
 
@@ -79,30 +79,30 @@ export default function ConfirmationPage() {
                         {order.notes && <InfoRow label="Notes" value={order.notes} />}
                     </div>
 
-                    <div className="h-px bg-white/10 mb-4" />
+                    <div className="h-px bg-black/10 mb-4" />
 
                     {/* Items */}
                     <div className="space-y-2 mb-4">
-                        <p className="text-xs text-white/40 uppercase tracking-wider mb-2">Order Details</p>
+                        <p className="text-xs text-[#666] uppercase tracking-wider mb-2">Order Details</p>
                         {(order.items ?? []).map((item) => (
                             <div key={item.id} className="flex items-center justify-between text-sm">
-                                <span className="text-white/80">
+                                <span className="text-[#333]">
                                     {item.name_en} {item.weight_g ? `(${item.weight_g}g)` : ''} × {item.quantity}
                                 </span>
-                                <span className="text-white font-semibold">₪{Number(item.subtotal_nis).toFixed(2)}</span>
+                                <span className="text-[#111] font-semibold">₪{Number(item.subtotal_nis).toFixed(2)}</span>
                             </div>
                         ))}
                     </div>
 
-                    <div className="h-px bg-white/10 mb-4" />
+                    <div className="h-px bg-black/10 mb-4" />
                     <div className="flex items-center justify-between">
-                        <span className="text-white font-bold text-lg">Total to Pay</span>
+                        <span className="text-[#111] font-bold text-lg">Total to Pay</span>
                         <span className="text-2xl font-black text-brand-red">₪{Number(order.total_nis).toFixed(2)}</span>
                     </div>
-                    <p className="text-xs text-white/30 mt-2 text-center">Payment by cash/card in-store upon pickup</p>
+                    <p className="text-xs text-[#888] mt-2 text-center">Payment by cash/card in-store upon pickup</p>
 
                     <div className="h-px bg-gradient-to-r from-transparent via-brand-red to-transparent mt-4" />
-                    <p className="text-center text-xs text-white/30 mt-3">Palmach 77, Safed · 04-6226677</p>
+                    <p className="text-center text-xs text-[#888] mt-3">Palmach 77, Safed · 04-6226677</p>
                 </div>
 
                 {/* Actions */}
@@ -121,9 +121,9 @@ export default function ConfirmationPage() {
 
 function InfoRow({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
     return (
-        <div className="flex items-center justify-between py-1.5 border-b border-white/5">
-            <span className="text-white/50 text-sm">{label}</span>
-            <span className={`text-sm font-bold ${highlight ? 'text-brand-red text-base' : 'text-white'}`}>{value}</span>
+        <div className="flex items-center justify-between py-1.5 border-b border-black/5">
+            <span className="text-[#666] text-sm">{label}</span>
+            <span className={`text-sm font-bold ${highlight ? 'text-brand-red text-base' : 'text-[#111]'}`}>{value}</span>
         </div>
     );
 }

@@ -6,12 +6,12 @@ export default {
         extend: {
             colors: {
                 brand: {
-                    black: '#000000',
-                    white: '#FFFFFF',
-                    red: '#C8102E',
-                    'dark-gray': '#1F1F1F',
-                    'light-gray': '#F5F5F5',
-                    'red-dark': '#A00C24',
+                    black: '#F8F6F2', // Warm Off-White (Primary Bg)
+                    white: '#111111', // Dark Text
+                    red: '#B21B21',   // Accent Red
+                    'dark-gray': '#EAEAEA',
+                    'light-gray': '#FCFAF6', // Card Bg
+                    'red-dark': '#6B191E', // Deep Burgundy (Secondary Bg)
                     'red-light': '#E5193D',
                 },
             },

@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 import Navbar from './components/Navbar';
+import MobileBottomNav from './components/MobileBottomNav';
+import WhatsAppButton from './components/WhatsAppButton';
 import { useAuthStore } from './store/authStore';
 
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -23,7 +25,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 function Loading() {
     return (
         <div className="flex items-center justify-center min-h-screen bg-brand-black">
-            <div className="w-12 h-12 border-4 border-brand-dark-gray border-t-brand-red rounded-full animate-spin" aria-label="Loading..." />
+            <div className="w-12 h-12 border-4 border-black/10 border-t-brand-red rounded-full animate-spin" aria-label="Loading..." />
         </div>
     );
 }
@@ -49,8 +51,10 @@ export default function App() {
                     <Route
                         path="*"
                         element={
-                            <div dir="ltr" className="min-h-screen font-sans text-brand-white bg-brand-black">
+                            <div dir="ltr" className="min-h-screen font-sans text-brand-white bg-brand-black overflow-x-hidden w-full pb-16 md:pb-0">
                                 <Navbar />
+                                <MobileBottomNav />
+                                <WhatsAppButton />
                                 <main>
                                     <Routes>
                                         <Route path="/" element={<HomePage />} />

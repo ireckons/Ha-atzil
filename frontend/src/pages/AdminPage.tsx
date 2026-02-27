@@ -12,11 +12,11 @@ const STATUS_LABELS: Record<OrderStatus, string> = {
     pending: 'Pending', confirmed: 'Confirmed', ready: 'Ready', collected: 'Collected', cancelled: 'Cancelled',
 };
 const STATUS_COLORS: Record<OrderStatus, string> = {
-    pending: 'bg-yellow-900/40 text-yellow-300 border-yellow-700/40',
-    confirmed: 'bg-blue-900/40 text-blue-300 border-blue-700/40',
-    ready: 'bg-emerald-900/40 text-emerald-300 border-emerald-700/40',
-    collected: 'bg-white/10 text-white/50 border-white/20',
-    cancelled: 'bg-red-900/40 text-red-300 border-red-700/40',
+    pending: 'bg-yellow-100/80 text-yellow-800 border-yellow-200',
+    confirmed: 'bg-blue-100/80 text-blue-800 border-blue-200',
+    ready: 'bg-emerald-100/80 text-emerald-800 border-emerald-200',
+    collected: 'bg-black/5 text-black/50 border-black/10',
+    cancelled: 'bg-red-100/80 text-red-800 border-red-200',
 };
 
 export default function AdminPage() {
@@ -45,24 +45,23 @@ export default function AdminPage() {
     const handleLogout = () => { clearAuth(); toast.success('Logged out'); navigate('/admin/login'); };
 
     return (
-        <div className="min-h-screen bg-brand-black flex flex-col">
+        <div className="min-h-screen bg-[#F8F9FA] flex flex-col">
             {/* Admin Navbar */}
-            <header className="bg-brand-dark-gray border-b border-white/10 px-4 py-3 flex items-center justify-between sticky top-0 z-50">
+            <header className="bg-white border-b border-black/10 px-4 py-3 flex items-center justify-between sticky top-0 z-50">
                 <div className="flex items-center gap-3">
-                    <img src="/bull-silhouette.svg" alt="" className="w-7 h-7 opacity-80" aria-hidden="true" />
+                    <img src="/logo-haatzil.jpeg" alt="האציל Logo" className="h-8 object-contain mix-blend-multiply" />
                     <div>
-                        <span className="font-black text-white font-hebrew">האציל</span>
-                        <span className="text-xs text-white/40 mr-2">Admin Dashboard</span>
+                        <span className="text-xs text-[#666] mr-2">Admin Dashboard</span>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
-                    <button onClick={() => setTab('orders')} className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${tab === 'orders' ? 'bg-brand-red text-white' : 'text-white/60 hover:bg-white/10'}`} aria-pressed={tab === 'orders'}>
+                    <button onClick={() => setTab('orders')} className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${tab === 'orders' ? 'bg-brand-red text-white' : 'text-[#555] hover:bg-black/5'}`} aria-pressed={tab === 'orders'}>
                         📦 Orders
                     </button>
-                    <button onClick={() => setTab('items')} className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${tab === 'items' ? 'bg-brand-red text-white' : 'text-white/60 hover:bg-white/10'}`} aria-pressed={tab === 'items'}>
+                    <button onClick={() => setTab('items')} className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${tab === 'items' ? 'bg-brand-red text-white' : 'text-[#555] hover:bg-black/5'}`} aria-pressed={tab === 'items'}>
                         🥩 Items
                     </button>
-                    <button onClick={handleLogout} className="btn-ghost text-sm" aria-label="Logout">Logout</button>
+                    <button onClick={handleLogout} className="btn-ghost border-black/10 hover:border-black/20 text-sm" aria-label="Logout">Logout</button>
                 </div>
             </header>
 
@@ -110,21 +109,21 @@ function OrdersPanel({ search, setSearch, status, setStatus }: {
                     {Object.entries(STATUS_LABELS).map(([s, l]) => <option key={s} value={s}>{l}</option>)}
                 </select>
                 <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" aria-hidden="true" />
-                    <span className="text-xs text-white/40">Live updates</span>
+                    <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" aria-hidden="true" />
+                    <span className="text-xs text-[#666]">Live updates</span>
                 </div>
             </div>
 
             {isLoading ? (
                 <div className="space-y-3">
-                    {Array.from({ length: 5 }).map((_, i) => <div key={i} className="h-20 rounded-xl bg-white/5 animate-pulse" />)}
+                    {Array.from({ length: 5 }).map((_, i) => <div key={i} className="h-20 rounded-xl bg-black/5 animate-pulse" />)}
                 </div>
             ) : !orders?.length ? (
-                <div className="text-center py-20 text-white/40">No orders to display</div>
+                <div className="text-center py-20 text-[#666]">No orders to display</div>
             ) : (
                 <div className="space-y-3" role="list" aria-label="Order list">
                     {orders.map((order: Order) => (
-                        <div key={order.id} role="listitem" className="card p-4 lg:p-5 animate-fade-in">
+                        <div key={order.id} role="listitem" className="card p-4 lg:p-5 animate-fade-in border border-black/5 shadow-sm">
                             <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
                                 <div>
                                     <div className="flex items-center gap-2 mb-0.5">
@@ -133,21 +132,21 @@ function OrdersPanel({ search, setSearch, status, setStatus }: {
                                             {STATUS_LABELS[order.status]}
                                         </span>
                                     </div>
-                                    <p className="font-bold text-white text-lg leading-tight">{order.customer_name}</p>
-                                    <p className="text-white/50 text-sm">{order.customer_phone}</p>
+                                    <p className="font-bold text-[#111] text-lg leading-tight">{order.customer_name}</p>
+                                    <p className="text-[#666] text-sm">{order.customer_phone}</p>
                                 </div>
                                 <div className="text-end">
-                                    <p className="text-white/40 text-xs">{order.slot_date}</p>
-                                    <p className="text-white font-bold text-lg">{order.slot_time?.slice(0, 5)}</p>
+                                    <p className="text-[#666] text-xs font-medium">{order.slot_date}</p>
+                                    <p className="text-[#111] font-bold text-lg">{order.slot_time?.slice(0, 5)}</p>
                                     <p className="text-brand-red font-black text-xl">₪{Number(order.total_nis).toFixed(2)}</p>
                                 </div>
                             </div>
 
                             {/* Order items summary */}
                             {order.items?.filter(Boolean).length > 0 && (
-                                <div className="bg-white/5 rounded-lg p-3 mb-3 text-xs text-white/60 space-y-1">
+                                <div className="bg-[#F8F9FA] rounded-lg p-3 mb-3 text-xs text-[#555] space-y-1">
                                     {order.items.filter(Boolean).map((item) => (
-                                        <div key={item.id} className="flex justify-between">
+                                        <div key={item.id} className="flex justify-between font-medium">
                                             <span>{item.name_en} {item.weight_g ? `(${item.weight_g}g)` : ''} × {item.quantity}</span>
                                             <span>₪{Number(item.subtotal_nis).toFixed(2)}</span>
                                         </div>
@@ -179,10 +178,10 @@ function OrdersPanel({ search, setSearch, status, setStatus }: {
 
 function QuickBtn({ label, onClick, color }: { label: string; onClick: () => void; color: string }) {
     const colors: Record<string, string> = {
-        blue: 'bg-blue-900/30 text-blue-300 border-blue-700/40 hover:bg-blue-800/50',
-        green: 'bg-emerald-900/30 text-emerald-300 border-emerald-700/40 hover:bg-emerald-800/50',
-        gray: 'bg-white/10 text-white/60 border-white/20 hover:bg-white/20',
-        red: 'bg-red-900/30 text-red-300 border-red-700/40 hover:bg-red-800/50',
+        blue: 'bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100',
+        green: 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100',
+        gray: 'bg-[#F8F9FA] text-[#666] border-black/10 hover:bg-black/5',
+        red: 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100',
     };
     return (
         <button onClick={onClick} className={`px-4 py-2 rounded-lg border text-sm font-medium transition-all active:scale-95 min-h-[44px] ${colors[color]}`}>
@@ -232,8 +231,8 @@ function ItemsPanel() {
             <div className="flex flex-wrap items-center gap-3 mb-6">
                 <h2 className="section-title text-xl mb-0">Manage Items</h2>
                 <div className="flex-1" />
-                <button onClick={exportCsv} className="btn-ghost border border-white/10 text-sm py-2">📥 Export CSV</button>
-                <label className="btn-ghost border border-white/10 text-sm py-2 cursor-pointer">
+                <button onClick={exportCsv} className="btn-ghost border border-black/10 hover:border-black/20 text-sm py-2 bg-white">📥 Export CSV</button>
+                <label className="btn-ghost border border-black/10 hover:border-black/20 text-sm py-2 cursor-pointer bg-white">
                     📤 Import CSV
                     <input ref={fileInputRef} type="file" accept=".csv" className="hidden"
                         onChange={async (e) => {
@@ -262,36 +261,36 @@ function ItemsPanel() {
 
             {isLoading ? (
                 <div className="space-y-3">
-                    {Array.from({ length: 6 }).map((_, i) => <div key={i} className="h-16 rounded-xl bg-white/5 animate-pulse" />)}
+                    {Array.from({ length: 6 }).map((_, i) => <div key={i} className="h-16 rounded-xl bg-black/5 animate-pulse" />)}
                 </div>
             ) : (
                 <div className="space-y-2" role="list">
                     {(products ?? []).map((product: Product) => (
-                        <div key={product.id} role="listitem" className={`card p-4 flex flex-wrap items-center gap-3 ${!product.is_available ? 'opacity-60' : ''}`}>
-                            <div className="w-10 h-10 rounded-lg bg-brand-black flex-shrink-0 overflow-hidden">
-                                {product.image_url ? <img src={product.image_url} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-lg" aria-hidden="true">🥩</div>}
+                        <div key={product.id} role="listitem" className={`card p-4 flex flex-wrap items-center gap-3 border border-black/5 shadow-sm ${!product.is_available ? 'opacity-60' : ''}`}>
+                            <div className="w-10 h-10 rounded-lg bg-[#EAEAEA] flex-shrink-0 overflow-hidden border border-black/5">
+                                {product.image_url ? <img src={product.image_url} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-lg text-black/10" aria-hidden="true">🥩</div>}
                             </div>
                             <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2">
-                                    <span className="font-bold text-white truncate">{product.name_en}</span>
-                                    {product.is_kosher && <span className="badge-kosher">✡️</span>}
+                                    <span className="font-bold text-[#111] truncate">{product.name_en}</span>
+                                    {product.is_kosher && <span className="badge-kosher text-[10px] px-1.5 py-0.5">✡️</span>}
                                 </div>
-                                <p className="text-white/40 text-xs">{product.category_name_en} · ₪{product.price_nis} / {product.unit === 'kg' ? 'kg' : 'unit'}</p>
+                                <p className="text-[#666] text-xs font-medium">{product.category_name_en} · ₪{product.price_nis} / {product.unit === 'kg' ? 'kg' : 'unit'}</p>
                             </div>
 
                             {/* Availability toggle */}
                             <button
                                 onClick={() => toggleMutation.mutate({ id: product.id, v: !product.is_available })}
-                                className={`text-xs px-3 py-1.5 rounded-full border font-medium transition-all min-h-[36px] ${product.is_available ? 'bg-emerald-900/30 text-emerald-300 border-emerald-700/40' : 'bg-white/5 text-white/40 border-white/10'}`}
+                                className={`text-xs px-3 py-1.5 rounded-full border font-bold transition-all min-h-[36px] ${product.is_available ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-[#F8F9FA] text-[#888] border-black/10'}`}
                                 aria-label={product.is_available ? 'Disable product' : 'Enable product'}
                             >
                                 {product.is_available ? '✓ Available' : 'Unavailable'}
                             </button>
 
                             <div className="flex gap-2">
-                                <button onClick={() => { setEditing(product); setShowForm(true); }} className="btn-ghost text-sm py-2 px-3 min-h-[44px]" aria-label={`Edit ${product.name_en}`}>✏️</button>
+                                <button onClick={() => { setEditing(product); setShowForm(true); }} className="btn-ghost border border-black/10 hover:border-black/20 text-sm py-2 px-3 min-h-[44px] bg-white" aria-label={`Edit ${product.name_en}`}>✏️</button>
                                 <button onClick={() => { if (confirm(`Delete "${product.name_en}"?`)) deleteMutation.mutate(product.id); }}
-                                    className="text-red-400/60 hover:text-red-400 transition-colors p-2 rounded min-h-[44px] min-w-[44px] flex items-center justify-center"
+                                    className="text-red-600/70 hover:text-red-600 transition-colors p-2 rounded min-h-[44px] min-w-[44px] flex items-center justify-center bg-white border border-black/10"
                                     aria-label={`Delete ${product.name_en}`}>🗑️</button>
                             </div>
                         </div>
@@ -333,17 +332,17 @@ function ProductFormModal({ product, categories, onClose, onSaved }: {
     });
 
     return (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="modal-title">
-            <div className="bg-brand-dark-gray border border-white/20 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6" onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="modal-title">
+            <div className="bg-[#F8F9FA] border border-black/10 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
                 <div className="flex items-center justify-between mb-6">
-                    <h3 id="modal-title" className="text-xl font-bold text-white">{isEdit ? 'Edit Product' : 'New Product'}</h3>
-                    <button onClick={onClose} className="text-white/40 hover:text-white transition-colors text-xl" aria-label="Close">✕</button>
+                    <h3 id="modal-title" className="text-xl font-bold text-[#111]">{isEdit ? 'Edit Product' : 'New Product'}</h3>
+                    <button onClick={onClose} className="text-[#666] hover:text-[#111] transition-colors text-xl" aria-label="Close">✕</button>
                 </div>
 
                 <div className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-white/60 mb-1">Category</label>
-                        <select value={form.category_id} onChange={(e) => setForm((f) => ({ ...f, category_id: Number(e.target.value) }))} className="input">
+                        <label className="block text-sm font-medium text-[#444] mb-1">Category</label>
+                        <select value={form.category_id} onChange={(e) => setForm((f) => ({ ...f, category_id: Number(e.target.value) }))} className="input bg-white border-black/10 text-[#111]">
                             {categories.map((c) => <option key={c.id} value={c.id}>{c.name_en}</option>)}
                         </select>
                     </div>
@@ -352,8 +351,8 @@ function ProductFormModal({ product, categories, onClose, onSaved }: {
                     <FormRow label="Description (Hebrew)" value={form.description_he} onChange={(v) => setForm((f) => ({ ...f, description_he: v }))} textarea />
                     <FormRow label="Price ₪ *" type="number" value={String(form.price_nis)} onChange={(v) => setForm((f) => ({ ...f, price_nis: parseFloat(v) }))} dir="ltr" />
                     <div>
-                        <label className="block text-sm font-medium text-white/60 mb-1">Unit</label>
-                        <select value={form.unit} onChange={(e) => setForm((f) => ({ ...f, unit: e.target.value as 'kg' | 'unit' | 'portion' }))} className="input">
+                        <label className="block text-sm font-medium text-[#444] mb-1">Unit</label>
+                        <select value={form.unit} onChange={(e) => setForm((f) => ({ ...f, unit: e.target.value as 'kg' | 'unit' | 'portion' }))} className="input bg-white border-black/10 text-[#111]">
                             <option value="kg">kg</option><option value="unit">unit</option><option value="portion">portion</option>
                         </select>
                     </div>
@@ -393,7 +392,7 @@ function ProductFormModal({ product, categories, onClose, onSaved }: {
                 </div>
 
                 <div className="flex gap-3 mt-6">
-                    <button onClick={onClose} className="btn-ghost flex-1 justify-center border border-white/10">Cancel</button>
+                    <button onClick={onClose} className="btn-ghost flex-1 justify-center border border-black/10 bg-white">Cancel</button>
                     <button onClick={() => saveMutation.mutate()} disabled={saveMutation.isPending} className="btn-primary flex-1 justify-center">
                         {saveMutation.isPending ? 'Saving…' : 'Save'}
                     </button>
@@ -407,11 +406,11 @@ function FormRow({ label, value, onChange, type = 'text', dir, textarea }: {
     label: string; value: string; onChange: (v: string) => void;
     type?: string; dir?: string; textarea?: boolean;
 }) {
-    const props = { value, onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChange(e.target.value), className: 'input', dir };
+    const props = { value, onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChange(e.target.value), className: 'input bg-white border-black/10 text-[#111]', dir };
     return (
         <div>
-            <label className="block text-sm font-medium text-white/60 mb-1">{label}</label>
-            {textarea ? <textarea {...props} rows={3} className="input resize-none" /> : <input type={type} {...props} />}
+            <label className="block text-sm font-medium text-[#444] mb-1">{label}</label>
+            {textarea ? <textarea {...props} rows={3} className="input bg-white border-black/10 text-[#111] resize-none" /> : <input type={type} {...props} />}
         </div>
     );
 }
@@ -419,12 +418,12 @@ function FormRow({ label, value, onChange, type = 'text', dir, textarea }: {
 function Toggle({ label, checked, onChange }: { label: string; checked: boolean; onChange: (v: boolean) => void }) {
     return (
         <label className="flex items-center gap-2 cursor-pointer">
-            <div className={`w-10 h-6 rounded-full transition-colors ${checked ? 'bg-brand-red' : 'bg-white/20'}`}
+            <div className={`w-10 h-6 rounded-full transition-colors border ${checked ? 'bg-brand-red border-brand-red' : 'bg-[#EAEAEA] border-black/10'}`}
                 onClick={() => onChange(!checked)} role="checkbox" aria-checked={checked} tabIndex={0}
                 onKeyDown={(e) => e.key === ' ' && onChange(!checked)}>
                 <div className={`w-5 h-5 bg-white rounded-full shadow m-0.5 transition-transform ${checked ? 'translate-x-0' : '-translate-x-4'}`} />
             </div>
-            <span className="text-sm text-white/70">{label}</span>
+            <span className="text-sm font-medium text-[#444]">{label}</span>
         </label>
     );
 }

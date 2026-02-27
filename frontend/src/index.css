@@ -15,7 +15,7 @@
   }
 
   body {
-    @apply bg-[#111] text-white antialiased;
+    @apply bg-[#F8F6F2] text-[#111111] antialiased overflow-x-hidden w-full;
     font-family: 'Inter', 'Helvetica Neue', system-ui, sans-serif;
     font-feature-settings: 'kern' 1, 'liga' 1;
   }
@@ -25,17 +25,17 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: #0a0a0a;
+    background: #EAEAEA;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #C8102E;
+    background: #B21B21;
     border-radius: 2px;
   }
 
   /* Focus visible for keyboard nav */
   *:focus-visible {
-    outline: 2px solid #C8102E;
+    outline: 2px solid #B21B21;
     outline-offset: 2px;
   }
 
@@ -59,33 +59,35 @@
 
   /* ── Buttons ── */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#C8102E] text-white font-bold text-xs tracking-[0.12em] uppercase hover:bg-[#a00c24] active:scale-95 transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#B21B21] text-white font-bold text-xs tracking-[0.12em] uppercase hover:bg-[#6B191E] active:scale-95 transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#C8102E] text-[#C8102E] font-bold text-xs tracking-[0.12em] uppercase hover:bg-[#C8102E] hover:text-white active:scale-95 transition-all duration-150;
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#B21B21] text-[#B21B21] font-bold text-xs tracking-[0.12em] uppercase hover:bg-[#B21B21] hover:text-white active:scale-95 transition-all duration-150;
   }
 
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2 text-white/60 font-medium hover:bg-white/10 active:scale-95 transition-all duration-150;
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 text-black/60 font-medium hover:bg-black/5 active:scale-95 transition-all duration-150;
   }
 
   /* ── Cards ── */
   .card {
-    background: #1a1a1a;
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: #FCFAF6;
+    /* slightly lighter than body */
+    border: 1px solid rgba(0, 0, 0, 0.08);
     overflow: hidden;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
   }
 
   .card:hover {
-    border-color: rgba(200, 16, 46, 0.5);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+    border-color: rgba(178, 27, 33, 0.3);
+    /* Accent Red */
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
   }
 
   /* ── Form input ── */
   .input {
-    @apply w-full px-4 py-3 bg-white/5 border border-white/15 text-white placeholder-white/30 focus:outline-none focus:border-[#C8102E] focus:bg-white/[0.08] transition-colors duration-150;
+    @apply w-full px-4 py-3 bg-white border border-black/10 text-black placeholder-black/40 shadow-sm focus:outline-none focus:border-[#C8102E] focus:ring-1 focus:ring-[#C8102E]/20 transition-all duration-150 rounded-md;
   }
 
   /* ── Kosher badge ── */
@@ -107,7 +109,7 @@
     font-weight: 900;
     letter-spacing: -0.02em;
     line-height: 1.05;
-    color: #fff;
+    color: #111;
   }
 
   .section-divider {
@@ -119,33 +121,33 @@
 
   /* ── Category card ── */
   .category-card {
-    background: #1a1a1a;
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: #FDFDFB;
+    border: 1px solid rgba(0, 0, 0, 0.08);
     overflow: hidden;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
   }
 
   .category-card:hover {
-    border-color: #C8102E;
-    box-shadow: 0 0 0 1px rgba(200, 16, 46, 0.3), 0 8px 24px rgba(0, 0, 0, 0.4);
+    border-color: #B21B21;
+    box-shadow: 0 0 0 1px rgba(178, 27, 33, 0.1), 0 8px 16px rgba(0, 0, 0, 0.05);
   }
 
   /* ── Shop card (old style kept for backward compat) ── */
   .shop-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
     transition: border-color 0.2s ease, background 0.2s ease;
   }
 
   .shop-card:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(200, 16, 46, 0.4);
+    background: #FDFBF8;
+    border-color: rgba(178, 27, 33, 0.3);
   }
 
   /* ── WordPress / WooCommerce boxy product card ── */
   .woo-card {
-    background: #161616;
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: #FDFDFB;
+    border: 1px solid rgba(0, 0, 0, 0.08);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -153,12 +155,12 @@
   }
 
   .woo-card:hover {
-    border-color: rgba(200, 16, 46, 0.5);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+    border-color: rgba(200, 16, 46, 0.4);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
   }
 
   .woo-card-body {
-    border-top: 2px solid #C8102E;
+    border-top: 2px solid #B21B21;
   }
 
   .woo-btn-add {
@@ -166,7 +168,7 @@
     align-items: center;
     justify-content: center;
     padding: 6px 14px;
-    background: #C8102E;
+    background: #B21B21;
     color: #fff;
     font-size: 10px;
     font-weight: 700;
@@ -177,7 +179,7 @@
   }
 
   .woo-btn-add:hover {
-    background: #A00C24;
+    background: #6B191E;
   }
 }
 
@@ -213,4 +215,22 @@
   to {
     opacity: 1;
   }
+}
+
+@keyframes pulseWhatsApp {
+  0% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5);
+  }
+
+  70% {
+    box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+  }
+}
+
+.animate-pulse-whatsapp {
+  animation: pulseWhatsApp 2.5s infinite;
 }

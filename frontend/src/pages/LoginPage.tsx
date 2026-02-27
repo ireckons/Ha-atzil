@@ -35,30 +35,40 @@ export default function LoginPage() {
         <div className="relative min-h-screen flex items-center justify-center px-4">
             {/* Background Image with Overlay */}
             <div
-                className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-40"
+                className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-20"
                 style={{ backgroundImage: 'url(/images/premium_cuts.jpg)' }}
             />
-            <div className="absolute inset-0 z-0 bg-brand-black/70" /> {/* Dimming overlay */}
+            <div className="absolute inset-0 z-0 bg-[#F8F9FA]/80" /> {/* Dimming overlay */}
+
+            {/* Skip Button */}
+            <div className="absolute top-4 right-4 z-20">
+                <button
+                    onClick={() => navigate('/')}
+                    className="px-4 py-1.5 bg-black/50 backdrop-blur-md text-white font-bold rounded-full text-xs hover:bg-[#C8102E] transition-colors border border-white/20"
+                >
+                    Skip
+                </button>
+            </div>
 
             {/* Content Container */}
-            <div className="relative z-10 w-full max-w-sm animate-fade-in">
-                {/* Logo */}
-                <div className="text-center mb-8 cursor-pointer" onClick={() => navigate('/')}>
-                    <img src="/bull-silhouette.svg" alt="" className="w-16 h-16 mx-auto mb-4 opacity-80" aria-hidden="true" />
-                    <h1 className="text-3xl font-black text-white font-hebrew">האציל</h1>
-                    <p className="text-white/40 text-sm mt-1">Premium Kosher Meats</p>
+            <div className="relative z-10 w-full max-w-sm animate-fade-in mt-12 bg-white/95 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-black/10 mx-auto">
+                {/* Logo & Intro */}
+                <div className="text-center mb-8">
+                    <img src="/logo-haatzil.jpeg" alt="האציל Logo" className="h-[60px] mx-auto mb-4 object-contain mix-blend-multiply" />
+                    <h1 className="text-2xl font-black text-[#111] tracking-widest uppercase mt-4">Login or Sign up</h1>
+                    <p className="text-[#666] text-xs mt-2 uppercase tracking-wide">Enter your credentials below</p>
                 </div>
 
-                <div className="flex bg-white/5 rounded-t-lg p-1 gap-1 mb-2">
+                <div className="flex bg-[#F8F9FA] rounded-lg p-1 gap-1 mb-6 border border-black/5">
                     <button
                         onClick={() => setIsLogin(true)}
-                        className={`flex-1 py-2 text-sm font-bold rounded-md transition-colors ${isLogin ? 'bg-[#C8102E] text-white' : 'text-white/50 hover:text-white/80'}`}
+                        className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${isLogin ? 'bg-[#C8102E] text-white shadow-lg shadow-[#C8102E]/30' : 'text-[#666] hover:text-[#111]'}`}
                     >
                         Login
                     </button>
                     <button
                         onClick={() => setIsLogin(false)}
-                        className={`flex-1 py-2 text-sm font-bold rounded-md transition-colors ${!isLogin ? 'bg-[#C8102E] text-white' : 'text-white/50 hover:text-white/80'}`}
+                        className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${!isLogin ? 'bg-[#C8102E] text-white shadow-lg shadow-[#C8102E]/30' : 'text-[#666] hover:text-[#111]'}`}
                     >
                         Sign Up
                     </button>
@@ -66,24 +76,20 @@ export default function LoginPage() {
 
                 <form
                     onSubmit={(e) => { e.preventDefault(); mutation.mutate(); }}
-                    className="card p-8 space-y-5 rounded-t-none"
+                    className="space-y-4"
                     aria-labelledby="login-heading"
                 >
-                    <h2 id="login-heading" className="text-xl font-bold text-white">
-                        {isLogin ? 'Welcome Back' : 'Create Account'}
-                    </h2>
 
                     {!isLogin && (
                         <div>
-                            <label htmlFor="user-name" className="block text-sm font-medium text-white/60 mb-1">Full Name</label>
                             <input
                                 id="user-name"
                                 type="text"
                                 required
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                placeholder="John Doe"
-                                className="input"
+                                placeholder="Full Name"
+                                className="w-full bg-[#F8F9FA] border border-black/10 rounded-xl px-4 py-3 text-[#111] placeholder-black/30 focus:border-[#C8102E] focus:ring-1 focus:ring-[#C8102E] outline-none transition-all text-sm"
                                 dir="ltr"
                                 autoComplete="name"
                             />
@@ -91,22 +97,20 @@ export default function LoginPage() {
                     )}
 
                     <div>
-                        <label htmlFor="user-email" className="block text-sm font-medium text-white/60 mb-1">Email</label>
                         <input
                             id="user-email"
                             type="email"
                             required
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            placeholder="you@example.com"
-                            className="input"
+                            placeholder="Email / Mobile Number"
+                            className="w-full bg-[#F8F9FA] border border-black/10 rounded-xl px-4 py-3 text-[#111] placeholder-black/30 focus:border-[#C8102E] focus:ring-1 focus:ring-[#C8102E] outline-none transition-all text-sm"
                             dir="ltr"
                             autoComplete="username"
                         />
                     </div>
 
                     <div>
-                        <label htmlFor="user-password" className="block text-sm font-medium text-white/60 mb-1">Password</label>
                         <div className="relative">
                             <input
                                 id="user-password"
@@ -115,17 +119,15 @@ export default function LoginPage() {
                                 minLength={6}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                placeholder="••••••••"
-                                className="input"
-                                style={{ paddingRight: '2.5rem', textAlign: 'left' }}
+                                placeholder="Password"
+                                className="w-full bg-[#F8F9FA] border border-black/10 rounded-xl px-4 py-3 text-[#111] placeholder-black/30 focus:border-[#C8102E] focus:ring-1 focus:ring-[#C8102E] outline-none transition-all text-sm pr-12"
                                 dir="ltr"
                                 autoComplete={isLogin ? 'current-password' : 'new-password'}
                             />
                             <button
                                 type="button"
                                 onClick={() => setShowPassword((v) => !v)}
-                                className="absolute inset-y-0 flex items-center text-white/40 hover:text-white transition-colors"
-                                style={{ right: '0.75rem' }}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-black/30 hover:text-[#111] transition-colors"
                                 aria-label={showPassword ? 'Hide password' : 'Show password'}
                             >
                                 {showPassword ? (
@@ -140,13 +142,12 @@ export default function LoginPage() {
                                 )}
                             </button>
                         </div>
-                        {!isLogin && <p className="text-white/30 text-[10px] mt-1">Must be at least 6 characters</p>}
                     </div>
 
                     <button
                         type="submit"
                         disabled={mutation.isPending}
-                        className="btn-primary w-full justify-center py-3 mt-2"
+                        className="w-full justify-center py-3 mt-8 bg-[#C8102E] text-white font-black rounded-xl hover:bg-[#A00D24] hover:shadow-lg hover:shadow-[#C8102E]/40 transition-all uppercase tracking-widest text-sm"
                     >
                         {mutation.isPending ? 'Please wait...' : (isLogin ? 'Login' : 'Create Account')}
                     </button>
