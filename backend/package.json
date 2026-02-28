@@ -14,9 +14,7 @@
         "seed": "tsx src/db/seedRunner.ts"
     },
     "dependencies": {
-        "@types/better-sqlite3": "^7.6.13",
         "bcryptjs": "^2.4.3",
-        "better-sqlite3": "^12.6.2",
         "cors": "^2.8.5",
         "csv-parse": "^5.5.6",
         "csv-stringify": "^6.4.6",

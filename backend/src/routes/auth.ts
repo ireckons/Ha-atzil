@@ -30,7 +30,7 @@ router.post('/login', authLimiter, validate(LoginSchema), async (req: Request, r
         const userId = await redis.hget('users:emails', email);
         if (!userId) { res.status(401).json({ error: 'Invalid credentials' }); return; }
 
-        const user = await getEntity<User>('user', userId);
+        const user = await getEntity<User>('user', userId || '');
         if (!user) { res.status(401).json({ error: 'Invalid credentials' }); return; }
 
         const valid = await bcrypt.compare(password, user.password_hash);

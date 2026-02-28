@@ -26,7 +26,11 @@ export async function saveEntity(collection: string, id: string, data: Record<st
   const flatData: Record<string, string> = {};
   for (const [k, v] of Object.entries(data)) {
     if (v !== undefined && v !== null) {
-      flatData[k] = typeof v === 'object' ? JSON.stringify(v) : String(v);
+      if (typeof v === 'object' && !Array.isArray(v)) {
+        flatData[k] = JSON.stringify(v);
+      } else {
+        flatData[k] = String(v);
+      }
     }
   }
   await redis.hset(key, flatData);
