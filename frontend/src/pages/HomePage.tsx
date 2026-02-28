@@ -46,9 +46,17 @@ export default function HomePage() {
 
             {/* ── Big Stat / Counter (Deep Burgundy Section) ──  */}
             <section className="bg-[#6B191E] py-16 px-6">
-                <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 items-center">
-                    {/* Left: Small labels */}
-                    <div className="grid grid-cols-3 gap-6">
+                <div className="max-w-7xl mx-auto grid md:grid-cols-[1.5fr_1fr_1.5fr] gap-10 items-center">
+                    {/* Left: Image block */}
+                    <div className="hidden md:block border max-w-lg mx-auto border-white/20 rounded-sm overflow-hidden shadow-2xl pb-0 w-full">
+                        <img
+                            src="/images/premium_cuts.jpg"
+                            alt="Premium Cuts"
+                            className="w-full h-[350px] object-cover object-center opacity-85 hover:opacity-100 transition-opacity duration-300 contrast-125"
+                        />
+                    </div>
+                    {/* Middle: Small labels */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                         {stats.map(s => (
                             <div key={s.label} className="border-t border-white/20 pt-4">
                                 <div className="text-white text-xs font-bold tracking-[0.2em] uppercase mb-1">{s.label}</div>
@@ -58,11 +66,11 @@ export default function HomePage() {
                     </div>
                     {/* Right: Big editorial number */}
                     <div className="text-right">
-                        <span className="font-black select-none" style={{ fontSize: 'clamp(80px, 14vw, 160px)', lineHeight: 1, color: 'rgba(255,255,255,0.08)' }}>
+                        <span className="font-black select-none" style={{ fontSize: 'clamp(100px, 16vw, 200px)', lineHeight: 0.9, color: 'rgba(255,255,255,0.08)' }}>
                             20+
                         </span>
                         <div className="-mt-8 relative z-10">
-                            <h3 className="text-white font-black" style={{ fontSize: 'clamp(36px, 5vw, 64px)', lineHeight: 1.1 }}>
+                            <h3 className="text-white font-black" style={{ fontSize: 'clamp(32px, 4vw, 56px)', lineHeight: 1.1 }}>
                                 years of
                                 <br />
                                 <span className="text-[#E5193D]">expertise</span>
@@ -121,51 +129,7 @@ export default function HomePage() {
                 </div>
             </section>
 
-            {/* ── Featured Cuts / Product Showcase (Off-White Section) ── */}
-            <section className="bg-[#F8F6F2] py-20 px-6 border-y border-black/5">
-                <div className="max-w-7xl mx-auto">
-                    <div className="mb-12">
-                        <p className="text-[#B21B21] text-xs font-bold tracking-[0.3em] uppercase mb-3">HIGHLIGHTS</p>
-                        <div className="flex items-end justify-between">
-                            <h2 className="text-[#111111] font-black" style={{ fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '-0.02em' }}>
-                                about <span className="text-[#B21B21]">30</span>
-                                <br />varieties
-                            </h2>
-                            <Link to="/catalog" className="hidden md:inline-block text-black/40 text-xs font-bold tracking-[0.2em] uppercase border-b border-black/20 pb-1 hover:text-[#B21B21] hover:border-[#B21B21] transition-colors">
-                                FULL CATALOG →
-                            </Link>
-                        </div>
-                    </div>
 
-                    {/* 3-column floating cuts display */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {featuredCuts.map((cut) => (
-                            <Link key={cut.slug} to={`/catalog/${cut.category}`}
-                                className="group relative bg-[#F8F9FA] border border-black/5 p-6 flex flex-col gap-4 overflow-hidden hover:bg-brand-black/50 transition-colors duration-200 shadow-sm hover:shadow-md">
-                                {/* Floating cut image - no bg box, just the meat */}
-                                <div className="h-[180px] flex items-center justify-center relative">
-                                    <img
-                                        src={cut.img}
-                                        alt={cut.name}
-                                        className="max-h-full object-contain drop-shadow-2xl transition-transform duration-500 group-hover:scale-105 group-hover:-translate-y-1"
-                                        style={{ filter: 'drop-shadow(0 12px 24px rgba(0,0,0,0.6))' }}
-                                    />
-                                </div>
-                                {/* Cut details */}
-                                <div className="border-t border-black/10 pt-4">
-                                    <div className="flex items-start justify-between mb-1">
-                                        <h3 className="text-[#111] font-bold text-[13px] tracking-[0.08em] uppercase">{cut.name}</h3>
-                                        <span className="text-[#C8102E] text-[11px] font-bold tracking-widest uppercase">{cut.category}</span>
-                                    </div>
-                                    <p className="text-[#444] text-[12px] leading-relaxed">{cut.desc}</p>
-                                </div>
-                                {/* Hover indicator */}
-                                <div className="absolute bottom-0 left-0 w-0 group-hover:w-full h-[2px] bg-[#C8102E] transition-all duration-300" />
-                            </Link>
-                        ))}
-                    </div>
-                </div>
-            </section>
 
             {/* ── Why HaAtzil (Deep Burgundy Section) ── */}
             <section className="py-20 px-6 bg-[#6B191E]">
@@ -209,18 +173,43 @@ export default function HomePage() {
                         <h2 className="text-[#111111] font-black" style={{ fontSize: 'clamp(28px, 4vw, 48px)', letterSpacing: '-0.02em' }}>
                             Come visit us
                         </h2>
-                        <p className="text-[#555555] text-sm mt-2 font-medium">Open Sunday–Thursday 8:00–20:00, Friday 8:00–14:00</p>
                     </div>
 
-                    <div className="w-full bg-[#f4f4f4] border border-black/10 rounded-2xl overflow-hidden shadow-lg relative" style={{ paddingBottom: '40%', minHeight: '350px' }}>
-                        <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3350.592395982862!2d35.4957454!3d32.9649557!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x151c313c0b1bbcb5%3A0x6fbcdce057f86641!2sHaPalmach%20St%2077%2C%20Safed!5e0!3m2!1sen!2sil!4v1709425200000!5m2!1sen!2sil"
-                            className="absolute top-0 left-0 w-full h-full border-0 grayscale opacity-90 transition-opacity hover:grayscale-0 hover:opacity-100 duration-500"
-                            allowFullScreen={true}
-                            loading="lazy"
-                            referrerPolicy="no-referrer-when-downgrade"
-                            title="Ha-atzil Store Location"
-                        />
+                    <div className="grid md:grid-cols-[1fr_2fr] gap-8 items-stretch">
+                        {/* Info Column */}
+                        <div className="flex flex-col justify-center bg-white p-8 rounded-2xl shadow-md border border-black/5">
+                            <div className="mb-6">
+                                <h3 className="font-hebrew text-2xl font-black text-[#111]">האציל</h3>
+                                <p className="text-gray-600 mt-2">77 HaPalmach St, Safed</p>
+                            </div>
+                            <div className="mb-8">
+                                <h4 className="font-bold text-sm text-[#B21B21] tracking-widest uppercase mb-2">Hours</h4>
+                                <ul className="text-gray-600 flex flex-col gap-1 text-sm font-medium">
+                                    <li>Sunday–Thursday 8:00–20:00</li>
+                                    <li>Friday 8:00–14:00</li>
+                                </ul>
+                            </div>
+                            <div className="flex flex-col gap-3 mt-auto">
+                                <a href="https://waze.com/ul?q=HaPalmach+77+Safed" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 bg-[#33ccff] hover:bg-[#00bfff] text-white font-bold py-3 rounded-lg transition-colors">
+                                    Navigate with Waze
+                                </a>
+                                <a href="https://maps.google.com/?q=HaPalmach+77+Safed" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold py-3 rounded-lg transition-colors">
+                                    Google Maps
+                                </a>
+                            </div>
+                        </div>
+
+                        {/* Map Column */}
+                        <div className="w-full bg-[#f4f4f4] border border-black/10 rounded-2xl overflow-hidden shadow-lg relative min-h-[350px] md:min-h-[400px]">
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3350.592395982862!2d35.4957454!3d32.9649557!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x151c313c0b1bbcb5%3A0x6fbcdce057f86641!2sHaPalmach%20St%2077%2C%20Safed!5e0!3m2!1sen!2sil!4v1709425200000!5m2!1sen!2sil"
+                                className="absolute top-0 left-0 w-full h-full border-0"
+                                allowFullScreen={true}
+                                loading="lazy"
+                                referrerPolicy="no-referrer-when-downgrade"
+                                title="Ha-atzil Store Location"
+                            />
+                        </div>
                     </div>
                 </div>
             </section>
@@ -259,13 +248,21 @@ export default function HomePage() {
                         </div>
                     </div>
                 </div>
-                <div className="max-w-7xl mx-auto mt-10 pt-6 border-t border-white/5 flex items-center justify-between">
+                <div className="max-w-7xl mx-auto mt-10 pt-6 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
                     <p className="text-white/20 text-[11px]">
                         ©️ {new Date().getFullYear()} האציל – All rights reserved
                     </p>
-                    <Link to="/privacy" className="text-white/20 text-[11px] hover:text-white/50 transition-colors">
-                        Privacy Policy
-                    </Link>
+                    <div className="flex flex-wrap justify-center gap-4">
+                        <Link to="/terms" className="text-white/20 text-[11px] hover:text-white/50 transition-colors">
+                            Terms & Conditions
+                        </Link>
+                        <Link to="/privacy" className="text-white/20 text-[11px] hover:text-white/50 transition-colors">
+                            Privacy Policy
+                        </Link>
+                        <Link to="/accessibility" className="text-white/20 text-[11px] hover:text-white/50 transition-colors">
+                            Accessibility
+                        </Link>
+                    </div>
                 </div>
             </footer>
         </div>

@@ -1,6 +1,6 @@
 import { Router, Response } from 'express';
 import { z } from 'zod';
-import { query } from '../db/client';
+import { getAllEntities, getEntity, saveEntity, deleteEntity, uuidv4, redis } from '../db/client';
 import { authenticateJWT, requireAdmin, AuthRequest } from '../middleware/auth';
 import { validate } from '../middleware/validate';
 import { broadcastEvent } from '../services/sse';
@@ -26,25 +26,48 @@ const ProductSchema = z.object({
     image_url: z.string().optional(),
 });
 
+type Category = { id: number; slug: string; name_he: string; name_en: string; sort_order: number };
+type Product = z.infer<typeof ProductSchema> & { id: string; created_at: string; updated_at: string };
+
+// Helper to get category details
+async function getCategoryData() {
+    const cats = await getAllEntities<Category>('category');
+    const catMap = new Map<number, Category>();
+    cats.forEach(c => catMap.set(Number(c.id), c));
+    return { cats, catMap };
+}
+
 // GET /api/products
 router.get('/', async (req, res) => {
     try {
         const { category, available } = req.query;
-        let sql = `
-      SELECT p.*, c.name_he AS category_name_he, c.name_en AS category_name_en, c.slug AS category_slug
-      FROM products p
-      JOIN categories c ON p.category_id = c.id
-      WHERE 1=1
-    `;
-        const params: unknown[] = [];
+        const products = await getAllEntities<Product>('product');
+        const { catMap } = await getCategoryData();
+
+        let filtered = products.map(p => {
+            const c = catMap.get(Number(p.category_id));
+            return {
+                ...p,
+                category_name_he: c?.name_he || '',
+                category_name_en: c?.name_en || '',
+                category_slug: c?.slug || '',
+                category_sort_order: c?.sort_order || 999
+            };
+        });
+
         if (category) {
-            params.push(category);
-            sql += ` AND c.slug = $${params.length}`;
+            filtered = filtered.filter(p => p.category_slug === String(category));
         }
-        if (available === 'true') sql += ' AND p.is_available = true';
-        sql += ' ORDER BY c.sort_order, p.name_he';
-        const result = await query(sql, params);
-        res.json(result.rows);
+        if (available === 'true') {
+            filtered = filtered.filter(p => p.is_available === true);
+        }
+
+        filtered.sort((a, b) => {
+            if (a.category_sort_order !== b.category_sort_order) return a.category_sort_order - b.category_sort_order;
+            return a.name_he.localeCompare(b.name_he, 'he');
+        });
+
+        res.json(filtered);
     } catch (err) {
         console.error('[Products] GET error:', err);
         res.status(500).json({ error: 'Internal server error' });
@@ -54,13 +77,16 @@ router.get('/', async (req, res) => {
 // GET /api/products/:id
 router.get('/:id', async (req, res) => {
     try {
-        const result = await query(
-            `SELECT p.*, c.name_he AS category_name_he, c.name_en AS category_name_en, c.slug AS category_slug
-       FROM products p JOIN categories c ON p.category_id = c.id WHERE p.id = $1`,
-            [req.params.id]
-        );
-        if (!result.rows[0]) { res.status(404).json({ error: 'Product not found' }); return; }
-        res.json(result.rows[0]);
+        const product = await getEntity<Product>('product', req.params.id);
+        if (!product) { res.status(404).json({ error: 'Product not found' }); return; }
+
+        const c = await getEntity<Category>('category', String(product.category_id));
+        res.json({
+            ...product,
+            category_name_he: c?.name_he || '',
+            category_name_en: c?.name_en || '',
+            category_slug: c?.slug || ''
+        });
     } catch {
         res.status(500).json({ error: 'Internal server error' });
     }
@@ -70,18 +96,15 @@ router.get('/:id', async (req, res) => {
 router.post('/', authenticateJWT, requireAdmin, validate(ProductSchema), async (req: AuthRequest, res: Response) => {
     const b = req.body;
     try {
-        const result = await query(
-            `INSERT INTO products (category_id,name_he,name_en,description_he,description_en,price_nis,weight_options,unit,is_available,is_kosher,kosher_cert_text,image_url)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING *`,
-            [b.category_id, b.name_he, b.name_en, b.description_he, b.description_en, b.price_nis, JSON.stringify(b.weight_options), b.unit, b.is_available, b.is_kosher, b.kosher_cert_text, b.image_url]
-        );
-        const product = result.rows[0];
-        await query(
-            "INSERT INTO audit_log (entity_type,entity_id,action,new_value,performed_by) VALUES ('product',$1,'create',$2,$3)",
-            [product.id, JSON.stringify(product), req.userId]
-        );
-        broadcastEvent('product_created', product);
-        res.status(201).json(product);
+        const id = uuidv4();
+        const now = new Date().toISOString();
+        const newProduct: Product = { ...b, id, created_at: now, updated_at: now };
+
+        await saveEntity('product', id, newProduct);
+        await redis.lpush(`audit_log:product:${id}`, JSON.stringify({ action: 'create', new_value: newProduct, performed_by: req.userId, date: now }));
+
+        broadcastEvent('product_created', newProduct);
+        res.status(201).json(newProduct);
     } catch (err) {
         console.error('[Products] POST error:', err);
         res.status(500).json({ error: 'Internal server error' });
@@ -92,25 +115,14 @@ router.post('/', authenticateJWT, requireAdmin, validate(ProductSchema), async (
 router.put('/:id', authenticateJWT, requireAdmin, validate(ProductSchema.partial()), async (req: AuthRequest, res: Response) => {
     const b = req.body;
     try {
-        const existing = await query('SELECT * FROM products WHERE id=$1', [req.params.id]);
-        if (!existing.rows[0]) { res.status(404).json({ error: 'Not found' }); return; }
-        const result = await query(
-            `UPDATE products SET
-        category_id=COALESCE($1,category_id), name_he=COALESCE($2,name_he), name_en=COALESCE($3,name_en),
-        description_he=COALESCE($4,description_he), description_en=COALESCE($5,description_en),
-        price_nis=COALESCE($6,price_nis), weight_options=COALESCE($7::jsonb,weight_options),
-        unit=COALESCE($8,unit), is_available=COALESCE($9,is_available), is_kosher=COALESCE($10,is_kosher),
-        kosher_cert_text=COALESCE($11,kosher_cert_text), image_url=COALESCE($12,image_url)
-       WHERE id=$13 RETURNING *`,
-            [b.category_id, b.name_he, b.name_en, b.description_he, b.description_en, b.price_nis,
-            b.weight_options ? JSON.stringify(b.weight_options) : null,
-            b.unit, b.is_available, b.is_kosher, b.kosher_cert_text, b.image_url, req.params.id]
-        );
-        const updated = result.rows[0];
-        await query(
-            "INSERT INTO audit_log (entity_type,entity_id,action,old_value,new_value,performed_by) VALUES ('product',$1,'update',$2,$3,$4)",
-            [updated.id, JSON.stringify(existing.rows[0]), JSON.stringify(updated), req.userId]
-        );
+        const existing = await getEntity<Product>('product', req.params.id);
+        if (!existing) { res.status(404).json({ error: 'Not found' }); return; }
+
+        const updated = { ...existing, ...b, updated_at: new Date().toISOString() };
+        await saveEntity('product', req.params.id, updated);
+
+        await redis.lpush(`audit_log:product:${req.params.id}`, JSON.stringify({ action: 'update', old_value: existing, new_value: updated, performed_by: req.userId, date: updated.updated_at }));
+
         broadcastEvent('product_updated', updated);
         res.json(updated);
     } catch (err) {
@@ -122,13 +134,12 @@ router.put('/:id', authenticateJWT, requireAdmin, validate(ProductSchema.partial
 // DELETE /api/products/:id (admin)
 router.delete('/:id', authenticateJWT, requireAdmin, async (req: AuthRequest, res: Response) => {
     try {
-        const existing = await query('SELECT * FROM products WHERE id=$1', [req.params.id]);
-        if (!existing.rows[0]) { res.status(404).json({ error: 'Not found' }); return; }
-        await query('DELETE FROM products WHERE id=$1', [req.params.id]);
-        await query(
-            "INSERT INTO audit_log (entity_type,entity_id,action,old_value,performed_by) VALUES ('product',$1,'delete',$2,$3)",
-            [req.params.id, JSON.stringify(existing.rows[0]), req.userId]
-        );
+        const existing = await getEntity<Product>('product', req.params.id);
+        if (!existing) { res.status(404).json({ error: 'Not found' }); return; }
+
+        await deleteEntity('product', req.params.id);
+        await redis.lpush(`audit_log:product:${req.params.id}`, JSON.stringify({ action: 'delete', old_value: existing, performed_by: req.userId, date: new Date().toISOString() }));
+
         broadcastEvent('product_deleted', { id: req.params.id });
         res.json({ message: 'Deleted' });
     } catch { res.status(500).json({ error: 'Internal server error' }); }
@@ -138,21 +149,24 @@ router.delete('/:id', authenticateJWT, requireAdmin, async (req: AuthRequest, re
 router.patch('/:id/availability', authenticateJWT, requireAdmin, async (req: AuthRequest, res: Response) => {
     const { is_available } = req.body;
     try {
-        const result = await query(
-            'UPDATE products SET is_available=$1 WHERE id=$2 RETURNING *',
-            [is_available, req.params.id]
-        );
-        if (!result.rows[0]) { res.status(404).json({ error: 'Not found' }); return; }
-        broadcastEvent('product_availability_changed', result.rows[0]);
-        res.json(result.rows[0]);
+        const existing = await getEntity<Product>('product', req.params.id);
+        if (!existing) { res.status(404).json({ error: 'Not found' }); return; }
+
+        const updated = { ...existing, is_available: Boolean(is_available), updated_at: new Date().toISOString() };
+        await saveEntity('product', req.params.id, updated);
+
+        broadcastEvent('product_availability_changed', updated);
+        res.json(updated);
     } catch { res.status(500).json({ error: 'Internal server error' }); }
 });
 
 // GET /api/products/export/csv (admin)
 router.get('/export/csv', authenticateJWT, requireAdmin, async (_req, res: Response) => {
     try {
-        const result = await query('SELECT * FROM products ORDER BY name_he');
-        const csv = stringify(result.rows, { header: true });
+        const products = await getAllEntities<Product>('product');
+        products.sort((a, b) => a.name_he.localeCompare(b.name_he, 'he'));
+
+        const csv = stringify(products, { header: true });
         res.setHeader('Content-Type', 'text/csv');
         res.setHeader('Content-Disposition', 'attachment; filename="products.csv"');
         res.send(csv);
@@ -165,15 +179,26 @@ router.post('/import/csv', authenticateJWT, requireAdmin, upload.single('file'),
     try {
         const records = parse(req.file.buffer, { columns: true, skip_empty_lines: true }) as Record<string, string>[];
         let imported = 0;
+        const now = new Date().toISOString();
         for (const row of records) {
-            await query(
-                `INSERT INTO products (category_id,name_he,name_en,description_he,description_en,price_nis,unit,is_available,is_kosher,kosher_cert_text)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
-         ON CONFLICT DO NOTHING`,
-                [row.category_id, row.name_he, row.name_en, row.description_he, row.description_en,
-                parseFloat(row.price_nis), row.unit ?? 'kg', row.is_available !== 'false',
-                row.is_kosher !== 'false', row.kosher_cert_text]
-            );
+            const id = uuidv4();
+            const product: Product = {
+                id,
+                category_id: Number(row.category_id),
+                name_he: row.name_he,
+                name_en: row.name_en,
+                description_he: row.description_he,
+                description_en: row.description_en,
+                price_nis: parseFloat(row.price_nis),
+                weight_options: [],
+                unit: (row.unit || 'kg') as 'kg' | 'unit' | 'portion',
+                is_available: row.is_available !== 'false',
+                is_kosher: row.is_kosher !== 'false',
+                kosher_cert_text: row.kosher_cert_text,
+                created_at: now,
+                updated_at: now
+            };
+            await saveEntity('product', id, product);
             imported++;
         }
         res.json({ imported });
@@ -186,8 +211,9 @@ router.post('/import/csv', authenticateJWT, requireAdmin, upload.single('file'),
 // GET /api/categories
 router.get('/categories/all', async (_req, res) => {
     try {
-        const result = await query('SELECT * FROM categories ORDER BY sort_order');
-        res.json(result.rows);
+        const cats = await getAllEntities<Category>('category');
+        cats.sort((a, b) => Number(a.sort_order) - Number(b.sort_order));
+        res.json(cats);
     } catch { res.status(500).json({ error: 'Internal server error' }); }
 });
 

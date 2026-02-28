@@ -4,17 +4,21 @@ import type { Product } from '../api/client';
 
 const mockProduct: Product = {
     id: 'prod-001',
-    category_id: 1,
+    category_id: '1',
     category_name_he: 'בקר',
     category_name_en: 'Beef',
     category_slug: 'beef',
     name_he: 'אנטריקוט',
     name_en: 'Ribeye',
+    description_he: '',
+    description_en: '',
     price_nis: 189,
     weight_options: [{ label: '500g', grams: 500 }],
     unit: 'kg',
     is_available: true,
     is_kosher: true,
+    kosher_cert_text: '',
+    image_url: '',
 };
 
 describe('Cart Store', () => {

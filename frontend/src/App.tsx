@@ -12,6 +12,8 @@ const CartPage = lazy(() => import('./pages/CartPage'));
 const CheckoutPage = lazy(() => import('./pages/CheckoutPage'));
 const ConfirmationPage = lazy(() => import('./pages/ConfirmationPage'));
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
+const TermsPage = lazy(() => import('./pages/TermsPage'));
+const AccessibilityPage = lazy(() => import('./pages/AccessibilityPage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const AdminPage = lazy(() => import('./pages/AdminPage'));
 
@@ -65,6 +67,8 @@ export default function App() {
                                         <Route path="/checkout" element={<CheckoutPage />} />
                                         <Route path="/confirmation" element={<ConfirmationPage />} />
                                         <Route path="/privacy" element={<PrivacyPage />} />
+                                        <Route path="/terms" element={<TermsPage />} />
+                                        <Route path="/accessibility" element={<AccessibilityPage />} />
                                         <Route path="*" element={<Navigate to="/" replace />} />
                                     </Routes>
                                 </main>

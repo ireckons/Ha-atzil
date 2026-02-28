@@ -32,9 +32,6 @@ export default function ProductCard({ product }: Props) {
 
                 {/* Badges – top left */}
                 <div className="absolute top-3 left-3 flex flex-col gap-1.5">
-                    {product.is_kosher && (
-                        <span className="badge-kosher text-[10px] px-2 py-0.5">✡️ Kosher</span>
-                    )}
                     {!product.is_available && (
                         <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-semibold bg-white/90 text-black/70 rounded border border-black/10">
                             Out of stock

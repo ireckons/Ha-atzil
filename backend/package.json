@@ -11,7 +11,6 @@
         "test": "jest --runInBand",
         "lint": "eslint src --ext .ts",
         "typecheck": "tsc --noEmit",
-        "migrate": "tsx src/db/migrate.ts",
         "seed": "tsx src/db/seedRunner.ts"
     },
     "dependencies": {
@@ -28,7 +27,6 @@
         "jsonwebtoken": "^9.0.2",
         "multer": "^1.4.5-lts.1",
         "nodemailer": "^6.9.16",
-        "pg": "^8.13.3",
         "uuid": "^13.0.0",
         "zod": "^3.23.8"
     },
@@ -42,7 +40,6 @@
         "@types/multer": "^1.4.12",
         "@types/node": "^20.17.19",
         "@types/nodemailer": "^6.4.17",
-        "@types/pg": "^8.11.11",
         "@types/supertest": "^6.0.2",
         "@types/uuid": "^10.0.0",
         "@typescript-eslint/eslint-plugin": "^7.18.0",

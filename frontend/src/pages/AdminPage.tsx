@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import { productApi, orderApi, type Product, type Order, type Category } from '../api/client';
 import { useAuthStore } from '../store/authStore';
 
-type AdminTab = 'orders' | 'items';
+type AdminTab = 'orders' | 'history' | 'items';
 type OrderStatus = 'pending' | 'confirmed' | 'ready' | 'collected' | 'cancelled';
 
 const STATUS_LABELS: Record<OrderStatus, string> = {
@@ -56,7 +56,10 @@ export default function AdminPage() {
                 </div>
                 <div className="flex items-center gap-2">
                     <button onClick={() => setTab('orders')} className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${tab === 'orders' ? 'bg-brand-red text-white' : 'text-[#555] hover:bg-black/5'}`} aria-pressed={tab === 'orders'}>
-                        📦 Orders
+                        📦 Active Orders
+                    </button>
+                    <button onClick={() => setTab('history')} className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${tab === 'history' ? 'bg-brand-red text-white' : 'text-[#555] hover:bg-black/5'}`} aria-pressed={tab === 'history'}>
+                        🕒 Order History
                     </button>
                     <button onClick={() => setTab('items')} className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${tab === 'items' ? 'bg-brand-red text-white' : 'text-[#555] hover:bg-black/5'}`} aria-pressed={tab === 'items'}>
                         🥩 Items
@@ -67,7 +70,10 @@ export default function AdminPage() {
 
             <main className="flex-1 p-4 lg:p-6 overflow-auto">
                 {tab === 'orders' && (
-                    <OrdersPanel search={orderSearch} setSearch={setOrderSearch} status={orderStatus} setStatus={setOrderStatus} />
+                    <OrdersPanel mode="active" search={orderSearch} setSearch={setOrderSearch} status={orderStatus} setStatus={setOrderStatus} />
+                )}
+                {tab === 'history' && (
+                    <OrdersPanel mode="history" search={orderSearch} setSearch={setOrderSearch} status={orderStatus} setStatus={setOrderStatus} />
                 )}
                 {tab === 'items' && <ItemsPanel />}
             </main>
@@ -78,15 +84,21 @@ export default function AdminPage() {
 // ─────────────────────────────────────
 // Orders Panel
 // ─────────────────────────────────────
-function OrdersPanel({ search, setSearch, status, setStatus }: {
+function OrdersPanel({ mode, search, setSearch, status, setStatus }: {
+    mode: 'active' | 'history';
     search: string; setSearch: (v: string) => void;
     status: string; setStatus: (v: string) => void;
 }) {
     const qc = useQueryClient();
-    const { data: orders, isLoading } = useQuery({
+    const { data: rawOrders, isLoading } = useQuery({
         queryKey: ['admin-orders', search, status],
         queryFn: () => orderApi.list({ search: search || undefined, status: status || undefined }),
         refetchInterval: 15000,
+    });
+
+    const orders = (rawOrders || []).filter((o: Order) => {
+        if (mode === 'active') return ['pending', 'confirmed', 'ready'].includes(o.status);
+        return ['collected', 'cancelled'].includes(o.status);
     });
 
     const statusMutation = useMutation({
@@ -98,7 +110,7 @@ function OrdersPanel({ search, setSearch, status, setStatus }: {
     return (
         <div>
             <div className="flex flex-wrap items-center gap-3 mb-6">
-                <h2 className="section-title text-xl mb-0">Orders</h2>
+                <h2 className="section-title text-xl mb-0">{mode === 'active' ? 'Active Orders' : 'Order History'}</h2>
                 <div className="flex-1 relative min-w-[200px]">
                     <input type="search" placeholder="Search by name or phone…" value={search} onChange={(e) => setSearch(e.target.value)}
                         className="input py-2 pr-4 text-sm w-full" aria-label="Search orders" />
@@ -273,7 +285,6 @@ function ItemsPanel() {
                             <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2">
                                     <span className="font-bold text-[#111] truncate">{product.name_en}</span>
-                                    {product.is_kosher && <span className="badge-kosher text-[10px] px-1.5 py-0.5">✡️</span>}
                                 </div>
                                 <p className="text-[#666] text-xs font-medium">{product.category_name_en} · ₪{product.price_nis} / {product.unit === 'kg' ? 'kg' : 'unit'}</p>
                             </div>
@@ -310,7 +321,7 @@ function ProductFormModal({ product, categories, onClose, onSaved }: {
 }) {
     const isEdit = !!product;
     const [form, setForm] = useState({
-        category_id: product?.category_id ?? categories[0]?.id ?? 1,
+        category_id: product?.category_id ?? String(categories[0]?.id ?? '1'),
         name_he: product?.name_he ?? '',
         name_en: product?.name_en ?? '',
         description_he: product?.description_he ?? '',
@@ -342,7 +353,7 @@ function ProductFormModal({ product, categories, onClose, onSaved }: {
                 <div className="space-y-4">
                     <div>
                         <label className="block text-sm font-medium text-[#444] mb-1">Category</label>
-                        <select value={form.category_id} onChange={(e) => setForm((f) => ({ ...f, category_id: Number(e.target.value) }))} className="input bg-white border-black/10 text-[#111]">
+                        <select value={form.category_id} onChange={(e) => setForm((f) => ({ ...f, category_id: e.target.value }))} className="input bg-white border-black/10 text-[#111]">
                             {categories.map((c) => <option key={c.id} value={c.id}>{c.name_en}</option>)}
                         </select>
                     </div>
@@ -387,7 +398,6 @@ function ProductFormModal({ product, categories, onClose, onSaved }: {
                     <FormRow label="Kosher Certificate" value={form.kosher_cert_text} onChange={(v) => setForm((f) => ({ ...f, kosher_cert_text: v }))} />
                     <div className="flex gap-6">
                         <Toggle label="Available" checked={form.is_available} onChange={(v) => setForm((f) => ({ ...f, is_available: v }))} />
-                        <Toggle label="Kosher" checked={form.is_kosher} onChange={(v) => setForm((f) => ({ ...f, is_kosher: v }))} />
                     </div>
                 </div>
 

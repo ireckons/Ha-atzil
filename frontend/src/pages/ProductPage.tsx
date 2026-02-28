@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
@@ -16,6 +16,16 @@ export default function ProductPage() {
         queryFn: () => productApi.get(id!),
         enabled: !!id,
     });
+
+
+    useEffect(() => {
+        if (product && !selectedWeight) {
+            const weightOptions = Array.isArray(product.weight_options) ? product.weight_options : (typeof product.weight_options === 'string' ? JSON.parse(product.weight_options || '[]') : []);
+            if (weightOptions.length > 0) {
+                setSelectedWeight(weightOptions[0]);
+            }
+        }
+    }, [product, selectedWeight]);
 
     if (isLoading) return (
         <div className="min-h-screen bg-transparent flex items-center justify-center">
@@ -84,18 +94,18 @@ export default function ProductPage() {
 
                     {/* Details */}
                     <div className="flex flex-col">
-                        <div className="flex items-start gap-3 mb-2">
-                            {product.is_kosher && <span className="badge-kosher mt-1">✡️ Kosher</span>}
-                            <span className="text-[#666] text-sm font-semibold">{product.category_name_en}</span>
+                        <div className="flex flex-wrap gap-2 text-xs font-bold font-sans mt-2">
+                            {product.is_available ? (
+                                <span className="bg-[#1e4620] text-[#a5d6a7] px-2 py-0.5 rounded border border-[#a5d6a7]/20 uppercase tracking-wider">
+                                    In Stock
+                                </span>
+                            ) : (
+                                <span className="bg-[#461e1e] text-[#d6a5a5] px-2 py-0.5 rounded border border-[#d6a5a5]/20 uppercase tracking-wider">
+                                    Out of Stock
+                                </span>
+                            )}
                         </div>
-
                         <h1 className="text-4xl font-black text-[#111] mb-2">{product.name_en}</h1>
-
-                        {product.kosher_cert_text && (
-                            <p className="text-xs text-emerald-800 mb-4 p-2 rounded bg-emerald-100/50 border border-emerald-200">
-                                🏷️ {product.kosher_cert_text}
-                            </p>
-                        )}
 
                         {product.description_en && (
                             <p className="text-[#444] text-base leading-relaxed mb-6">{product.description_en}</p>

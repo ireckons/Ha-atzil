@@ -1,17 +1,17 @@
 import type { Product, Category } from '../api/client';
 
 export const LOCAL_CATEGORIES: Category[] = [
-    { id: 1, slug: 'beef', name_he: 'בקר', name_en: 'Beef', sort_order: 1 },
-    { id: 2, slug: 'lamb', name_he: 'כבש וטלה', name_en: 'Lamb', sort_order: 2 },
-    { id: 3, slug: 'poultry', name_he: 'עוף והודו', name_en: 'Poultry', sort_order: 3 },
-    { id: 4, slug: 'prepared', name_he: 'מוכן לבישול', name_en: 'Prepared Foods', sort_order: 4 },
-    { id: 5, slug: 'kosher-special', name_he: 'מיוחדי כשרות', name_en: 'Kosher Specials', sort_order: 5 },
+    { id: '1', slug: 'beef', name_he: 'בקר', name_en: 'Beef', sort_order: 1 },
+    { id: '2', slug: 'lamb', name_he: 'כבש וטלה', name_en: 'Lamb', sort_order: 2 },
+    { id: '3', slug: 'poultry', name_he: 'עוף והודו', name_en: 'Poultry', sort_order: 3 },
+    { id: '4', slug: 'prepared', name_he: 'מוכן לבישול', name_en: 'Prepared Foods', sort_order: 4 },
+    { id: '5', slug: 'kosher-special', name_he: 'מיוחדי כשרות', name_en: 'Kosher Specials', sort_order: 5 },
 ];
 
 export const LOCAL_PRODUCTS: Product[] = [
     // ── BEEF ──────────────────────────────────────────────────────
     {
-        id: 'beef-01', category_id: 1, category_name_he: 'בקר', category_name_en: 'Beef', category_slug: 'beef',
+        id: 'beef-01', category_id: '1', category_name_he: 'בקר', category_name_en: 'Beef', category_slug: 'beef',
         name_he: 'אנטריקוט טרי', name_en: 'Ribeye Steak',
         description_he: 'נתח פרמיום מהצלעות, עם שיוש מעולה ותוצאה אידיאלית על הגריל.',
         description_en: 'Premium ribeye cut, beautifully marbled, ideal for grilling.',
@@ -20,7 +20,7 @@ export const LOCAL_PRODUCTS: Product[] = [
         image_url: '/images/products/beef/ribeye.jpg',
     },
     {
-        id: 'beef-02', category_id: 1, category_name_he: 'בקר', category_name_en: 'Beef', category_slug: 'beef',
+        id: 'beef-02', category_id: '1', category_name_he: 'בקר', category_name_en: 'Beef', category_slug: 'beef',
         name_he: 'פילה בקר מובחר', name_en: 'Beef Tenderloin',
         description_he: 'הנתח הרך ביותר – מושלם לצלייה מהירה ולסטייק בשיטת sous vide.',
         description_en: 'The most tender cut – perfect for quick searing or sous vide.',
@@ -29,7 +29,7 @@ export const LOCAL_PRODUCTS: Product[] = [
         image_url: '/images/products/beef/tenderloin.jpg',
     },
     {
-        id: 'beef-03', category_id: 1, category_name_he: 'בקר', category_name_en: 'Beef', category_slug: 'beef',
+        id: 'beef-03', category_id: '1', category_name_he: 'בקר', category_name_en: 'Beef', category_slug: 'beef',
         name_he: 'צלי כתף בקר', name_en: 'Chuck Roast',
         description_he: 'נתח כתף שמנמן, מומלץ לבישול ממושך בתנור או בסיר לחץ.',
         description_en: 'Fatty shoulder roast, ideal for slow cooking or pressure pot.',
@@ -38,7 +38,7 @@ export const LOCAL_PRODUCTS: Product[] = [
         image_url: '/images/products/beef/chuck_roast.jpg',
     },
     {
-        id: 'beef-04', category_id: 1, category_name_he: 'בקר', category_name_en: 'Beef', category_slug: 'beef',
+        id: 'beef-04', category_id: '1', category_name_he: 'בקר', category_name_en: 'Beef', category_slug: 'beef',
         name_he: 'שפיץ צ״אק', name_en: 'Chuck Eye Roll',
         description_he: 'נתח טוסס עם טעם עשיר – מעולה לסטייק ולבישול ארוך.',
         description_en: 'Flavourful chuck eye roll – great as steak or slow cooked.',
@@ -47,7 +47,7 @@ export const LOCAL_PRODUCTS: Product[] = [
         image_url: '/images/products/beef/chuck_eye.jpg',
     },
     {
-        id: 'beef-05', category_id: 1, category_name_he: 'בקר', category_name_en: 'Beef', category_slug: 'beef',
+        id: 'beef-05', category_id: '1', category_name_he: 'בקר', category_name_en: 'Beef', category_slug: 'beef',
         name_he: 'כבד בקר טרי', name_en: 'Fresh Beef Liver',
         description_he: 'כבד בקר טרי ואיכותי – עשיר בברזל ונוטריאנטים חיוניים.',
         description_en: 'Fresh quality beef liver – rich in iron and essential nutrients.',
@@ -57,7 +57,7 @@ export const LOCAL_PRODUCTS: Product[] = [
     },
     // ── LAMB ──────────────────────────────────────────────────────
     {
-        id: 'lamb-01', category_id: 2, category_name_he: 'כבש וטלה', category_name_en: 'Lamb', category_slug: 'lamb',
+        id: 'lamb-01', category_id: '2', category_name_he: 'כבש וטלה', category_name_en: 'Lamb', category_slug: 'lamb',
         name_he: 'צלעות כבש', name_en: 'Lamb Chops',
         description_he: 'צלעות כבש עסיסיות, מתובלות בתבלינים טריים מהבית.',
         description_en: 'Juicy lamb chops, seasoned with fresh Mediterranean spices.',
@@ -66,7 +66,7 @@ export const LOCAL_PRODUCTS: Product[] = [
         image_url: '/images/products/lamb/lamb_chops.jpg',
     },
     {
-        id: 'lamb-02', category_id: 2, category_name_he: 'כבש וטלה', category_name_en: 'Lamb', category_slug: 'lamb',
+        id: 'lamb-02', category_id: '2', category_name_he: 'כבש וטלה', category_name_en: 'Lamb', category_slug: 'lamb',
         name_he: 'קבב טלה', name_en: 'Lamb Kebab',
         description_he: 'קבב טלה הכן לצלייה – על שיפוד, פאטה ותבלינים מיוחדים.',
         description_en: 'Ready-to-grill lamb kebab with special spice blend on skewers.',
@@ -75,7 +75,7 @@ export const LOCAL_PRODUCTS: Product[] = [
         image_url: '/images/products/lamb/lamb_kebab.jpg',
     },
     {
-        id: 'lamb-03', category_id: 2, category_name_he: 'כבש וטלה', category_name_en: 'Lamb', category_slug: 'lamb',
+        id: 'lamb-03', category_id: '2', category_name_he: 'כבש וטלה', category_name_en: 'Lamb', category_slug: 'lamb',
         name_he: 'כתף טלה שלמה', name_en: 'Whole Lamb Shoulder',
         description_he: 'כתף טלה שלמה – מומלצת לצלייה איטית בתנור, עסיסית ומפנקת.',
         description_en: 'Whole lamb shoulder – slow roast for a rich and tender result.',
@@ -84,7 +84,7 @@ export const LOCAL_PRODUCTS: Product[] = [
         image_url: '/images/products/lamb/lamb_shoulder.jpg',
     },
     {
-        id: 'lamb-04', category_id: 2, category_name_he: 'כבש וטלה', category_name_en: 'Lamb', category_slug: 'lamb',
+        id: 'lamb-04', category_id: '2', category_name_he: 'כבש וטלה', category_name_en: 'Lamb', category_slug: 'lamb',
         name_he: 'שוק כבש', name_en: 'Lamb Leg',
         description_he: 'שוק כבש מהרבה ראשונה – מושלם לאוכל חגיגי בשבת.',
         description_en: 'First-grade lamb leg – perfect for a festive Shabbat meal.',
@@ -94,7 +94,7 @@ export const LOCAL_PRODUCTS: Product[] = [
     },
     // ── POULTRY ───────────────────────────────────────────────────
     {
-        id: 'poultry-01', category_id: 3, category_name_he: 'עוף והודו', category_name_en: 'Poultry', category_slug: 'poultry',
+        id: 'poultry-01', category_id: '3', category_name_he: 'עוף והודו', category_name_en: 'Poultry', category_slug: 'poultry',
         name_he: 'שניצל עוף', name_en: 'Chicken Schnitzel',
         description_he: 'פרגיות עוף פרוסות ומוכנות לשניצל – רכות ועסיסיות לבישול ביתי.',
         description_en: 'Sliced chicken breasts ready for schnitzel – tender and juicy.',
@@ -103,7 +103,7 @@ export const LOCAL_PRODUCTS: Product[] = [
         image_url: '/images/products/poultry/chicken_schnitzel.jpg',
     },
     {
-        id: 'poultry-02', category_id: 3, category_name_he: 'עוף והודו', category_name_en: 'Poultry', category_slug: 'poultry',
+        id: 'poultry-02', category_id: '3', category_name_he: 'עוף והודו', category_name_en: 'Poultry', category_slug: 'poultry',
         name_he: 'שווארמה הודו', name_en: 'Turkey Shawarma',
         description_he: 'תערובת שווארמה הודו טחונה עם תבלינייים ייחודיים של האציל.',
         description_en: 'Ground turkey shawarma blend with HaAtzil signature spices.',
@@ -112,7 +112,7 @@ export const LOCAL_PRODUCTS: Product[] = [
         image_url: '/images/products/poultry/turkey_shawarma.jpg',
     },
     {
-        id: 'poultry-03', category_id: 3, category_name_he: 'עוף והודו', category_name_en: 'Poultry', category_slug: 'poultry',
+        id: 'poultry-03', category_id: '3', category_name_he: 'עוף והודו', category_name_en: 'Poultry', category_slug: 'poultry',
         name_he: 'עוף שלם טרי', name_en: 'Whole Fresh Chicken',
         description_he: 'עוף שלם גדול, מגודל ללא אנטיביוטיקה – מומלץ לתבשיל או צלייה.',
         description_en: 'Large whole chicken, antibiotic-free – great for stew or roast.',
@@ -121,7 +121,7 @@ export const LOCAL_PRODUCTS: Product[] = [
         image_url: '/images/products/poultry/whole_chicken.jpg',
     },
     {
-        id: 'poultry-04', category_id: 3, category_name_he: 'עוף והודו', category_name_en: 'Poultry', category_slug: 'poultry',
+        id: 'poultry-04', category_id: '3', category_name_he: 'עוף והודו', category_name_en: 'Poultry', category_slug: 'poultry',
         name_he: 'כרעיים עוף', name_en: 'Chicken Legs',
         description_he: 'כרעיים עוף שמינות – מצוינות לתנור עם עשבי תיבול.',
         description_en: 'Plump chicken legs – excellent oven-roasted with fresh herbs.',
@@ -130,7 +130,7 @@ export const LOCAL_PRODUCTS: Product[] = [
         image_url: '/images/products/poultry/chicken_legs.jpg',
     },
     {
-        id: 'poultry-05', category_id: 3, category_name_he: 'עוף והודו', category_name_en: 'Poultry', category_slug: 'poultry',
+        id: 'poultry-05', category_id: '3', category_name_he: 'עוף והודו', category_name_en: 'Poultry', category_slug: 'poultry',
         name_he: 'חזה הודו פרוס', name_en: 'Sliced Turkey Breast',
         description_he: 'חזה הודו פרוס דק, מעולה לסנדוויצ׳ים ולבישול קל.',
         description_en: 'Thinly sliced turkey breast – great for sandwiches and light cooking.',
@@ -140,7 +140,7 @@ export const LOCAL_PRODUCTS: Product[] = [
     },
     // ── PREPARED ──────────────────────────────────────────────────
     {
-        id: 'prep-01', category_id: 4, category_name_he: 'מוכן לבישול', category_name_en: 'Prepared Foods', category_slug: 'prepared',
+        id: 'prep-01', category_id: '4', category_name_he: 'מוכן לבישול', category_name_en: 'Prepared Foods', category_slug: 'prepared',
         name_he: 'קציצות בקר הכן', name_en: 'Ready Beef Patties',
         description_he: 'קציצות בקר מתובלות, מוכנות לצלייה – מתכון הבית של האציל.',
         description_en: 'Seasoned beef patties ready to pan-fry – HaAtzil house recipe.',
@@ -149,7 +149,7 @@ export const LOCAL_PRODUCTS: Product[] = [
         image_url: '/images/products/prepared/beef_patties.jpg',
     },
     {
-        id: 'prep-02', category_id: 4, category_name_he: 'מוכן לבישול', category_name_en: 'Prepared Foods', category_slug: 'prepared',
+        id: 'prep-02', category_id: '4', category_name_he: 'מוכן לבישול', category_name_en: 'Prepared Foods', category_slug: 'prepared',
         name_he: 'מרינדה אנטריקוט', name_en: 'Marinated Ribeye',
         description_he: 'אנטריקוט במרינדת שום ועשבי תיבול – ישר לגריל ללא הכנה.',
         description_en: 'Ribeye in garlic and herb marinade – grill-ready, no prep needed.',
@@ -158,7 +158,7 @@ export const LOCAL_PRODUCTS: Product[] = [
         image_url: '/images/products/prepared/marinated_ribeye.jpg',
     },
     {
-        id: 'prep-03', category_id: 4, category_name_he: 'מוכן לבישול', category_name_en: 'Prepared Foods', category_slug: 'prepared',
+        id: 'prep-03', category_id: '4', category_name_he: 'מוכן לבישול', category_name_en: 'Prepared Foods', category_slug: 'prepared',
         name_he: 'נקניקיות בקר', name_en: 'Beef Sausages',
         description_he: 'נקניקיות בקר ביתיות עם תבלינים – מושלמות לברביקיו.',
         description_en: 'Homestyle beef sausages with spices – perfect for the barbecue.',
@@ -167,7 +167,7 @@ export const LOCAL_PRODUCTS: Product[] = [
         image_url: '/images/products/prepared/beef_sausages.jpg',
     },
     {
-        id: 'prep-04', category_id: 4, category_name_he: 'מוכן לבישול', category_name_en: 'Prepared Foods', category_slug: 'prepared',
+        id: 'prep-04', category_id: '4', category_name_he: 'מוכן לבישול', category_name_en: 'Prepared Foods', category_slug: 'prepared',
         name_he: 'מרק עצמות', name_en: 'Beef Bone Broth Kit',
         description_he: 'עצמות מרק עם ירקות שורש לבחירתכם – בסיס מושלם למרק.',
         description_en: 'Soup bones with root vegetables – the perfect soup base.',
@@ -177,7 +177,7 @@ export const LOCAL_PRODUCTS: Product[] = [
     },
     // ── KOSHER SPECIALS ───────────────────────────────────────────
     {
-        id: 'ks-01', category_id: 5, category_name_he: 'מיוחדי כשרות', category_name_en: 'Kosher Specials', category_slug: 'kosher-special',
+        id: 'ks-01', category_id: '5', category_name_he: 'מיוחדי כשרות', category_name_en: 'Kosher Specials', category_slug: 'kosher-special',
         name_he: 'בשר בקר מהדרין', name_en: 'Mehadrin Beef Selection',
         description_he: 'מבחר נתחי בקר מהדרין – כשרות מחמירה עם תעודה מוכרת.',
         description_en: 'Mehadrin beef selection – strict kosher with certified documentation.',
@@ -186,7 +186,7 @@ export const LOCAL_PRODUCTS: Product[] = [
         image_url: '/images/products/kosher-special/mehadrin_beef.jpg',
     },
     {
-        id: 'ks-02', category_id: 5, category_name_he: 'מיוחדי כשרות', category_name_en: 'Kosher Specials', category_slug: 'kosher-special',
+        id: 'ks-02', category_id: '5', category_name_he: 'מיוחדי כשרות', category_name_en: 'Kosher Specials', category_slug: 'kosher-special',
         name_he: 'כבש מהדרין לר״ה', name_en: 'Mehadrin Lamb for Rosh Hashana',
         description_he: 'כבש שלם או חצי לפי המסורת – כשרות מהדרין לחגים.',
         description_en: 'Whole or half lamb per tradition – mehadrin kosher for the holidays.',
@@ -195,7 +195,7 @@ export const LOCAL_PRODUCTS: Product[] = [
         image_url: '/images/products/kosher-special/mehadrin_lamb.jpg',
     },
     {
-        id: 'ks-03', category_id: 5, category_name_he: 'מיוחדי כשרות', category_name_en: 'Kosher Specials', category_slug: 'kosher-special',
+        id: 'ks-03', category_id: '5', category_name_he: 'מיוחדי כשרות', category_name_en: 'Kosher Specials', category_slug: 'kosher-special',
         name_he: 'הודו שלם לחג', name_en: 'Whole Turkey for Holiday',
         description_he: 'הודו שלם מהדרין – אידיאלי לצלייה חגיגית בחגים ובארוחות גדולות.',
         description_en: 'Whole mehadrin turkey – ideal for festive holiday roasting.',

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:4001';
+const API_BASE = import.meta.env.VITE_API_URL ?? '';
 
 export const api = axios.create({
     baseURL: `${API_BASE}/api`,
@@ -37,7 +37,7 @@ export interface WeightOption {
 
 export interface Product {
     id: string;
-    category_id: number;
+    category_id: string;
     category_name_he: string;
     category_name_en: string;
     category_slug: string;
@@ -55,7 +55,7 @@ export interface Product {
 }
 
 export interface Category {
-    id: number;
+    id: string;
     slug: string;
     name_he: string;
     name_en: string;
@@ -164,6 +164,7 @@ export const authApi = {
         api.post<{ token: string; isAdmin: boolean }>('/auth/login', { email, password }).then((r) => r.data),
     register: (name: string, email: string, password: string) =>
         api.post<{ token: string; isAdmin: boolean }>('/auth/register', { name, email, password }).then((r) => r.data),
+    bypass: () => api.post<{ token: string; isAdmin: boolean }>('/auth/bypass').then((r) => r.data),
     me: () => api.get('/auth/me').then((r) => r.data),
     logout: () => api.post('/auth/logout'),
 };

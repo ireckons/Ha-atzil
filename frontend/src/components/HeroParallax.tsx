@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 export default function HeroParallax() {
     return (
         <section className="relative w-full overflow-hidden bg-[#1A1A1A] min-h-[500px] h-[500px]">
@@ -85,11 +87,11 @@ export default function HeroParallax() {
                     <div className="absolute w-full max-w-[1200px] h-[300px] z-20 mx-auto">
 
                         {/* Main "Ha-atzil" Logo */}
-                        <div className="absolute top-[15px] w-full flex justify-center z-20 pointer-events-none px-4 md:px-0">
+                        <div className="absolute top-[2px] w-full flex justify-center z-20 pointer-events-none px-4 md:px-0">
                             <img
                                 src="/logo-haatzil.jpeg"
                                 alt="האציל Logo"
-                                className="w-full max-w-[320px] md:max-w-none h-[210px] md:h-[250px] object-contain mix-blend-lighten opacity-95 contrast-125"
+                                className="w-full max-w-[320px] md:max-w-none h-[210px] md:h-[250px] object-contain mix-blend-lighten opacity-95 contrast-125 scale-[1.375]"
                             />
                         </div>
 
@@ -106,6 +108,13 @@ export default function HeroParallax() {
                         </div>
 
                     </div>
+                </div>
+
+                {/* Explore Catalog Button */}
+                <div className="absolute bottom-10 z-30 w-full flex justify-center">
+                    <Link to="/catalog" className="px-8 py-3 bg-[#B21B21] text-white text-sm font-bold tracking-[0.15em] uppercase hover:bg-[#8a1318] transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 rounded border border-transparent hover:border-white/20">
+                        Explore our catalog
+                    </Link>
                 </div>
 
             </div>

@@ -9,6 +9,7 @@ const CATEGORIES = [
     { slug: 'beef', label: 'Beef' },
     { slug: 'lamb', label: 'Lamb' },
     { slug: 'poultry', label: 'Poultry' },
+    { slug: 'fish', label: 'Fish' },
     { slug: 'prepared', label: 'Prepared' },
     { slug: 'kosher-special', label: 'Kosher Specials' },
 ];
@@ -85,6 +86,7 @@ export default function CatalogPage() {
                                 case 'beef': return '🥩';
                                 case 'lamb': return '🍖';
                                 case 'poultry': return '🍗';
+                                case 'fish': return '🐟';
                                 case 'prepared': return '🍲';
                                 case 'kosher-special': return '🏷️';
                                 default: return '🍽️';
@@ -96,13 +98,16 @@ export default function CatalogPage() {
                                 key={cat.slug}
                                 role="tab"
                                 aria-selected={activeCategory === cat.slug}
-                                onClick={() => setActiveCategory(cat.slug)}
+                                onClick={() => {
+                                    setActiveCategory(cat.slug);
+                                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                                }}
                                 className={`flex flex-col items-center justify-center gap-2 min-w-[76px] snap-center transition-all ${activeCategory === cat.slug ? 'scale-105 opacity-100' : 'opacity-60 hover:opacity-100'
                                     }`}
                             >
                                 <div className={`w-16 h-16 rounded-full flex items-center justify-center text-2xl shadow-md border-2 ${activeCategory === cat.slug
-                                        ? 'bg-[#B21B21] text-white border-[#B21B21] shadow-[#B21B21]/40'
-                                        : 'bg-white/10 text-white border-white/10 hover:border-white/25'
+                                    ? 'bg-[#B21B21] text-white border-[#B21B21] shadow-[#B21B21]/40'
+                                    : 'bg-white/10 text-white border-white/10 hover:border-white/25'
                                     }`}>
                                     {getIcon(cat.slug)}
                                 </div>

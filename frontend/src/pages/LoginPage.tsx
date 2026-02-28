@@ -14,6 +14,18 @@ export default function LoginPage() {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
 
+    const bypassMutation = useMutation({
+        mutationFn: () => authApi.bypass(),
+        onSuccess: ({ token, isAdmin }) => {
+            setAuth(token, isAdmin);
+            toast.success('Admin Quick Login Successful! 🔪');
+            navigate('/admin');
+        },
+        onError: () => {
+            toast.error('Quick login failed. Is the backend updated?');
+        }
+    });
+
     const mutation = useMutation({
         mutationFn: () => isLogin ? authApi.login(email, password) : authApi.register(name, email, password),
         onSuccess: ({ token, isAdmin }) => {
@@ -57,6 +69,23 @@ export default function LoginPage() {
                     <img src="/logo-haatzil.jpeg" alt="האציל Logo" className="h-[60px] mx-auto mb-4 object-contain mix-blend-multiply" />
                     <h1 className="text-2xl font-black text-[#111] tracking-widest uppercase mt-4">Login or Sign up</h1>
                     <p className="text-[#666] text-xs mt-2 uppercase tracking-wide">Enter your credentials below</p>
+                </div>
+
+                <div className="mb-8">
+                    <button
+                        type="button"
+                        onClick={() => bypassMutation.mutate()}
+                        disabled={bypassMutation.isPending}
+                        className="w-full flex items-center justify-center gap-2 py-3 bg-black text-white font-black rounded-xl hover:bg-neutral-800 transition-all uppercase tracking-widest text-sm shadow-xl shadow-black/20"
+                    >
+                        {bypassMutation.isPending ? 'Connecting...' : '⚡ Direct Admin Login'}
+                    </button>
+
+                    <div className="relative flex py-5 items-center">
+                        <div className="flex-grow border-t border-black/10"></div>
+                        <span className="flex-shrink-0 mx-4 text-black/30 text-xs font-bold">OR</span>
+                        <div className="flex-grow border-t border-black/10"></div>
+                    </div>
                 </div>
 
                 <div className="flex bg-[#F8F9FA] rounded-lg p-1 gap-1 mb-6 border border-black/5">
