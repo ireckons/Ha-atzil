@@ -77,7 +77,7 @@ router.post('/register', authLimiter, validate(RegisterSchema), async (req: Requ
 // GET /api/auth/me
 router.get('/me', authenticateJWT, async (req: AuthRequest, res: Response) => {
     try {
-        const user = await getEntity<User>('user', req.userId);
+        const user = await getEntity<User>('user', req.userId as string);
         if (!user) { res.status(404).json({ error: 'User not found' }); return; }
         res.json({ id: user.id, email: user.email, is_admin: user.is_admin });
     } catch (err) {
