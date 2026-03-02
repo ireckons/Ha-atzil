@@ -54,8 +54,8 @@ app.use((err: Error, _req: express.Request, res: express.Response, _next: expres
 });
 
 const PORT = config.port;
-app.listen(PORT, () => {
-    console.log(`🔪 HaAtzil API running on http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🔪 HaAtzil API running on http://0.0.0.0:${PORT}`);
     console.log(`   Environment: ${config.nodeEnv}`);
 });
 
