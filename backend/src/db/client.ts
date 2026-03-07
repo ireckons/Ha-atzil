@@ -6,7 +6,18 @@ dotenv.config();
 
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
 
-export const redis = new Redis(REDIS_URL);
+export const redis = new Redis(REDIS_URL, {
+  maxRetriesPerRequest: null,
+  enableReadyCheck: false,
+  retryStrategy: (times) => {
+    console.warn(`[Redis] Reconnecting in ${Math.min(times * 50, 2000)}ms`);
+    return Math.min(times * 50, 2000); // Backoff up to 2 seconds
+  },
+  reconnectOnError: (err) => {
+    console.warn('[Redis] Connection lost, reconnecting...', err.message);
+    return true; // Auto reconnect on error
+  }
+});
 
 redis.on('connect', () => {
   console.log(`🔌 Connected to Redis at ${REDIS_URL.split('@').pop()}`);

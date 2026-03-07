@@ -160,11 +160,8 @@ export const slotApi = {
 };
 
 export const authApi = {
-    login: (email: string, password: string) =>
-        api.post<{ token: string; isAdmin: boolean }>('/auth/login', { email, password }).then((r) => r.data),
-    register: (name: string, email: string, password: string) =>
-        api.post<{ token: string; isAdmin: boolean }>('/auth/register', { name, email, password }).then((r) => r.data),
-    bypass: () => api.post<{ token: string; isAdmin: boolean }>('/auth/bypass').then((r) => r.data),
-    me: () => api.get('/auth/me').then((r) => r.data),
-    logout: () => api.post('/auth/logout'),
+    googleLogin: (credential: string) =>
+        api.post('/auth/google', { credential }).then((res) => res.data),
+    me: () => api.get('/auth/me').then((res) => res.data),
+    logout: () => api.post('/auth/logout').then((res) => res.data),
 };

@@ -1,76 +1,64 @@
 import { Router, Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { OAuth2Client } from 'google-auth-library';
 import { z } from 'zod';
-import { getEntity, saveEntity, getAllEntities, redis, uuidv4 } from '../db/client';
+import { getEntity, redis } from '../db/client';
 import { config } from '../config';
 import { authLimiter } from '../middleware/rateLimit';
 import { validate } from '../middleware/validate';
 import { authenticateJWT, AuthRequest } from '../middleware/auth';
 
 const router = Router();
+const googleClient = new OAuth2Client(config.googleClientId);
 
-const LoginSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(6),
-});
-
-const RegisterSchema = z.object({
-    name: z.string().min(2),
-    email: z.string().email(),
-    password: z.string().min(6),
+const GoogleLoginSchema = z.object({
+    credential: z.string(),
 });
 
 type User = { id: string; email: string; password_hash: string; name: string; is_admin: boolean };
 
-// POST /api/auth/login
-router.post('/login', authLimiter, validate(LoginSchema), async (req: Request, res: Response) => {
-    const { email, password } = req.body as z.infer<typeof LoginSchema>;
+// POST /api/auth/google
+router.post('/google', authLimiter, validate(GoogleLoginSchema), async (req: Request, res: Response) => {
+    const { credential } = req.body as z.infer<typeof GoogleLoginSchema>;
     try {
-        const userId = await redis.hget('users:emails', email);
-        if (!userId) { res.status(401).json({ error: 'Invalid credentials' }); return; }
+        const ticket = await googleClient.verifyIdToken({
+            idToken: credential,
+            audience: config.googleClientId,
+        });
+        const payload = ticket.getPayload();
+        if (!payload || !payload.email) {
+            res.status(401).json({ error: 'Invalid Google token' });
+            return;
+        }
 
-        const user = await getEntity<User>('user', userId || '');
-        if (!user) { res.status(401).json({ error: 'Invalid credentials' }); return; }
+        const email = payload.email.toLowerCase();
 
-        const valid = await bcrypt.compare(password, user.password_hash);
-        if (!valid) { res.status(401).json({ error: 'Invalid credentials' }); return; }
+        // Security check: is this email allowed to be an admin?
+        if (!config.adminEmails.includes(email)) {
+            console.warn(`[Auth] Unauthorized Google login attempt by: ${email}`);
+            res.status(403).json({ error: 'Not authorized for admin access' });
+            return;
+        }
+
+        // Check if user exists in DB
+        let userId = await redis.hget('users:emails', email);
+
+        // If they don't exist yet, we could auto-create them, or let it pass with a virtual ID
+        // For simplicity, we'll assign a deterministic virtual ID based on their email
+        if (!userId) {
+            userId = `google-admin-${email}`;
+        }
 
         const token = jwt.sign(
-            { userId: user.id, isAdmin: user.is_admin },
+            { userId, isAdmin: true },
             config.jwtSecret,
             { expiresIn: config.jwtExpiresIn } as jwt.SignOptions
         );
-        res.json({ token, isAdmin: user.is_admin });
+        res.json({ token, isAdmin: true, name: payload.name, picture: payload.picture });
     } catch (err) {
-        console.error('[Auth] Login error:', err);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-// POST /api/auth/register
-router.post('/register', authLimiter, validate(RegisterSchema), async (req: Request, res: Response) => {
-    const { email, password, name } = req.body as z.infer<typeof RegisterSchema>;
-    try {
-        const existingId = await redis.hget('users:emails', email);
-        if (existingId) { res.status(400).json({ error: 'Email already registered' }); return; }
-
-        const hash = await bcrypt.hash(password, 10);
-        const id = uuidv4();
-
-        const user: User = { id, email, password_hash: hash, name, is_admin: false };
-        await saveEntity('user', id, user);
-        await redis.hset('users:emails', email, id);
-
-        const token = jwt.sign(
-            { userId: id, isAdmin: false },
-            config.jwtSecret,
-            { expiresIn: config.jwtExpiresIn } as jwt.SignOptions
-        );
-        res.json({ token, isAdmin: false });
-    } catch (err) {
-        console.error('[Auth] Register error:', err);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error('[Auth] Google verify error:', err);
+        res.status(401).json({ error: 'Token verification failed' });
     }
 });
 
@@ -88,16 +76,6 @@ router.get('/me', authenticateJWT, async (req: AuthRequest, res: Response) => {
 // POST /api/auth/logout (stateless JWT – just acknowledge)
 router.post('/logout', (_, res: Response) => {
     res.json({ message: 'Logged out' });
-});
-
-// POST /api/auth/bypass
-router.post('/bypass', (_, res: Response) => {
-    const token = jwt.sign(
-        { userId: 'admin-bypass-id', isAdmin: true },
-        config.jwtSecret,
-        { expiresIn: config.jwtExpiresIn } as jwt.SignOptions
-    );
-    res.json({ token, isAdmin: true });
 });
 
 export default router;

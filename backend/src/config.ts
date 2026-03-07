@@ -9,8 +9,10 @@ function requireEnv(key: string): string {
 export const config = {
     nodeEnv: process.env.NODE_ENV ?? 'development',
     port: parseInt(process.env.PORT ?? '4000', 10),
-    jwtSecret: requireEnv('JWT_SECRET'),
-    jwtExpiresIn: process.env.JWT_EXPIRES_IN ?? '7d',
+    jwtSecret: process.env.JWT_SECRET || 'dev_jwt_secret',
+    jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
+    googleClientId: process.env.GOOGLE_CLIENT_ID || '',
+    adminEmails: process.env.ADMIN_EMAILS ? process.env.ADMIN_EMAILS.split(',').map(e => e.trim()) : ['adam@gmail.com'],
     adminEmail: process.env.ADMIN_EMAIL ?? 'admin@haatzil.co.il',
     adminPassword: process.env.ADMIN_PASSWORD ?? 'Admin1234!',
     redisUrl: requireEnv('REDIS_URL'),

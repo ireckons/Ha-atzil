@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import Navbar from './components/Navbar';
 import MobileBottomNav from './components/MobileBottomNav';
 import WhatsAppButton from './components/WhatsAppButton';
@@ -34,49 +35,51 @@ function Loading() {
 
 export default function App() {
     return (
-        <BrowserRouter>
-            <Suspense fallback={<Loading />}>
-                <Routes>
-                    {/* General/Admin Login */}
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/admin/login" element={<Navigate to="/login" replace />} />
-                    <Route
-                        path="/admin"
-                        element={
-                            <ProtectedRoute>
-                                <AdminPage />
-                            </ProtectedRoute>
-                        }
-                    />
+        <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || ''}>
+            <BrowserRouter>
+                <Suspense fallback={<Loading />}>
+                    <Routes>
+                        {/* General/Admin Login */}
+                        <Route path="/login" element={<LoginPage />} />
+                        <Route path="/admin/login" element={<Navigate to="/login" replace />} />
+                        <Route
+                            path="/admin"
+                            element={
+                                <ProtectedRoute>
+                                    <AdminPage />
+                                </ProtectedRoute>
+                            }
+                        />
 
-                    {/* Customer routes */}
-                    <Route
-                        path="*"
-                        element={
-                            <div dir="ltr" className="min-h-screen font-sans text-brand-white bg-brand-black overflow-x-hidden w-full pb-16 md:pb-0">
-                                <Navbar />
-                                <MobileBottomNav />
-                                <WhatsAppButton />
-                                <main>
-                                    <Routes>
-                                        <Route path="/" element={<HomePage />} />
-                                        <Route path="/catalog" element={<CatalogPage />} />
-                                        <Route path="/catalog/:category" element={<CatalogPage />} />
-                                        <Route path="/product/:id" element={<ProductPage />} />
-                                        <Route path="/cart" element={<CartPage />} />
-                                        <Route path="/checkout" element={<CheckoutPage />} />
-                                        <Route path="/confirmation" element={<ConfirmationPage />} />
-                                        <Route path="/privacy" element={<PrivacyPage />} />
-                                        <Route path="/terms" element={<TermsPage />} />
-                                        <Route path="/accessibility" element={<AccessibilityPage />} />
-                                        <Route path="*" element={<Navigate to="/" replace />} />
-                                    </Routes>
-                                </main>
-                            </div>
-                        }
-                    />
-                </Routes>
-            </Suspense>
-        </BrowserRouter>
+                        {/* Customer routes */}
+                        <Route
+                            path="*"
+                            element={
+                                <div dir="ltr" className="min-h-screen font-sans text-brand-white bg-brand-black overflow-x-hidden w-full pb-16 md:pb-0">
+                                    <Navbar />
+                                    <MobileBottomNav />
+                                    <WhatsAppButton />
+                                    <main>
+                                        <Routes>
+                                            <Route path="/" element={<HomePage />} />
+                                            <Route path="/catalog" element={<CatalogPage />} />
+                                            <Route path="/catalog/:category" element={<CatalogPage />} />
+                                            <Route path="/product/:id" element={<ProductPage />} />
+                                            <Route path="/cart" element={<CartPage />} />
+                                            <Route path="/checkout" element={<CheckoutPage />} />
+                                            <Route path="/confirmation" element={<ConfirmationPage />} />
+                                            <Route path="/privacy" element={<PrivacyPage />} />
+                                            <Route path="/terms" element={<TermsPage />} />
+                                            <Route path="/accessibility" element={<AccessibilityPage />} />
+                                            <Route path="*" element={<Navigate to="/" replace />} />
+                                        </Routes>
+                                    </main>
+                                </div>
+                            }
+                        />
+                    </Routes>
+                </Suspense>
+            </BrowserRouter>
+        </GoogleOAuthProvider>
     );
 }
