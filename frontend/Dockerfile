@@ -9,8 +9,8 @@ CMD ["npm", "run", "dev", "--", "--host"]
 FROM dev AS builder
 RUN npm run build
 
-FROM nginx:stable-alpine AS production
-COPY --from=builder /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/templates/default.conf.template
+FROM caddy:alpine AS production
+COPY --from=builder /app/dist /usr/share/caddy
+COPY Caddyfile /etc/caddy/Caddyfile
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
