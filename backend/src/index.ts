@@ -14,9 +14,16 @@ const app = express();
 // Trust proxy for rate limiting behind Docker/Nginx
 app.set('trust proxy', 1);
 
-// CORS
+// CORS - Allow specific origins from env, or fallback to local and wildcard frontend regex
+const defaultOrigins = [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    // Allow any ha-atzil frontend on Cloud Run
+    /^https:\/\/ha-atzil-760765313327.*\.run\.app$/
+];
+
 app.use(cors({
-    origin: process.env.CORS_ORIGIN?.split(',') ?? ['http://localhost:5173', 'http://localhost:3000'],
+    origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : defaultOrigins,
     credentials: true,
 }));
 
