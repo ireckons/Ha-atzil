@@ -1,19 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { productApi, type Product } from '../api/client';
+import { productApi, categoryApi, type Product, type Category } from '../api/client';
 import ProductCard from '../components/ProductCard';
 import { useTranslation } from 'react-i18next';
-
-const CATEGORIES = [
-    { slug: '', label: 'All' },
-    { slug: 'beef', label: 'Beef' },
-    { slug: 'lamb', label: 'Lamb' },
-    { slug: 'poultry', label: 'Poultry' },
-    { slug: 'fish', label: 'Fish' },
-    { slug: 'prepared', label: 'Prepared' },
-    { slug: 'kosher-special', label: 'Kosher Specials' },
-];
 
 export default function CatalogPage() {
     const { t, i18n } = useTranslation();
@@ -35,7 +25,6 @@ export default function CatalogPage() {
         const val = e.target.value;
         setSearch(val);
 
-        // Update the URL without reloading the page
         if (val) {
             setSearchParams({ q: val });
         } else {
@@ -44,6 +33,11 @@ export default function CatalogPage() {
         }
     };
 
+    const { data: categories } = useQuery({
+        queryKey: ['categories'],
+        queryFn: categoryApi.list,
+    });
+
     const { data: products, isLoading, isError } = useQuery({
         queryKey: ['products', activeCategory],
         queryFn: () => productApi.list({ category: activeCategory || undefined, available: true }),
@@ -51,13 +45,15 @@ export default function CatalogPage() {
 
     const filtered = (products ?? []).filter((p: Product) => {
         if (!search) return true;
-
-        // Search across active language name fields
         const searchLower = search.toLowerCase();
-
         return (p.name_he && p.name_he.includes(search)) ||
             (p.name_en && p.name_en.toLowerCase().includes(searchLower));
     });
+
+    const displayCategories: (Category | { slug: string, name_en: string, name_he: string, icon_emoji: string })[] = [
+        { slug: '', name_he: 'הכל', name_en: 'All', icon_emoji: '🍽️' },
+        ...(categories || []).sort((a: Category, b: Category) => a.sort_order - b.sort_order)
+    ];
 
     return (
         <div className="min-h-screen py-8 px-4" style={{ background: '#1A1A1A', fontFamily: "'Inter', 'Helvetica Neue', sans-serif" }}>
@@ -85,45 +81,33 @@ export default function CatalogPage() {
 
                 {/* Category filter (Mobile Pills) */}
                 <div className="flex gap-4 overflow-x-auto pb-4 mb-6 no-scrollbar snap-x px-1" role="tablist" aria-label="Categories">
-                    {CATEGORIES.map((cat, idx) => {
-                        // Using placeholder emojis/icons for the category pills based on the reference design.
-                        const getIcon = (slug: string) => {
-                            switch (slug) {
-                                case 'beef': return '🥩';
-                                case 'lamb': return '🍖';
-                                case 'poultry': return '🍗';
-                                case 'fish': return '🐟';
-                                case 'prepared': return '🍲';
-                                case 'kosher-special': return '🏷️';
-                                default: return '🍽️';
-                            }
-                        };
-
-                        return (
-                            <button
-                                key={cat.slug}
-                                role="tab"
-                                aria-selected={activeCategory === cat.slug}
-                                onClick={() => {
-                                    setActiveCategory(cat.slug);
-                                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                                }}
-                                className={`flex flex-col items-center justify-center gap-2 min-w-[76px] snap-center transition-all ${activeCategory === cat.slug ? 'scale-105 opacity-100' : 'opacity-60 hover:opacity-100'
-                                    }`}
-                            >
-                                <div className={`w-16 h-16 rounded-full flex items-center justify-center text-2xl shadow-md border-2 ${activeCategory === cat.slug
+                    {displayCategories.map((cat: any) => (
+                        <button
+                            key={cat.slug}
+                            role="tab"
+                            aria-selected={activeCategory === cat.slug}
+                            onClick={() => {
+                                setActiveCategory(cat.slug);
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }}
+                            className={`flex flex-col items-center justify-center gap-2 min-w-[76px] snap-center transition-all ${
+                                activeCategory === cat.slug ? 'scale-105 opacity-100' : 'opacity-60 hover:opacity-100'
+                            }`}
+                        >
+                            <div className={`w-16 h-16 rounded-full flex items-center justify-center text-2xl shadow-md border-2 ${
+                                activeCategory === cat.slug
                                     ? 'bg-[#B21B21] text-white border-[#B21B21] shadow-[#B21B21]/40'
                                     : 'bg-white/10 text-white border-white/10 hover:border-white/25'
-                                    }`}>
-                                    {getIcon(cat.slug)}
-                                </div>
-                                <span className={`text-[11px] font-bold text-center tracking-wide ${activeCategory === cat.slug ? 'text-[#B21B21]' : 'text-white/60'
-                                    }`}>
-                                    {t(`catalog.categories.${cat.slug ? cat.slug.replace('-', '_') : 'all'}`)}
-                                </span>
-                            </button>
-                        );
-                    })}
+                            }`}>
+                                {cat.icon_emoji || '🍽️'}
+                            </div>
+                            <span className={`text-[11px] font-bold text-center tracking-wide ${
+                                activeCategory === cat.slug ? 'text-[#B21B21]' : 'text-white/60'
+                            }`}>
+                                {i18n.language === 'he' ? (cat.name_he || cat.name_en) : cat.name_en}
+                            </span>
+                        </button>
+                    ))}
                 </div>
 
                 {/* Product grid */}

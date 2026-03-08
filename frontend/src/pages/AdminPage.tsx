@@ -143,6 +143,7 @@ function CategoryFormModal({ category, onClose, onSaved }: {
         name_en: category?.name_en ?? '',
         sort_order: category?.sort_order ?? 99,
         is_featured: category?.is_featured ?? false,
+        icon_emoji: category?.icon_emoji ?? '🍽️',
     });
 
     const saveMutation = useMutation({
@@ -164,7 +165,8 @@ function CategoryFormModal({ category, onClose, onSaved }: {
                 <div className="space-y-4">
                     <FormRow label="שם (עברית) *" value={form.name_he} onChange={(v) => setForm((f) => ({ ...f, name_he: v }))} />
                     <FormRow label="שם (אנגלית) *" value={form.name_en} onChange={(v) => setForm((f) => ({ ...f, name_en: v }))} dir="ltr" />
-                    <FormRow label="סדר תצוגה (מיקום)" type="number" value={String(form.sort_order)} onChange={(v) => setForm((f) => ({ ...f, sort_order: parseInt(v) }))} dir="ltr" />
+                    <FormRow label="סדר תצוגה (מיקום 0 הוא ראשון)" type="number" value={String(form.sort_order)} onChange={(v) => setForm((f) => ({ ...f, sort_order: parseInt(v) }))} dir="ltr" />
+                    <FormRow label="אייקון לקטגוריה (אימוג'י)" value={form.icon_emoji} onChange={(v) => setForm((f) => ({ ...f, icon_emoji: v }))} dir="ltr" />
                     <Toggle label="הצג בדף הבית (Featured)" checked={form.is_featured} onChange={(v) => setForm((f) => ({ ...f, is_featured: v }))} />
                 </div>
                 <div className="flex gap-3 mt-6">
@@ -332,7 +334,6 @@ function ProductFormModal({ product, categories, onClose, onSaved }: {
                             <option value="100g">100 גרם (100g)</option>
                             <option value="g">גרם (g)</option>
                             <option value="liter">ליטר (liter)</option>
-                            <option value="ml">מ״ל (ml)</option>
                             <option value="unit">יחידה (unit)</option>
                             <option value="portion">מנה (portion)</option>
                         </select>
@@ -370,16 +371,13 @@ function ProductFormModal({ product, categories, onClose, onSaved }: {
                                         const { data } = await api.post('/upload/image', fd, { headers: { 'Content-Type': 'multipart/form-data' }});
                                         setForm(f => ({ ...f, image_url: data.url }));
                                         toast.success('תמונה הועלתה בהצלחה', { id: 'img-upload' });
-                                    } catch (err) {
+                                    } catch (err: any) {
                                         console.error(err);
-                                        toast.error('שגיאה בהעלאת התמונה', { id: 'img-upload' });
+                                        toast.error(err.response?.data?.error || 'שגיאה בהעלאת התמונה', { id: 'img-upload' });
                                     }
                                 }}
                             />
                             <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto mt-2 sm:mt-0">
-                                <button type="button" onClick={() => fileInputRef.current?.click()} className="btn-secondary h-11 text-sm px-5 bg-white border border-black/10 hover:border-black/20 text-[#111] shadow-sm flex items-center justify-center gap-2 transition-colors">
-                                    📤 העלה מהמחשב
-                                </button>
                                 <button type="button" onClick={() => setShowImagePicker(true)} className="btn-primary h-11 text-sm px-5 shadow-sm bg-[#FE2B20] text-white hover:bg-[#E02015] flex items-center justify-center gap-2 transition-colors">
                                     ☁️ בחר תמונה מהענן
                                 </button>

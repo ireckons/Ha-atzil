@@ -79,7 +79,7 @@ export default function Navbar() {
                 <div className="hidden md:flex items-center gap-2 md:gap-3 shrink-0">
                     {/* Language Switcher */}
                     <button
-                        onClick={() => i18n.changeLanguage(i18n.language === 'en' ? 'he' : 'en')}
+                        onClick={() => i18n.changeLanguage(i18n.language.startsWith('en') ? 'he' : 'en')}
                         className="flex items-center justify-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 bg-white/10 border border-white/20 text-white rounded-lg hover:bg-white/20 transition-all font-bold"
                         aria-label="Toggle language"
                     >
@@ -89,7 +89,7 @@ export default function Navbar() {
                             <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
                         </svg>
                         <span className="hidden lg:inline text-[13px] font-bold tracking-wide">
-                            {i18n.language === 'en' ? 'עברית' : 'EN'}
+                            {i18n.language.startsWith('en') ? 'עברית' : 'EN'}
                         </span>
                     </button>
 

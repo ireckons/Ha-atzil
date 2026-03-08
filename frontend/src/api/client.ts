@@ -61,6 +61,7 @@ export interface Category {
     name_en: string;
     sort_order: number;
     is_featured?: boolean;
+    icon_emoji?: string;
 }
 
 export interface PickupSlot {
