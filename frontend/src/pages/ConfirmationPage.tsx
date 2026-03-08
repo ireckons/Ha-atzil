@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { useOrderStore } from '../store/authStore';
 import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
-import { useTranslation } from 'react-i18next';
 
 export default function ConfirmationPage() {
     const { t, i18n } = useTranslation();
