@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useCartStore } from '../store/cartStore';
 
 export default function Navbar() {
+    const { t, i18n } = useTranslation();
     const count = useCartStore((s) => s.count());
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState('');
@@ -33,7 +35,7 @@ export default function Navbar() {
                     <input
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Explore..."
+                        placeholder={t('nav.explore')}
                         className="flex-1 px-3 py-2 bg-transparent border-none outline-none text-[13px] text-white placeholder-white/40"
                     />
                     <button type="submit" className="px-3 py-2 bg-transparent flex items-center justify-center text-white/60 hover:text-white">
@@ -47,10 +49,10 @@ export default function Navbar() {
                 {/* ── Navigation Links ── */}
                 <div className="hidden md:flex items-center gap-4 md:gap-8 mx-auto shrink-0">
                     <Link to="/" className="text-white md:text-[#B21B21] font-bold text-sm uppercase tracking-wider hover:text-white md:hover:text-[#6B191E] transition-colors">
-                        Home
+                        {t('nav.home')}
                     </Link>
                     <Link to="/catalog" className="text-white md:text-[#B21B21] font-bold text-sm uppercase tracking-wider hover:text-white md:hover:text-[#6B191E] transition-colors">
-                        Menu
+                        {t('nav.menu')}
                     </Link>
                 </div>
 
@@ -62,7 +64,7 @@ export default function Navbar() {
                     <input
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Explore Ha-Atzil..."
+                        placeholder={t('nav.explore_haatzil')}
                         className="flex-1 px-4 py-2.5 bg-transparent border-none outline-none text-sm text-white placeholder-white/40"
                     />
                     <button type="submit" className="px-4 py-2.5 bg-[#B21B21] flex items-center justify-center hover:bg-[#6B191E] transition-colors">
@@ -75,6 +77,22 @@ export default function Navbar() {
 
                 {/* ── Right Icons ── */}
                 <div className="hidden md:flex items-center gap-2 md:gap-3 shrink-0">
+                    {/* Language Switcher */}
+                    <button
+                        onClick={() => i18n.changeLanguage(i18n.language === 'en' ? 'he' : 'en')}
+                        className="flex items-center justify-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 bg-white/10 border border-white/20 text-white rounded-lg hover:bg-white/20 transition-all font-bold"
+                        aria-label="Toggle language"
+                    >
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="2" y1="12" x2="22" y2="12" />
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                        </svg>
+                        <span className="hidden lg:inline text-[13px] font-bold tracking-wide">
+                            {i18n.language === 'en' ? 'עברית' : 'EN'}
+                        </span>
+                    </button>
+
                     {/* Login */}
                     <Link
                         to="/login"
@@ -84,7 +102,7 @@ export default function Navbar() {
                             <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
                             <circle cx="12" cy="7" r="4" />
                         </svg>
-                        <span className="hidden lg:inline text-[13px] font-bold tracking-wide">Login</span>
+                        <span className="hidden lg:inline text-[13px] font-bold tracking-wide">{t('nav.login')}</span>
                     </Link>
 
                     {/* Cart */}
@@ -98,7 +116,7 @@ export default function Navbar() {
                             <path d="M16 10a4 4 0 0 1-8 0" />
                         </svg>
                         <span className="text-[13px] md:text-[14px] font-extrabold tracking-wide">
-                            <span className="hidden lg:inline">Cart </span>
+                            <span className="hidden lg:inline">{t('nav.cart')} </span>
                             {count > 0 ? `(${count})` : ''}
                         </span>
                     </Link>

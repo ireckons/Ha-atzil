@@ -7,6 +7,7 @@ import { broadcastEvent } from '../services/sse';
 import { stringify } from 'csv-stringify/sync';
 import { parse } from 'csv-parse/sync';
 import multer from 'multer';
+import { defaultProducts } from '../db/default_products';
 
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 2 * 1024 * 1024 } });
@@ -36,6 +37,27 @@ async function getCategoryData() {
     cats.forEach(c => catMap.set(Number(c.id), c));
     return { cats, catMap };
 }
+
+async function ensureProductsSeeded() {
+    try {
+        const prods = await getAllEntities<Product>('product');
+        if (prods.length === 0) {
+            console.log('Seeding default products...');
+            for (const prod of defaultProducts) {
+                // @ts-ignore - bypass strict typing for seed
+                await saveEntity('product', prod.id, {
+                    ...prod,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                });
+            }
+            console.log('Finished seeding products!');
+        }
+    } catch (err) {
+        console.error('Failed to seed products:', err);
+    }
+}
+ensureProductsSeeded();
 
 // GET /api/products
 router.get('/', async (req, res) => {

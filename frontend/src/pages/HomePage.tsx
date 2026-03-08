@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { productApi } from '../api/client';
+import { categoryApi } from '../api/client';
 import HeroParallax from '../components/HeroParallax';
+import { useTranslation } from 'react-i18next';
 
 export default function HomePage() {
-    const { data: categories } = useQuery({ queryKey: ['categories'], queryFn: productApi.categories });
+    const { t, i18n } = useTranslation();
+    const { data: categories } = useQuery({ queryKey: ['categories'], queryFn: categoryApi.list });
 
     return (
         <div className="min-h-screen bg-[#1A1A1A]" style={{ fontFamily: "'Inter', 'Helvetica Neue', sans-serif" }}>
@@ -16,17 +18,17 @@ export default function HomePage() {
                 <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
                     {/* Left: Big Editorial Headline */}
                     <div>
-                        <p className="text-[#E5193D] text-xs font-bold tracking-[0.3em] uppercase mb-4">OUR SELECTION</p>
+                        <p className="text-[#E5193D] text-xs font-bold tracking-[0.3em] uppercase mb-4">{t('home.our_selection')}</p>
                         <h2 className="text-white font-black leading-tight mb-5"
                             style={{ fontSize: 'clamp(48px, 7vw, 90px)', letterSpacing: '-0.02em', lineHeight: 1.05 }}>
-                            what<br />to<br />choose
+                            {t('home.what_to')}<br />{i18n.language === 'he' ? '' : <>to<br /></>}{t('home.choose')}
                         </h2>
                         <div className="w-10 h-[3px] bg-[#B21B21] mb-6" />
                         <p className="text-white/70 text-[15px] leading-relaxed max-w-sm">
-                            Premium kosher meats sourced daily from the finest suppliers. Beef, lamb, poultry, and specialties — every cut selected with care for your table.
+                            {t('home.selection_desc')}
                         </p>
                         <Link to="/catalog" className="inline-block mt-8 px-6 py-3 border border-[#B21B21] text-[#B21B21] text-xs font-bold tracking-[0.15em] uppercase hover:bg-[#6B191E] hover:text-white hover:border-[#6B191E] transition-all duration-200">
-                            BROWSE ALL CUTS
+                            {t('home.browse_all')}
                         </Link>
                     </div>
 
@@ -58,9 +60,9 @@ export default function HomePage() {
                     {/* Middle: Small labels */}
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                         {stats.map(s => (
-                            <div key={s.label} className="border-t border-white/20 pt-4">
-                                <div className="text-white text-xs font-bold tracking-[0.2em] uppercase mb-1">{s.label}</div>
-                                <div className="text-white/60 text-[11px] leading-relaxed">{s.desc}</div>
+                            <div key={s.id} className="border-t border-white/20 pt-4">
+                                <div className="text-white text-xs font-bold tracking-[0.2em] uppercase mb-1">{t(`home.stats.${s.id}`)}</div>
+                                <div className="text-white/60 text-[11px] leading-relaxed">{t(`home.stats.${s.id}_desc`)}</div>
                             </div>
                         ))}
                     </div>
@@ -71,9 +73,9 @@ export default function HomePage() {
                         </span>
                         <div className="-mt-8 relative z-10">
                             <h3 className="text-white font-black" style={{ fontSize: 'clamp(32px, 4vw, 56px)', lineHeight: 1.1 }}>
-                                years of
+                                {t('home.years_of')}
                                 <br />
-                                <span className="text-[#E5193D]">expertise</span>
+                                <span className="text-[#E5193D]">{t('home.expertise')}</span>
                             </h3>
                         </div>
                     </div>
@@ -85,18 +87,18 @@ export default function HomePage() {
                 <div className="max-w-7xl mx-auto">
                     <div className="flex items-end justify-between mb-10">
                         <div>
-                            <p className="text-[#B21B21] text-xs font-bold tracking-[0.3em] uppercase mb-3">SHOP BY TYPE</p>
+                            <p className="text-[#B21B21] text-xs font-bold tracking-[0.3em] uppercase mb-3">{t('home.shop_by_type')}</p>
                             <h2 id="categories-heading" className="text-[#111111] font-black" style={{ fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '-0.02em' }}>
-                                Our Categories
+                                {t('home.our_categories')}
                             </h2>
                         </div>
                         <Link to="/catalog" className="hidden md:inline-block text-black/40 text-xs font-bold tracking-[0.2em] uppercase border-b border-black/20 pb-1 hover:text-[#B21B21] hover:border-[#B21B21] transition-colors">
-                            VIEW ALL →
+                            {t('home.view_all')}
                         </Link>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-stretch">
-                        {(categories ?? defaultCategories).map((cat) => (
+                        {(categories ?? defaultCategories).filter((cat: any) => cat.is_featured).map((cat: any) => (
                             <Link
                                 key={cat.slug}
                                 to={`/catalog/${cat.slug}`}
@@ -117,10 +119,10 @@ export default function HomePage() {
                                 <div className="bg-[#8a201c] px-5 flex flex-col justify-center transition-colors duration-200 group-hover:bg-[#a3251f]"
                                     style={{ height: '88px', flexShrink: 0 }}>
                                     <h3 className="text-white font-bold text-[13px] tracking-[0.1em] uppercase mb-1 leading-tight">
-                                        {cat.name_en}
+                                        {i18n.language === 'he' ? cat.name_he || cat.name_en : cat.name_en}
                                     </h3>
                                     <p className="text-white/65 text-[11px] leading-tight">
-                                        click to visit our {cat.name_en.toLowerCase()} section
+                                        {t('home.click_to_visit', { category: i18n.language === 'he' ? (cat.name_he || cat.name_en) : cat.name_en.toLowerCase() })}
                                     </p>
                                 </div>
                             </Link>
@@ -135,14 +137,14 @@ export default function HomePage() {
             <section className="py-20 px-6 bg-[#6B191E]">
                 <div className="max-w-5xl mx-auto">
                     <div className="text-center mb-12">
-                        <p className="text-white/50 text-xs font-bold tracking-[0.3em] uppercase mb-3">OUR PROMISE</p>
+                        <p className="text-white/50 text-xs font-bold tracking-[0.3em] uppercase mb-3">{t('home.our_promise')}</p>
                         <h2 className="text-white font-black" style={{ fontSize: 'clamp(28px, 4vw, 48px)', letterSpacing: '-0.02em' }}>
-                            Why <span className="font-hebrew text-[#E5193D]">האציל</span>?
+                            {t('home.why')} <span className="font-hebrew text-[#E5193D]">האציל</span>?
                         </h2>
                     </div>
                     <div className="grid md:grid-cols-3 gap-8">
                         {perks.map((p, i) => (
-                            <div key={p.title} className="relative group pl-6 border-l border-white/20 hover:border-white transition-colors duration-300">
+                            <div key={p.id} className="relative group pl-6 border-l border-white/20 hover:border-white transition-colors duration-300">
                                 <div className="text-white/5 font-black text-[64px] absolute top-0 right-0 leading-none select-none"
                                     style={{ fontVariantNumeric: 'tabular-nums' }}>
                                     {String(i + 1).padStart(2, '0')}
@@ -152,13 +154,13 @@ export default function HomePage() {
                                 <div className="relative w-full aspect-video mb-5 overflow-hidden rounded-sm z-10 border border-white/10">
                                     <img
                                         src={p.img}
-                                        alt={p.title}
+                                        alt={t(`home.perks.${p.id}`)}
                                         className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
                                     />
                                 </div>
 
-                                <h3 className="text-white font-bold text-[15px] uppercase tracking-[0.08em] mb-2 relative z-10">{p.title}</h3>
-                                <p className="text-white/60 text-[13px] leading-relaxed relative z-10">{p.desc}</p>
+                                <h3 className="text-white font-bold text-[15px] uppercase tracking-[0.08em] mb-2 relative z-10">{t(`home.perks.${p.id}`)}</h3>
+                                <p className="text-white/60 text-[13px] leading-relaxed relative z-10">{t(`home.perks.${p.id}_desc`)}</p>
                             </div>
                         ))}
                     </div>
@@ -169,9 +171,9 @@ export default function HomePage() {
             <section className="py-16 px-6 bg-[#F8F6F2] border-t border-black/5">
                 <div className="max-w-7xl mx-auto">
                     <div className="text-center mb-10">
-                        <p className="text-[#B21B21] text-xs font-bold tracking-[0.3em] uppercase mb-3">LOCATION</p>
+                        <p className="text-[#B21B21] text-xs font-bold tracking-[0.3em] uppercase mb-3">{t('home.location')}</p>
                         <h2 className="text-[#111111] font-black" style={{ fontSize: 'clamp(28px, 4vw, 48px)', letterSpacing: '-0.02em' }}>
-                            Come visit us
+                            {t('home.come_visit')}
                         </h2>
                     </div>
 
@@ -180,21 +182,21 @@ export default function HomePage() {
                         <div className="flex flex-col justify-center bg-white p-8 rounded-2xl shadow-md border border-black/5">
                             <div className="mb-6">
                                 <h3 className="font-hebrew text-2xl font-black text-[#111]">האציל</h3>
-                                <p className="text-gray-600 mt-2">77 HaPalmach St, Safed</p>
+                                <p className="text-gray-600 mt-2">{t('home.address')}</p>
                             </div>
                             <div className="mb-8">
-                                <h4 className="font-bold text-sm text-[#B21B21] tracking-widest uppercase mb-2">Hours</h4>
+                                <h4 className="font-bold text-sm text-[#B21B21] tracking-widest uppercase mb-2">{t('home.hours')}</h4>
                                 <ul className="text-gray-600 flex flex-col gap-1 text-sm font-medium">
-                                    <li>Sunday–Thursday 8:00–20:00</li>
-                                    <li>Friday 8:00–14:00</li>
+                                    <li>{t('home.sun_thu')}</li>
+                                    <li>{t('home.fri')}</li>
                                 </ul>
                             </div>
                             <div className="flex flex-col gap-3 mt-auto">
                                 <a href="https://waze.com/ul?q=HaPalmach+77+Safed" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 bg-[#33ccff] hover:bg-[#00bfff] text-white font-bold py-3 rounded-lg transition-colors">
-                                    Navigate with Waze
+                                    {t('home.nav_waze')}
                                 </a>
                                 <a href="https://maps.google.com/?q=HaPalmach+77+Safed" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold py-3 rounded-lg transition-colors">
-                                    Google Maps
+                                    {t('home.nav_google')}
                                 </a>
                             </div>
                         </div>
@@ -221,46 +223,46 @@ export default function HomePage() {
                     <div>
                         <img src="/logo-haatzil.jpeg" alt="האציל Logo" className="h-16 mb-4 object-contain" />
                         <p className="text-white/35 text-[12px] leading-relaxed mb-4">
-                            Premium kosher meats in the heart of Safed. Since 2005.
+                            {t('home.footer_desc')}
                         </p>
-                        <div className="text-[#C8102E] text-[10px] font-bold tracking-[0.2em] uppercase">Glatt Kosher · Mehadrin</div>
+                        <div className="text-[#C8102E] text-[10px] font-bold tracking-[0.2em] uppercase">{t('home.glatt')}</div>
                     </div>
                     {/* Quick Links */}
                     <div>
-                        <h4 className="text-white text-[11px] font-bold tracking-[0.2em] uppercase mb-4">Quick Links</h4>
+                        <h4 className="text-white text-[11px] font-bold tracking-[0.2em] uppercase mb-4">{t('home.quick_links')}</h4>
                         <div className="flex flex-col gap-2">
                             {['Beef', 'Lamb', 'Poultry', 'Prepared', 'Kosher Specials'].map(n => (
                                 <Link key={n} to={`/catalog/${n.toLowerCase().replace(' ', '-')}`}
                                     className="text-white/40 text-[13px] hover:text-white transition-colors duration-150">
-                                    {n}
+                                    {t(`catalog.categories.${n.toLowerCase().replace(' ', '_')}`)}
                                 </Link>
                             ))}
                         </div>
                     </div>
                     {/* Contact */}
                     <div>
-                        <h4 className="text-white text-[11px] font-bold tracking-[0.2em] uppercase mb-4">Contact</h4>
+                        <h4 className="text-white text-[11px] font-bold tracking-[0.2em] uppercase mb-4">{t('home.contact')}</h4>
                         <div className="flex flex-col gap-2 text-white/40 text-[13px]">
-                            <span>77 HaPalmach St, Safed</span>
+                            <span>{t('home.address')}</span>
                             <a href="tel:046226677" className="hover:text-[#C8102E] transition-colors">04-6226677</a>
-                            <span>Sun–Thu: 8:00–20:00</span>
-                            <span>Fri: 8:00–14:00</span>
+                            <span>{t('home.sun_thu')}</span>
+                            <span>{t('home.fri')}</span>
                         </div>
                     </div>
                 </div>
                 <div className="max-w-7xl mx-auto mt-10 pt-6 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
                     <p className="text-white/20 text-[11px]">
-                        ©️ {new Date().getFullYear()} האציל – All rights reserved
+                        ©️ {new Date().getFullYear()} האציל – {t('home.rights')}
                     </p>
                     <div className="flex flex-wrap justify-center gap-4">
                         <Link to="/terms" className="text-white/20 text-[11px] hover:text-white/50 transition-colors">
-                            Terms & Conditions
+                            {t('home.terms')}
                         </Link>
                         <Link to="/privacy" className="text-white/20 text-[11px] hover:text-white/50 transition-colors">
-                            Privacy Policy
+                            {t('home.privacy')}
                         </Link>
                         <Link to="/accessibility" className="text-white/20 text-[11px] hover:text-white/50 transition-colors">
-                            Accessibility
+                            {t('home.accessibility')}
                         </Link>
                     </div>
                 </div>
@@ -270,11 +272,11 @@ export default function HomePage() {
 }
 
 const defaultCategories = [
-    { slug: 'beef', name_en: 'Beef' },
-    { slug: 'lamb', name_en: 'Lamb' },
-    { slug: 'poultry', name_en: 'Poultry' },
-    { slug: 'prepared', name_en: 'Prepared' },
-    { slug: 'kosher-special', name_en: 'Kosher Specials' },
+    { slug: 'beef', name_en: 'Beef', name_he: 'בקר', is_featured: true },
+    { slug: 'lamb', name_en: 'Lamb', name_he: 'כבש', is_featured: true },
+    { slug: 'poultry', name_en: 'Poultry', name_he: 'עופות', is_featured: true },
+    { slug: 'prepared', name_en: 'Prepared', name_he: 'אוכל מוכן', is_featured: true },
+    { slug: 'kosher-special', name_en: 'Kosher Specials', name_he: 'מיוחדים בכשרות', is_featured: true },
 ];
 
 const categoryImages: Record<string, string> = {
@@ -286,9 +288,9 @@ const categoryImages: Record<string, string> = {
 };
 
 const stats = [
-    { label: 'Daily Fresh', desc: 'Delivered fresh every morning from our suppliers' },
-    { label: 'Kosher Mehadrin', desc: 'Strict Badatz supervision on all products' },
-    { label: 'Since 2005', desc: 'Over 20 years serving the community of Safed' },
+    { id: 'daily_fresh' },
+    { id: 'kosher_mehadrin' },
+    { id: 'since' },
 ];
 
 const featuredCuts = [
@@ -316,7 +318,7 @@ const featuredCuts = [
 ];
 
 const perks = [
-    { img: '/images/perks/fresh.jpg', title: 'Fresh Daily Meat', desc: 'Meat straight from the premium supplier - fresh every day' },
-    { img: '/images/perks/kosher.jpg', title: 'Kosher Mehadrin', desc: 'All products under the supervision of Badatz Mehadrin' },
-    { img: '/images/perks/experience.jpg', title: '20 Years of Experience', desc: 'Since 2005 - we know meat, and you can feel it' },
+    { img: '/images/perks/fresh.jpg', id: 'fresh' },
+    { img: '/images/perks/kosher.jpg', id: 'kosher' },
+    { img: '/images/perks/experience.jpg', id: 'exp' },
 ];

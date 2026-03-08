@@ -3,6 +3,7 @@ import { useParams, Link, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { productApi, type Product } from '../api/client';
 import ProductCard from '../components/ProductCard';
+import { useTranslation } from 'react-i18next';
 
 const CATEGORIES = [
     { slug: '', label: 'All' },
@@ -15,6 +16,7 @@ const CATEGORIES = [
 ];
 
 export default function CatalogPage() {
+    const { t, i18n } = useTranslation();
     const { category: urlCategory } = useParams<{ category: string }>();
     const [searchParams, setSearchParams] = useSearchParams();
     const [activeCategory, setActiveCategory] = useState(urlCategory ?? '');
@@ -47,27 +49,31 @@ export default function CatalogPage() {
         queryFn: () => productApi.list({ category: activeCategory || undefined, available: true }),
     });
 
-    const filtered = (products ?? []).filter((p: Product) =>
-        !search ||
-        p.name_he.includes(search) ||
-        p.name_en.toLowerCase().includes(search.toLowerCase())
-    );
+    const filtered = (products ?? []).filter((p: Product) => {
+        if (!search) return true;
+
+        // Search across active language name fields
+        const searchLower = search.toLowerCase();
+
+        return (p.name_he && p.name_he.includes(search)) ||
+            (p.name_en && p.name_en.toLowerCase().includes(searchLower));
+    });
 
     return (
         <div className="min-h-screen py-8 px-4" style={{ background: '#1A1A1A', fontFamily: "'Inter', 'Helvetica Neue', sans-serif" }}>
             <div className="max-w-7xl mx-auto">
                 {/* Page header */}
                 <div className="mb-8">
-                    <h1 className="text-white font-black text-3xl md:text-4xl uppercase tracking-widest mb-2">Meat Menu</h1>
+                    <h1 className="text-white font-black text-3xl md:text-4xl uppercase tracking-widest mb-2">{t('catalog.title')}</h1>
                     <div className="w-16 h-[3px] mb-4" style={{ background: '#B21B21' }} />
-                    <p className="text-white/50 text-sm">Mehadrin Kosher Meats · Fresh Daily</p>
+                    <p className="text-white/50 text-sm">{t('catalog.subtitle')}</p>
                 </div>
 
                 {/* Search */}
                 <div className="mb-6 relative">
                     <input
                         type="search"
-                        placeholder="Search product..."
+                        placeholder={t('catalog.search_placeholder')}
                         value={search}
                         onChange={handleSearchChange}
                         className="w-full px-4 py-3 pl-10 rounded-lg outline-none text-sm font-medium text-white placeholder-white/30 border border-white/10 bg-white/8 focus:border-[#B21B21] focus:ring-1 focus:ring-[#B21B21] transition-all"
@@ -113,7 +119,7 @@ export default function CatalogPage() {
                                 </div>
                                 <span className={`text-[11px] font-bold text-center tracking-wide ${activeCategory === cat.slug ? 'text-[#B21B21]' : 'text-white/60'
                                     }`}>
-                                    {cat.label}
+                                    {t(`catalog.categories.${cat.slug ? cat.slug.replace('-', '_') : 'all'}`)}
                                 </span>
                             </button>
                         );
@@ -130,15 +136,15 @@ export default function CatalogPage() {
                 )}
                 {isError && (
                     <div className="text-center py-20">
-                        <p className="text-brand-white/50 text-lg">Error loading products. Please try again.</p>
+                        <p className="text-brand-white/50 text-lg">{t('catalog.error_loading')}</p>
                     </div>
                 )}
                 {!isLoading && !isError && (
                     <>
                         {filtered.length === 0 ? (
                             <div className="text-center py-20">
-                                <p className="text-brand-white/50 text-lg">No products found</p>
-                                <Link to="/catalog" className="btn-ghost mt-4" onClick={() => { setSearch(''); searchParams.delete('q'); setSearchParams(searchParams); }}>Clear search</Link>
+                                <p className="text-brand-white/50 text-lg">{t('catalog.no_products')}</p>
+                                <Link to="/catalog" className="btn-ghost mt-4" onClick={() => { setSearch(''); searchParams.delete('q'); setSearchParams(searchParams); }}>{t('catalog.clear_search')}</Link>
                             </div>
                         ) : (
                             <div

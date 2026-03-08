@@ -12,3 +12,7 @@ Thumbs.db
 .turbo/
 playwright-report/
 test-results/
+
+# GCP Service Account Keys
+*-*.json
+*.pem

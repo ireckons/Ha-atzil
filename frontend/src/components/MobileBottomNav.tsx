@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useCartStore } from '../store/cartStore';
 
 export default function MobileBottomNav() {
+    const { t, i18n } = useTranslation();
     const count = useCartStore((s) => s.count());
 
     return (
@@ -11,7 +13,7 @@ export default function MobileBottomNav() {
                     <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                     <polyline points="9 22 9 12 15 12 15 22" />
                 </svg>
-                <span className="text-[10px] font-bold uppercase tracking-wider">Home</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider">{t('nav.home')}</span>
             </Link>
 
             <Link to="/catalog" className="flex flex-col items-center gap-1 text-gray-500 hover:text-[#C8102E]">
@@ -20,7 +22,7 @@ export default function MobileBottomNav() {
                     <line x1="3" y1="6" x2="21" y2="6" />
                     <line x1="3" y1="18" x2="21" y2="18" />
                 </svg>
-                <span className="text-[10px] font-bold uppercase tracking-wider">Menu</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider">{t('nav.menu')}</span>
             </Link>
 
             <Link to="/cart" className="flex flex-col items-center gap-1 text-gray-500 hover:text-[#C8102E] relative">
@@ -36,7 +38,7 @@ export default function MobileBottomNav() {
                         </div>
                     )}
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider">Cart</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider">{t('nav.cart')}</span>
             </Link>
 
             <Link to="/login" className="flex flex-col items-center gap-1 text-gray-500 hover:text-[#C8102E]">
@@ -44,8 +46,17 @@ export default function MobileBottomNav() {
                     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
                     <circle cx="12" cy="7" r="4" />
                 </svg>
-                <span className="text-[10px] font-bold uppercase tracking-wider">Login</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider">{t('nav.login')}</span>
             </Link>
+
+            <button onClick={() => i18n.changeLanguage(i18n.language === 'en' ? 'he' : 'en')} className="flex flex-col items-center gap-1 text-gray-500 hover:text-[#C8102E]">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="2" y1="12" x2="22" y2="12" />
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                </svg>
+                <span className="text-[10px] font-bold uppercase tracking-wider">{i18n.language === 'en' ? 'עב' : 'EN'}</span>
+            </button>
         </div>
     );
 }

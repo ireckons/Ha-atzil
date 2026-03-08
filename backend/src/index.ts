@@ -5,6 +5,7 @@ import { config } from './config';
 import { generalLimiter } from './middleware/rateLimit';
 import authRouter from './routes/auth';
 import productsRouter from './routes/products';
+import categoriesRouter from './routes/categories';
 import ordersRouter from './routes/orders';
 import pickupSlotsRouter from './routes/pickupSlots';
 import uploadRouter from './routes/upload';
@@ -45,6 +46,7 @@ app.use('/uploads', express.static('uploads'));
 // Routes
 app.use('/api/auth', authRouter);
 app.use('/api/products', productsRouter);
+app.use('/api/categories', categoriesRouter);
 app.use('/api/orders', ordersRouter);
 app.use('/api/pickup-slots', pickupSlotsRouter);
 app.use('/api/upload', uploadRouter);

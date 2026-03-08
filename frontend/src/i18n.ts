@@ -1,166 +1,36 @@
-export type Lang = 'he' | 'en';
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
 
-export const strings = {
-    he: {
-        siteTitle: 'האציל',
-        tagline: 'בשרים שמכבדים אירוח',
-        since: 'since 2005',
-        nav: {
-            catalog: 'תפריט',
-            cart: 'עגלה',
-            admin: 'ניהול',
-            privacy: 'פרטיות',
-        },
-        hero: {
-            headline: 'האציל since 2005',
-            sub: 'בשרים שמכבדים אירוח',
-            cta: 'הזמן עכשיו',
-            storeName: 'הפלמ״ח 77 צפת · 04-6226677',
-        },
-        categories: {
-            beef: 'בקר',
-            lamb: 'כבש וטלה',
-            poultry: 'עוף והודו',
-            prepared: 'מוכן לבישול',
-            'kosher-special': 'מיוחדי כשרות',
-        },
-        product: {
-            addToCart: 'הוסף לעגלה',
-            perKg: '/ ק"ג',
-            perUnit: '/ יחידה',
-            weightLabel: 'בחר משקל',
-            kosher: 'כשר',
-            unavailable: 'לא זמין כרגע',
-        },
-        cart: {
-            title: 'עגלת הקניות',
-            empty: 'העגלה ריקה',
-            continueShopping: 'המשך קנייה',
-            checkout: 'המשך לתשלום',
-            total: 'סה"כ',
-            remove: 'הסר',
-        },
-        checkout: {
-            title: 'פרטי איסוף',
-            name: 'שם מלא',
-            phone: 'טלפון',
-            email: 'אימייל (אופציונלי)',
-            notes: 'הערות',
-            pickupSlot: 'בחר מועד איסוף',
-            placeOrder: 'שלח הזמנה',
-            pickupOnly: 'קיים איסוף עצמי בלבד – אין משלוח',
-        },
-        confirmation: {
-            title: 'ההזמנה התקבלה!',
-            orderNumber: 'מספר הזמנה',
-            pickup: 'מועד האיסוף',
-            print: 'הדפס תלוש',
-            backHome: 'חזרה לדף הבית',
-        },
-        admin: {
-            login: 'כניסת מנהל',
-            items: 'ניהול פריטים',
-            orders: 'הזמנות',
-            logout: 'יציאה',
-            newProduct: 'מוצר חדש',
-            exportCsv: 'ייצוא CSV',
-            importCsv: 'ייבוא CSV',
-            markReady: 'מוכן לאיסוף',
-            markCollected: 'נאסף',
-            markCancelled: 'ביטול',
-            statusPending: 'ממתין',
-            statusConfirmed: 'מאושר',
-            statusReady: 'מוכן',
-            statusCollected: 'נאסף',
-            statusCancelled: 'בוטל',
-        },
-        flags: {
-            caption: 'הדגלים המוצגים בחנות',
-        },
-        privacy: {
-            title: 'מדיניות פרטיות',
-        },
-    },
-    en: {
-        siteTitle: 'האציל',
-        tagline: 'Meats that honour hospitality',
-        since: 'since 2005',
-        nav: {
-            catalog: 'Menu',
-            cart: 'Cart',
-            admin: 'Admin',
-            privacy: 'Privacy',
-        },
-        hero: {
-            headline: 'האציל since 2005',
-            sub: 'Meats that honour hospitality',
-            cta: 'Order Now',
-            storeName: 'Palmach 77, Safed · 04-6226677',
-        },
-        categories: {
-            beef: 'Beef',
-            lamb: 'Lamb',
-            poultry: 'Poultry',
-            prepared: 'Prepared Foods',
-            'kosher-special': 'Kosher Specials',
-        },
-        product: {
-            addToCart: 'Add to Cart',
-            perKg: '/ kg',
-            perUnit: '/ unit',
-            weightLabel: 'Select weight',
-            kosher: 'Kosher',
-            unavailable: 'Currently unavailable',
-        },
-        cart: {
-            title: 'Shopping Cart',
-            empty: 'Your cart is empty',
-            continueShopping: 'Continue Shopping',
-            checkout: 'Proceed to Checkout',
-            total: 'Total',
-            remove: 'Remove',
-        },
-        checkout: {
-            title: 'Pickup Details',
-            name: 'Full Name',
-            phone: 'Phone',
-            email: 'Email (optional)',
-            notes: 'Notes',
-            pickupSlot: 'Select Pickup Time',
-            placeOrder: 'Place Order',
-            pickupOnly: 'In-store pickup only – no delivery',
-        },
-        confirmation: {
-            title: 'Order Confirmed!',
-            orderNumber: 'Order Number',
-            pickup: 'Pickup Time',
-            print: 'Print Slip',
-            backHome: 'Back to Home',
-        },
-        admin: {
-            login: 'Admin Login',
-            items: 'Items',
-            orders: 'Orders',
-            logout: 'Logout',
-            newProduct: 'New Product',
-            exportCsv: 'Export CSV',
-            importCsv: 'Import CSV',
-            markReady: 'Mark Ready',
-            markCollected: 'Mark Collected',
-            markCancelled: 'Cancel',
-            statusPending: 'Pending',
-            statusConfirmed: 'Confirmed',
-            statusReady: 'Ready',
-            statusCollected: 'Collected',
-            statusCancelled: 'Cancelled',
-        },
-        flags: {
-            caption: 'Flags displayed at the store',
-        },
-        privacy: {
-            title: 'Privacy Policy',
-        },
-    },
-} as const;
+import heTranslation from './locales/he/translation.json';
+import enTranslation from './locales/en/translation.json';
 
-export type Strings = typeof strings.en;
+i18n
+    .use(LanguageDetector)
+    .use(initReactI18next)
+    .init({
+        resources: {
+            he: { translation: heTranslation },
+            en: { translation: enTranslation }
+        },
+        fallbackLng: 'he', // default to hebrew
+        interpolation: {
+            escapeValue: false // react already safes from xss
+        },
+        detection: {
+            order: ['localStorage', 'navigator'],
+            caches: ['localStorage']
+        }
+    });
+
+// Explicitly set the HTML dir and lang tags based on the starting language
+const dir = i18n.language === 'he' ? 'rtl' : 'ltr';
+document.documentElement.dir = dir;
+document.documentElement.lang = i18n.language;
+
+i18n.on('languageChanged', (lng) => {
+    document.documentElement.dir = lng === 'he' ? 'rtl' : 'ltr';
+    document.documentElement.lang = lng;
+});
+
+export default i18n;

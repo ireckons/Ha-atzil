@@ -6,9 +6,11 @@ import { slotApi, orderApi, type PickupSlot } from '../api/client';
 import { useCartStore } from '../store/cartStore';
 import { useOrderStore } from '../store/authStore';
 import { format } from 'date-fns';
-import { enUS } from 'date-fns/locale';
+import { enUS, he } from 'date-fns/locale';
+import { useTranslation } from 'react-i18next';
 
 export default function CheckoutPage() {
+    const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const { items, total, clearCart } = useCartStore();
     const setLastOrder = useOrderStore((s) => s.setLastOrder);
@@ -30,13 +32,13 @@ export default function CheckoutPage() {
 
     const mutation = useMutation({
         mutationFn: orderApi.create,
-        onSuccess: (order) => {
+        onSuccess: (order: any) => {
             setLastOrder(order);
             clearCart();
             navigate('/confirmation');
         },
         onError: (err: unknown) => {
-            const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error ?? 'Error submitting order';
+            const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error ?? t('checkout.submit_error');
             toast.error(msg);
         },
     });
@@ -48,9 +50,9 @@ export default function CheckoutPage() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!selectedSlot) { toast.error('Please select a pickup time'); return; }
-        if (!name.trim()) { toast.error('Please enter full name'); return; }
-        if (!phone.trim()) { toast.error('Please enter phone number'); return; }
+        if (!selectedSlot) { toast.error(t('checkout.err_no_slot')); return; }
+        if (!name.trim()) { toast.error(t('checkout.err_no_name')); return; }
+        if (!phone.trim()) { toast.error(t('checkout.err_no_phone')); return; }
 
         mutation.mutate({
             customer_name: name.trim(),
@@ -75,54 +77,54 @@ export default function CheckoutPage() {
                         <path d="M19 12H5" />
                         <path d="M12 19l-7-7 7-7" />
                     </svg>
-                    <span className="text-xs font-bold uppercase tracking-wider pr-2">Back</span>
+                    <span className="text-xs font-bold uppercase tracking-wider pr-2">{t('cart.back')}</span>
                 </button>
             </div>
 
             <div className="max-w-2xl mx-auto">
-                <h1 className="section-title mb-2">Pickup Details</h1>
+                <h1 className="section-title mb-2">{t('checkout.title')}</h1>
                 <div className="section-divider w-24" />
 
                 {/* Pickup-only notice */}
                 <div className="mb-6 p-4 rounded-xl bg-brand-red/10 border border-brand-red/30 flex items-start gap-3" role="note">
                     <span className="text-brand-red text-xl flex-shrink-0" aria-hidden="true">ℹ️</span>
                     <p className="text-brand-red/90 text-sm font-medium">
-                        <strong>In-store pickup only – no delivery.</strong><br />
-                        Meat will be ready for pickup at Palmach 77, Safed.
+                        <strong>{t('checkout.pickup_only')}</strong><br />
+                        {t('checkout.pickup_desc')}
                     </p>
                 </div>
 
                 <form onSubmit={handleSubmit} noValidate className="space-y-6">
                     {/* Customer details */}
                     <fieldset className="card p-6">
-                        <legend className="text-lg font-bold text-[#111] mb-4">Personal Details</legend>
+                        <legend className="text-lg font-bold text-[#111] mb-4">{t('checkout.personal_details')}</legend>
                         <div className="space-y-4">
                             <div>
-                                <label htmlFor="name" className="block text-sm font-medium text-[#444] mb-1">Full Name *</label>
+                                <label htmlFor="name" className="block text-sm font-medium text-[#444] mb-1">{t('checkout.full_name')}</label>
                                 <input id="name" type="text" required value={name} onChange={(e) => setName(e.target.value)}
                                     placeholder="John Doe" className="input bg-[#F8F9FA] border-black/10 placeholder-black/30" autoComplete="name" />
                             </div>
                             <div>
-                                <label htmlFor="phone" className="block text-sm font-medium text-[#444] mb-1">Phone *</label>
+                                <label htmlFor="phone" className="block text-sm font-medium text-[#444] mb-1">{t('checkout.phone')}</label>
                                 <input id="phone" type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)}
                                     placeholder="052-0000000" className="input bg-[#F8F9FA] border-black/10 placeholder-black/30" autoComplete="tel" dir="ltr" />
                             </div>
                             <div>
-                                <label htmlFor="email" className="block text-sm font-medium text-[#444] mb-1">Email (optional)</label>
+                                <label htmlFor="email" className="block text-sm font-medium text-[#444] mb-1">{t('checkout.email')}</label>
                                 <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)}
                                     placeholder="example@email.com" className="input bg-[#F8F9FA] border-black/10 placeholder-black/30" autoComplete="email" dir="ltr" />
                             </div>
                             <div>
-                                <label htmlFor="notes" className="block text-sm font-medium text-[#444] mb-1">Notes</label>
+                                <label htmlFor="notes" className="block text-sm font-medium text-[#444] mb-1">{t('checkout.notes')}</label>
                                 <textarea id="notes" rows={3} value={notes} onChange={(e) => setNotes(e.target.value)}
-                                    placeholder="Special requests, details on cuts, etc..." className="input bg-[#F8F9FA] border-black/10 placeholder-black/30 resize-none" />
+                                    placeholder={t('checkout.notes_placeholder')} className="input bg-[#F8F9FA] border-black/10 placeholder-black/30 resize-none" />
                             </div>
                         </div>
                     </fieldset>
 
                     {/* Pickup slot */}
                     <fieldset className="card p-6">
-                        <legend className="text-lg font-bold text-[#111] mb-4">Pickup Time *</legend>
+                        <legend className="text-lg font-bold text-[#111] mb-4">{t('checkout.pickup_time')}</legend>
                         {slotsLoading ? (
                             <div className="space-y-2">
                                 {Array.from({ length: 4 }).map((_, i) => (
@@ -130,10 +132,10 @@ export default function CheckoutPage() {
                                 ))}
                             </div>
                         ) : !slots || slots.length === 0 ? (
-                            <p className="text-[#666] text-sm">No pickup slots available. Please contact the store.</p>
+                            <p className="text-[#666] text-sm">{t('checkout.no_slots')}</p>
                         ) : (
                             <div className="space-y-2 max-h-72 overflow-y-auto pr-2" role="radiogroup" aria-label="Select pickup time">
-                                {groupSlotsByDate(slots).map(({ date, slots: daySlots }) => (
+                                {groupSlotsByDate(slots, i18n.language).map(({ date, slots: daySlots }) => (
                                     <div key={date}>
                                         <p className="text-xs text-[#666] font-bold mb-1 mt-3 uppercase tracking-wider">{date}</p>
                                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -150,7 +152,7 @@ export default function CheckoutPage() {
                                                         }`}
                                                 >
                                                     <div className="font-bold">{slot.slot_time.slice(0, 5)}</div>
-                                                    <div className="text-xs opacity-70">{slot.available_count} left</div>
+                                                    <div className="text-xs opacity-70">{slot.available_count} {t('checkout.left')}</div>
                                                 </button>
                                             ))}
                                         </div>
@@ -163,10 +165,10 @@ export default function CheckoutPage() {
                     {/* Order summary */}
                     <div className="card p-4">
                         <div className="flex items-center justify-between">
-                            <span className="text-[#444] font-bold">Order Total</span>
+                            <span className="text-[#444] font-bold">{t('checkout.order_total')}</span>
                             <span className="text-2xl font-black text-brand-red">₪{total().toFixed(2)}</span>
                         </div>
-                        <p className="text-[#666] text-xs mt-1">Payment is processed in-store upon pickup</p>
+                        <p className="text-[#666] text-xs mt-1">{t('checkout.payment_desc')}</p>
                     </div>
 
                     <button
@@ -174,7 +176,7 @@ export default function CheckoutPage() {
                         disabled={mutation.isPending}
                         className="btn-primary w-full justify-center text-lg py-4"
                     >
-                        {mutation.isPending ? 'Submitting order...' : '✅ Place Order'}
+                        {mutation.isPending ? t('checkout.submitting') : t('checkout.place_order')}
                     </button>
                 </form>
             </div>
@@ -182,14 +184,14 @@ export default function CheckoutPage() {
     );
 }
 
-function groupSlotsByDate(slots: PickupSlot[]) {
+function groupSlotsByDate(slots: PickupSlot[], currentLang: string) {
     const map: Record<string, PickupSlot[]> = {};
     slots.forEach((slot) => {
         if (!map[slot.slot_date]) map[slot.slot_date] = [];
         map[slot.slot_date].push(slot);
     });
     return Object.entries(map).map(([date, slots]) => ({
-        date: format(new Date(date + 'T00:00:00'), 'EEEE, MMMM d', { locale: enUS }),
+        date: format(new Date(date + 'T00:00:00'), 'EEEE, MMMM d', { locale: currentLang === 'he' ? he : enUS }),
         slots,
     }));
 }

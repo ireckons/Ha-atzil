@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import type { Product } from '../api/client';
 
 interface Props {
@@ -6,6 +7,7 @@ interface Props {
 }
 
 export default function ProductCard({ product }: Props) {
+    const { t } = useTranslation();
     return (
         <Link
             to={`/product/${product.id}`}
@@ -34,7 +36,7 @@ export default function ProductCard({ product }: Props) {
                 <div className="absolute top-3 left-3 flex flex-col gap-1.5">
                     {!product.is_available && (
                         <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-semibold bg-white/90 text-black/70 rounded border border-black/10">
-                            Out of stock
+                            {t('product.out_of_stock')}
                         </span>
                     )}
                 </div>
@@ -42,7 +44,7 @@ export default function ProductCard({ product }: Props) {
                 {/* "View" pill on hover */}
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <span className="bg-brand-red text-white text-xs font-bold tracking-widest uppercase px-5 py-2 rounded shadow-lg shadow-black/50">
-                        View Product
+                        {t('product.view')}
                     </span>
                 </div>
             </div>
@@ -74,13 +76,13 @@ export default function ProductCard({ product }: Props) {
                     <div className="flex items-baseline gap-1">
                         <span className="text-xl font-black text-[#111]">₪{product.price_nis}</span>
                         <span className="text-[#666] text-[10px] font-medium">
-                            {product.unit === 'kg' ? '/ kg' : '/ item'}
+                            {t(`product.per_${product.unit === 'unit' ? 'item' : product.unit}`)}
                         </span>
                     </div>
 
                     {/* Add-to-cart button style (navigates to product page) */}
                     <span className="woo-btn-add shrink-0">
-                        Add to Cart
+                        {t('product.add_to_cart')}
                     </span>
                 </div>
             </div>

@@ -13,7 +13,7 @@ export default function LoginPage() {
         mutationFn: (credential: string) => authApi.googleLogin(credential),
         onSuccess: ({ token, isAdmin }) => {
             setAuth(token, isAdmin);
-            toast.success('Admin Login Successful! 🥩');
+            toast.success('התחברת בהצלחה! 🥩');
             if (isAdmin) {
                 navigate('/admin');
             } else {
@@ -21,7 +21,7 @@ export default function LoginPage() {
             }
         },
         onError: (err: any) => {
-            const msg = err?.response?.data?.error || 'Login failed. Please make sure your email is authorized.';
+            const msg = err?.response?.data?.error || 'ההתחברות נכשלה. אנא ודא שהאימייל שלך מורשה לגשת למערכת.';
             toast.error(msg);
         },
     });
@@ -41,7 +41,7 @@ export default function LoginPage() {
                     onClick={() => navigate('/')}
                     className="px-4 py-1.5 bg-black/50 backdrop-blur-md text-white font-bold rounded-full text-xs hover:bg-[#C8102E] transition-colors border border-white/20"
                 >
-                    Go Back
+                    חזרה לאתר
                 </button>
             </div>
 
@@ -50,8 +50,8 @@ export default function LoginPage() {
                 {/* Logo & Intro */}
                 <div className="text-center mb-8">
                     <img src="/logo-haatzil.jpeg" alt="האציל Logo" className="h-[60px] mx-auto mb-4 object-contain mix-blend-multiply" />
-                    <h1 className="text-2xl font-black text-[#111] tracking-widest uppercase mt-4">Admin Access</h1>
-                    <p className="text-[#666] text-xs mt-2 uppercase tracking-wide">Sign in with Google to continue</p>
+                    <h1 className="text-2xl font-black text-[#111] tracking-widest mt-4">כניסת הנהלה</h1>
+                    <p className="text-[#666] text-xs mt-2 tracking-wide">התחבר באמצעות Google</p>
                 </div>
 
                 <div className="flex justify-center items-center py-8">
@@ -62,7 +62,7 @@ export default function LoginPage() {
                             }
                         }}
                         onError={() => {
-                            toast.error('Google Sign-In Failed');
+                            toast.error('התחברות Google נכשלה');
                         }}
                         useOneTap
                         theme="filled_black"

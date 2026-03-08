@@ -1,68 +1,68 @@
+import { useTranslation } from 'react-i18next';
+
 export default function PrivacyPage() {
+    const { t } = useTranslation();
     return (
-        <div className="min-h-screen bg-brand-black py-10 px-4">
+        <div className="min-h-screen bg-[#F8F9FA] py-10 px-4 pt-24 md:pt-32">
             <div className="max-w-2xl mx-auto animate-fade-in">
-                <h1 className="section-title mb-2">Privacy Policy</h1>
+                <h1 className="section-title mb-2">{t('privacy.title')}</h1>
                 <div className="section-divider w-24" />
 
-                <div className="prose prose-invert max-w-none space-y-6 text-white/70 text-sm leading-relaxed">
+                <div className="prose max-w-none space-y-6 text-[#555] text-sm leading-relaxed">
                     <p>
-                        We at <strong className="text-white">HaAtzil</strong> respect your privacy.
-                        This document explains what information we collect and how we use it.
+                        {t('privacy.intro_prefix')}<strong className="text-[#111]">HaAtzil</strong>{t('privacy.intro_suffix')}
                     </p>
 
                     <section aria-labelledby="data-heading">
-                        <h2 id="data-heading" className="text-lg font-bold text-white mb-2">Information We Collect</h2>
-                        <p>When placing an order, we collect:</p>
+                        <h2 id="data-heading" className="text-lg font-bold text-[#111] mb-2">{t('privacy.info_heading')}</h2>
+                        <p>{t('privacy.info_p1')}</p>
                         <ul className="list-disc list-inside space-y-1 mt-2">
-                            <li>Full Name</li>
-                            <li>Phone Number</li>
-                            <li>Email Address (optional)</li>
-                            <li>Order details and pickup time</li>
+                            <li>{t('privacy.info_li1')}</li>
+                            <li>{t('privacy.info_li2')}</li>
+                            <li>{t('privacy.info_li3')}</li>
+                            <li>{t('privacy.info_li4')}</li>
                         </ul>
                         <p className="mt-2">
-                            We do <strong className="text-white">not</strong> collect credit card information - payment is processed physically in the store.
+                            {t('privacy.info_p2a')}<strong className="text-[#111]">{t('privacy.info_p2_not')}</strong>{t('privacy.info_p2b')}
                         </p>
                     </section>
 
                     <section aria-labelledby="usage-heading">
-                        <h2 id="usage-heading" className="text-lg font-bold text-white mb-2">Use of Information</h2>
-                        <p>The information is used solely for:</p>
+                        <h2 id="usage-heading" className="text-lg font-bold text-[#111] mb-2">{t('privacy.use_heading')}</h2>
+                        <p>{t('privacy.use_p')}</p>
                         <ul className="list-disc list-inside space-y-1 mt-2">
-                            <li>Processing and confirming the order</li>
-                            <li>Contacting you if necessary</li>
-                            <li>Managing the pickup queue</li>
+                            <li>{t('privacy.use_li1')}</li>
+                            <li>{t('privacy.use_li2')}</li>
+                            <li>{t('privacy.use_li3')}</li>
                         </ul>
                     </section>
 
                     <section aria-labelledby="retention-heading">
-                        <h2 id="retention-heading" className="text-lg font-bold text-white mb-2">Data Retention</h2>
+                        <h2 id="retention-heading" className="text-lg font-bold text-[#111] mb-2">{t('privacy.retain_heading')}</h2>
                         <p>
-                            We keep order information for <strong className="text-white">up to 90 days</strong> after pickup,
-                            for customer service and business management purposes. After that, the information is deleted.
+                            {t('privacy.retain_p1')}<strong className="text-[#111]">{t('privacy.retain_strong')}</strong>{t('privacy.retain_p2')}
                         </p>
                     </section>
 
                     <section aria-labelledby="rights-heading">
-                        <h2 id="rights-heading" className="text-lg font-bold text-white mb-2">Your Rights</h2>
+                        <h2 id="rights-heading" className="text-lg font-bold text-[#111] mb-2">{t('privacy.rights_heading')}</h2>
                         <p>
-                            You have the right to request access, correction, or deletion of your personal information.
-                            To contact us: <a href="tel:04-6226677" className="text-brand-red hover:underline">04-6226677</a> or
-                            by visiting the store.
+                            {t('privacy.rights_p1')}<a href="tel:04-6226677" className="text-brand-red hover:underline" dir="ltr">04-6226677</a>
+                            {t('privacy.rights_p2')}
                         </p>
                     </section>
 
                     <section aria-labelledby="contact-heading">
-                        <h2 id="contact-heading" className="text-lg font-bold text-white mb-2">Contact Us</h2>
+                        <h2 id="contact-heading" className="text-lg font-bold text-[#111] mb-2">{t('privacy.contact_heading')}</h2>
                         <address className="not-italic space-y-1">
                             <p>HaAtzil</p>
                             <p>Palmach 77, Safed</p>
-                            <p><a href="tel:04-6226677" className="text-brand-red hover:underline">04-6226677</a></p>
+                            <p><a href="tel:04-6226677" className="text-brand-red hover:underline" dir="ltr">04-6226677</a></p>
                         </address>
                     </section>
 
-                    <p className="text-white/30 text-xs border-t border-white/10 pt-4">
-                        Last updated: February 2025
+                    <p className="text-[#666] text-xs border-t border-black/10 pt-4">
+                        {t('privacy.last_updated')}
                     </p>
                 </div>
             </div>

@@ -60,6 +60,7 @@ export interface Category {
     name_he: string;
     name_en: string;
     sort_order: number;
+    is_featured?: boolean;
 }
 
 export interface PickupSlot {
@@ -101,25 +102,16 @@ export interface Order {
 // ─────────────────────────────────────
 // API calls
 // ─────────────────────────────────────
+// ─────────────────────────────────────
+// API calls
+// ─────────────────────────────────────
 export const productApi = {
-    list: (params?: { category?: string; available?: boolean }) => {
-        // Serve from local data — no backend required
-        import('../data/products').then(() => { }); // warm import
-        return import('../data/products').then(({ LOCAL_PRODUCTS }) => {
-            let products = LOCAL_PRODUCTS;
-            if (params?.category) products = products.filter(p => p.category_slug === params.category);
-            if (params?.available) products = products.filter(p => p.is_available);
-            return products;
-        });
-    },
+    list: (params?: { category?: string; available?: boolean }) =>
+        api.get<Product[]>('/products', { params }).then((r) => r.data),
     categories: () =>
-        import('../data/products').then(({ LOCAL_CATEGORIES }) => LOCAL_CATEGORIES),
+        api.get<Category[]>('/categories').then((r) => r.data),
     get: (id: string) =>
-        import('../data/products').then(({ LOCAL_PRODUCTS }) => {
-            const p = LOCAL_PRODUCTS.find(p => p.id === id);
-            if (!p) throw new Error('Product not found');
-            return p;
-        }),
+        api.get<Product>(`/products/${id}`).then((r) => r.data),
     create: (data: Partial<Product>) => api.post<Product>('/products', data).then((r) => r.data),
     update: (id: string, data: Partial<Product>) => api.put<Product>(`/products/${id}`, data).then((r) => r.data),
     delete: (id: string) => api.delete(`/products/${id}`),
@@ -130,7 +122,15 @@ export const productApi = {
         const fd = new FormData();
         fd.append('image', file);
         return api.post<{ url: string }>('/upload/image', fd, { headers: { 'Content-Type': 'multipart/form-data' } }).then((r) => r.data);
-    }
+    },
+    listImages: () => api.get<{ images: string[] }>('/upload/images').then(r => r.data)
+};
+
+export const categoryApi = {
+    list: () => api.get<Category[]>('/categories').then((r) => r.data),
+    create: (data: Partial<Category>) => api.post<Category>('/categories', data).then((r) => r.data),
+    update: (id: string, data: Partial<Category>) => api.put<Category>(`/categories/${id}`, data).then((r) => r.data),
+    delete: (id: string) => api.delete(`/categories/${id}`),
 };
 
 export const orderApi = {

@@ -21,7 +21,7 @@ const AdminPage = lazy(() => import('./pages/AdminPage'));
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
     const isAdmin = useAuthStore((s) => s.isAdmin);
     const token = useAuthStore((s) => s.token);
-    if (!token || !isAdmin) return <Navigate to="/login" replace />;
+    if (!token || !isAdmin) return <Navigate to="/" replace />;
     return <>{children}</>;
 }
 
@@ -55,7 +55,7 @@ export default function App() {
                         <Route
                             path="*"
                             element={
-                                <div dir="ltr" className="min-h-screen font-sans text-brand-white bg-brand-black overflow-x-hidden w-full pb-16 md:pb-0">
+                                <div className="min-h-screen font-sans text-brand-white bg-brand-black overflow-x-hidden w-full pb-16 md:pb-0">
                                     <Navbar />
                                     <MobileBottomNav />
                                     <WhatsAppButton />

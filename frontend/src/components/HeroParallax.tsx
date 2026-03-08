@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export default function HeroParallax() {
+    const { t } = useTranslation();
     return (
         <section className="relative w-full overflow-hidden bg-[#1A1A1A] min-h-[500px] h-[500px]">
             {/* ── Background Banners ── */}
@@ -95,25 +97,35 @@ export default function HeroParallax() {
                             />
                         </div>
 
-                        {/* ── Hebrew Text Placements (Responsive Stacking for Mobile, Absolute RTL Layout for Desktop) ── */}
+                        {/* ── Hebrew Text Placements (Always Hebrew, Right side for Mehadrin) ── */}
 
-                        {/* Left Text (Mehadrin) */}
-                        <div className="absolute top-[242px] md:top-[185px] left-0 md:left-[120px] w-full md:w-[300px] text-white/90 font-hebrew text-[15px] md:text-[22px] font-bold tracking-widest text-center md:text-left z-20">
-                            למהדרין
+                        {/* Right Text */}
+                        <div dir="rtl" className="absolute top-[185px] right-0 md:right-[150px] w-full md:w-[300px] hidden md:block text-white/90 font-hebrew text-[22px] font-bold tracking-widest text-right z-20">
+                            {t('hero.hero_right', { lng: 'he' })}
+                        </div>
+
+                        {/* Left Text */}
+                        <div dir="rtl" className="absolute top-[185px] left-0 md:left-[150px] w-full md:w-[300px] hidden md:block text-white/90 font-hebrew text-[22px] font-bold tracking-widest text-left z-20">
+                            {t('hero.hero_left', { lng: 'he' })}
+                        </div>
+
+                        {/* Mobile Text (combined) */}
+                        <div dir="rtl" className="absolute top-[242px] right-0 w-full md:hidden text-white/90 font-hebrew text-[15px] font-bold tracking-widest text-center z-20">
+                            {t('hero.mehadrin', { lng: 'he' })}
                         </div>
 
                         {/* Center Red Text (Subtitle) */}
-                        <div className="absolute top-[218px] md:top-[255px] left-1/2 -translate-x-1/2 w-full md:w-[300px] text-[#B21B21] font-hebrew font-bold text-[13px] md:text-[15px] tracking-wide text-center z-20 whitespace-nowrap">
-                            בשרים שמכבדים אירוח
+                        <div dir="rtl" className="absolute top-[218px] md:top-[255px] left-1/2 -translate-x-1/2 w-full md:w-[300px] text-[#B21B21] font-hebrew font-bold text-[13px] md:text-[15px] tracking-wide text-center z-20 whitespace-nowrap">
+                            {t('hero.subtitle', { lng: 'he' })}
                         </div>
 
                     </div>
                 </div>
 
                 {/* Explore Catalog Button */}
-                <div className="absolute bottom-10 z-30 w-full flex justify-center">
-                    <Link to="/catalog" className="px-8 py-3 bg-[#B21B21] text-white text-sm font-bold tracking-[0.15em] uppercase hover:bg-[#8a1318] transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 rounded border border-transparent hover:border-white/20">
-                        Explore our catalog
+                <div className="absolute bottom-10 z-30 w-full flex justify-center" dir="rtl">
+                    <Link to="/catalog" className="px-8 py-3 bg-[#B21B21] text-white text-sm font-bold tracking-[0.1em] hover:bg-[#8a1318] transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 rounded border border-transparent hover:border-white/20">
+                        {t('hero.explore_catalog', { lng: 'he' })}
                     </Link>
                 </div>
 
