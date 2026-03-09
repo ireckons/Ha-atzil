@@ -81,9 +81,9 @@ router.post('/image', authenticateJWT, requireAdmin, upload.single('image'), asy
             contentType: req.file.mimetype,
         });
 
-        blobStream.on('error', (err) => {
+        blobStream.on('error', (err: any) => {
             console.error('[GCS] Upload stream error:', err);
-            res.status(500).json({ error: 'Failed to upload image to storage bucket' });
+            res.status(500).json({ error: `GCS Error: ${err.message || 'Failed to upload image'}` });
         });
 
         blobStream.on('finish', () => {
@@ -94,9 +94,9 @@ router.post('/image', authenticateJWT, requireAdmin, upload.single('image'), asy
 
         blobStream.end(req.file.buffer);
 
-    } catch (err) {
+    } catch (err: any) {
         console.error('[GCS] Image upload error:', err);
-        res.status(500).json({ error: 'Internal server error during upload' });
+        res.status(500).json({ error: `Internal error: ${err.message || err}` });
     }
 });
 

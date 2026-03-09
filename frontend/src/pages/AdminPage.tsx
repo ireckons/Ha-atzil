@@ -68,21 +68,55 @@ function CategoriesPanel() {
         queryFn: categoryApi.list,
     });
 
+    const [localCategories, setLocalCategories] = useState<Category[]>([]);
+    const [draggedId, setDraggedId] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (categories) {
+            setLocalCategories([...categories].sort((a, b) => (a.sort_order ?? 99) - (b.sort_order ?? 99)));
+        }
+    }, [categories]);
+
+    const handleDrop = async (e: React.DragEvent, targetId: string) => {
+        e.preventDefault();
+        if (!draggedId || draggedId === targetId) return;
+
+        const oldIdx = localCategories.findIndex(c => c.id === draggedId);
+        const newIdx = localCategories.findIndex(c => c.id === targetId);
+        if (oldIdx === -1 || newIdx === -1) return;
+
+        const items = [...localCategories];
+        const [moved] = items.splice(oldIdx, 1);
+        items.splice(newIdx, 0, moved);
+
+        const updated = items.map((item, i) => ({ ...item, sort_order: i }));
+        setLocalCategories(updated);
+        setDraggedId(null);
+
+        try {
+            await Promise.all(updated.map(cat => categoryApi.update(cat.id, { ...cat, sort_order: cat.sort_order })));
+            qc.invalidateQueries({ queryKey: ['categories'] });
+            toast.success('סדר התצוגה עודכן');
+        } catch (err) {
+            toast.error('שגיאה בעדכון סדר התצוגה');
+        }
+    };
+
     const deleteMutation = useMutation({
         mutationFn: (id: string) => categoryApi.delete(id),
         onSuccess: () => { qc.invalidateQueries({ queryKey: ['categories'] }); toast.success('קטגוריה נמחקה!'); },
-        onError: () => toast.error('שגיאה במחיקת הקטגוריה'),
+        onError: (err: any) => toast.error(err.response?.data?.details?.[0]?.message || err.response?.data?.error || 'שגיאה במחיקת הקטגוריה'),
     });
 
     const toggleFeaturedMutation = useMutation({
         mutationFn: (cat: Category) => categoryApi.update(cat.id, { ...cat, is_featured: !cat.is_featured }),
         onSuccess: () => { qc.invalidateQueries({ queryKey: ['categories'] }); toast.success('הגדרות תצוגה שונו!'); },
-        onError: () => toast.error('שגיאה בעדכון הקטגוריה'),
+        onError: (err: any) => toast.error(err.response?.data?.details?.[0]?.message || err.response?.data?.error || 'שגיאה בעדכון הקטגוריה'),
     });
 
     return (
         <div>
-            <div className="flex flex-wrap items-center gap-3 mb-6">
+            <div className="flex flex-wrap items-center gap-3 mb-6 max-w-4xl">
                 <h2 className="section-title text-xl mb-0">ניהול קטגוריות</h2>
                 <div className="flex-1" />
                 <button onClick={() => { setEditing(null); setShowForm(true); }} className="btn-primary py-2 text-sm">+ הוספת קטגוריה</button>
@@ -97,13 +131,24 @@ function CategoriesPanel() {
             )}
 
             {isLoading ? (
-                <div className="space-y-3">
+                <div className="space-y-3 max-w-4xl mx-auto">
                     {Array.from({ length: 4 }).map((_, i) => <div key={i} className="h-16 rounded-xl bg-black/5 animate-pulse" />)}
                 </div>
             ) : (
-                <div className="space-y-2" role="list">
-                    {(categories ?? []).map((cat: Category) => (
-                        <div key={cat.id} role="listitem" className="card p-4 flex flex-wrap items-center gap-3 border border-black/5 shadow-sm">
+                <div className="space-y-2 max-w-4xl mx-auto" role="list">
+                    {localCategories.map((cat: Category) => (
+                        <div 
+                            key={cat.id} 
+                            role="listitem" 
+                            draggable
+                            onDragStart={() => setDraggedId(cat.id)}
+                            onDragOver={(e) => e.preventDefault()}
+                            onDrop={(e) => handleDrop(e, cat.id)}
+                            className={`card p-4 flex flex-wrap items-center gap-3 border border-black/5 shadow-sm cursor-grab active:cursor-grabbing hover:bg-black/5 transition-colors ${draggedId === cat.id ? 'opacity-40 scale-[0.98]' : ''}`}
+                        >
+                            <div className="text-2xl cursor-grab opacity-50 hover:opacity-100" title="גרור כדי לסדר">
+                                ☰
+                            </div>
                             <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2">
                                     <span className="font-bold text-[#111] truncate">
@@ -152,12 +197,12 @@ function CategoryFormModal({ category, onClose, onSaved }: {
             return isEdit ? categoryApi.update(category!.id, payload) : categoryApi.create(payload);
         },
         onSuccess: () => { toast.success(isEdit ? 'עודכן בהצלחה' : 'הקטגוריה נוצרה!'); onSaved(); },
-        onError: () => toast.error('שגיאה בשמירת הקטגוריה'),
+        onError: (err: any) => toast.error(err.response?.data?.details?.[0]?.message || err.response?.data?.error || 'שגיאה בשמירת הקטגוריה'),
     });
 
     return (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
-            <div className="bg-[#F8F9FA] border border-black/10 rounded-2xl w-full max-w-sm p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-[#F8F9FA] border border-black/10 rounded-2xl w-full max-w-sm p-6 shadow-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
                 <div className="flex items-center justify-between mb-6">
                     <h3 className="text-xl font-bold text-[#111]">{isEdit ? 'עריכת קטגוריה' : 'קטגוריה חדשה'}</h3>
                     <button onClick={onClose} className="text-[#666] hover:text-[#111] transition-colors text-xl">✕</button>
@@ -165,8 +210,21 @@ function CategoryFormModal({ category, onClose, onSaved }: {
                 <div className="space-y-4">
                     <FormRow label="שם (עברית) *" value={form.name_he} onChange={(v) => setForm((f) => ({ ...f, name_he: v }))} />
                     <FormRow label="שם (אנגלית) *" value={form.name_en} onChange={(v) => setForm((f) => ({ ...f, name_en: v }))} dir="ltr" />
-                    <FormRow label="סדר תצוגה (מיקום 0 הוא ראשון)" type="number" value={String(form.sort_order)} onChange={(v) => setForm((f) => ({ ...f, sort_order: parseInt(v) }))} dir="ltr" />
-                    <FormRow label="אייקון לקטגוריה (אימוג'י)" value={form.icon_emoji} onChange={(v) => setForm((f) => ({ ...f, icon_emoji: v }))} dir="ltr" />
+                    <div className="flex flex-col gap-2">
+                        <label className="text-sm font-bold text-[#111]">אייקון (בחר מהרשימה)</label>
+                        <div className="flex flex-wrap gap-2 p-3 bg-white border border-black/10 rounded-lg max-h-40 overflow-y-auto">
+                            {['🥩', '🍖', '🍗', '🐟', '🍔', '🍟', '🌭', '🥪', '🥙', '🧆', '🌯', '🥘', '🍲', '🥗', '🥤', '🧃', '🍷', '🥂', '🍺', '🍻', '🧊', '🧂', '🥫', '🍽️', '🍴', '🥄', '🔪'].map(emoji => (
+                                <button
+                                    key={emoji}
+                                    type="button"
+                                    onClick={() => setForm(f => ({ ...f, icon_emoji: emoji }))}
+                                    className={`w-10 h-10 text-xl flex items-center justify-center rounded-md hover:bg-black/5 transition-colors ${form.icon_emoji === emoji ? 'bg-[#B21B21] text-white shadow-md' : ''}`}
+                                >
+                                    {emoji}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
                     <Toggle label="הצג בדף הבית (Featured)" checked={form.is_featured} onChange={(v) => setForm((f) => ({ ...f, is_featured: v }))} />
                 </div>
                 <div className="flex gap-3 mt-6">
@@ -200,15 +258,50 @@ function ItemsPanel() {
         queryFn: categoryApi.list,
     });
 
+    const [localProducts, setLocalProducts] = useState<Product[]>([]);
+    const [draggedId, setDraggedId] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (products) {
+            setLocalProducts([...products].sort((a, b) => (a.sort_order ?? 99) - (b.sort_order ?? 99)));
+        }
+    }, [products]);
+
+    const handleDrop = async (e: React.DragEvent, targetId: string) => {
+        e.preventDefault();
+        if (!draggedId || draggedId === targetId) return;
+
+        const oldIdx = localProducts.findIndex(p => p.id === draggedId);
+        const newIdx = localProducts.findIndex(p => p.id === targetId);
+        if (oldIdx === -1 || newIdx === -1) return;
+
+        const items = [...localProducts];
+        const [moved] = items.splice(oldIdx, 1);
+        items.splice(newIdx, 0, moved);
+
+        const updated = items.map((item, i) => ({ ...item, sort_order: i }));
+        setLocalProducts(updated);
+        setDraggedId(null);
+
+        try {
+            await Promise.all(updated.map(p => productApi.update(p.id, { ...p, sort_order: p.sort_order })));
+            qc.invalidateQueries({ queryKey: ['admin-products'] });
+            toast.success('סדר התצוגה עודכן');
+        } catch (err) {
+            toast.error('שגיאה בעדכון סדר התצוגה');
+        }
+    };
+
     const deleteMutation = useMutation({
         mutationFn: (id: string) => productApi.delete(id),
         onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-products'] }); toast.success('מוצר נמחק!'); },
-        onError: () => toast.error('שגיאה במחיקת המוצר'),
+        onError: (err: any) => toast.error(err.response?.data?.details?.[0]?.message || err.response?.data?.error || 'שגיאה במחיקת המוצר'),
     });
 
     const toggleMutation = useMutation({
         mutationFn: ({ id, v }: { id: string; v: boolean }) => productApi.toggleAvailability(id, v),
         onSuccess: () => qc.invalidateQueries({ queryKey: ['admin-products'] }),
+        onError: (err: any) => toast.error(err.response?.data?.details?.[0]?.message || err.response?.data?.error || 'שגיאה בעדכון זמינות'),
     });
 
     const exportCsv = async () => {
@@ -220,7 +313,7 @@ function ItemsPanel() {
 
     return (
         <div>
-            <div className="flex flex-wrap items-center gap-3 mb-6">
+            <div className="flex flex-wrap items-center gap-3 mb-6 max-w-4xl mx-auto">
                 <h2 className="section-title text-xl mb-0">ניהול פריטים</h2>
                 <div className="flex-1" />
                 <button onClick={() => { setEditing(null); setShowForm(true); }} className="btn-primary py-2 text-sm px-6 shadow-md">+ הוספת מוצר</button>
@@ -237,13 +330,24 @@ function ItemsPanel() {
             )}
 
             {isLoading ? (
-                <div className="space-y-3">
+                <div className="space-y-3 max-w-4xl mx-auto">
                     {Array.from({ length: 6 }).map((_, i) => <div key={i} className="h-16 rounded-xl bg-black/5 animate-pulse" />)}
                 </div>
             ) : (
-                <div className="space-y-2" role="list">
-                    {(products ?? []).map((product: Product) => (
-                        <div key={product.id} role="listitem" className={`card p-4 flex flex-wrap items-center gap-3 border border-black/5 shadow-sm ${!product.is_available ? 'opacity-60' : ''}`}>
+                <div className="space-y-2 max-w-4xl mx-auto" role="list">
+                    {localProducts.map((product: Product) => (
+                        <div 
+                            key={product.id} 
+                            role="listitem" 
+                            draggable
+                            onDragStart={() => setDraggedId(product.id)}
+                            onDragOver={(e) => e.preventDefault()}
+                            onDrop={(e) => handleDrop(e, product.id)}
+                            className={`card p-4 flex flex-wrap items-center gap-3 border border-black/5 shadow-sm hover:bg-black/5 transition-colors cursor-grab active:cursor-grabbing ${!product.is_available ? 'opacity-60' : ''} ${draggedId === product.id ? 'opacity-40 scale-[0.98]' : ''}`}
+                        >
+                            <div className="text-2xl cursor-grab opacity-50 hover:opacity-100" title="גרור כדי לסדר">
+                                ☰
+                            </div>
                             <div className="w-10 h-10 rounded-lg bg-[#EAEAEA] flex-shrink-0 overflow-hidden border border-black/5">
                                 {product.image_url ? <img src={product.image_url} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-lg text-black/10" aria-hidden="true">🥩</div>}
                             </div>
@@ -301,11 +405,18 @@ function ProductFormModal({ product, categories, onClose, onSaved }: {
     });
 
     const saveMutation = useMutation({
-        mutationFn: () => isEdit
-            ? productApi.update(product!.id, { ...form, weight_options: product?.weight_options ?? [] })
-            : productApi.create({ ...form, weight_options: [] }),
+        mutationFn: () => {
+            const payload = { 
+                ...form, 
+                price_nis: Number(form.price_nis) || 0,
+                category_id: Number(form.category_id) || 1
+            };
+            return isEdit
+                ? productApi.update(product!.id, { ...payload, weight_options: Array.isArray(product?.weight_options) ? product.weight_options : [] })
+                : productApi.create({ ...payload, weight_options: [] });
+        },
         onSuccess: () => { toast.success(isEdit ? 'עודכן בהצלחה' : 'המוצר נוצר בהצלחה!'); onSaved(); },
-        onError: () => toast.error('שגיאה בשמירת המוצר'),
+        onError: (err: any) => toast.error(err.response?.data?.details?.[0]?.message || err.response?.data?.error || 'שגיאה בשמירת המוצר'),
     });
 
     return (
@@ -326,7 +437,7 @@ function ProductFormModal({ product, categories, onClose, onSaved }: {
                     <FormRow label="שם (עברית) *" value={form.name_he} onChange={(v) => setForm((f) => ({ ...f, name_he: v }))} />
                     <FormRow label="שם (אנגלית) *" value={form.name_en} onChange={(v) => setForm((f) => ({ ...f, name_en: v }))} dir="ltr" />
                     <FormRow label="תיאור (עברית)" value={form.description_he} onChange={(v) => setForm((f) => ({ ...f, description_he: v }))} textarea />
-                    <FormRow label="מחיר ב₪ *" type="number" value={String(form.price_nis)} onChange={(v) => setForm((f) => ({ ...f, price_nis: parseFloat(v) }))} dir="ltr" />
+                    <FormRow label="מחיר ב₪ *" type="number" value={form.price_nis || form.price_nis === 0 ? String(form.price_nis) : ''} onChange={(v) => setForm((f) => ({ ...f, price_nis: v === '' ? 0 : parseFloat(v) }))} dir="ltr" />
                     <div>
                         <label className="block text-sm font-medium text-[#444] mb-1">יחידת מידה</label>
                         <select value={form.unit} onChange={(e) => setForm((f) => ({ ...f, unit: e.target.value as any }))} className="input bg-white border-black/10 text-[#111]">

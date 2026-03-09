@@ -55,7 +55,9 @@ router.get('/', async (_req, res) => {
 router.post('/', authenticateJWT, requireAdmin, validate(CategorySchema), async (req: AuthRequest, res: Response) => {
     try {
         const id = uuidv4();
-        const cat = { id, ...req.body };
+        const cats = await getAllEntities<Category>('category');
+        const nextOrder = cats.length > 0 ? Math.max(...cats.map(c => c.sort_order || 0)) + 1 : 1;
+        const cat = { ...req.body, id, sort_order: nextOrder };
         await saveEntity('category', id, cat);
         res.status(201).json(cat);
     } catch (err) {

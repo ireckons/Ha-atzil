@@ -13,28 +13,29 @@ const router = Router();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 2 * 1024 * 1024 } });
 
 const ProductSchema = z.object({
-    category_id: z.number().int().positive(),
+    category_id: z.coerce.string(),
     name_he: z.string().min(1).max(200),
     name_en: z.string().min(1).max(200),
     description_he: z.string().optional(),
     description_en: z.string().optional(),
-    price_nis: z.number().positive(),
-    weight_options: z.array(z.object({ label: z.string(), grams: z.number() })).default([]),
-    unit: z.enum(['kg', 'unit', 'portion']).default('kg'),
+    price_nis: z.coerce.number().nonnegative(),
+    weight_options: z.array(z.object({ label: z.string(), grams: z.coerce.number() })).default([]),
+    unit: z.enum(['kg', '100g', 'g', 'liter', 'unit', 'portion']).default('kg'),
     is_available: z.boolean().default(true),
     is_kosher: z.boolean().default(true),
     kosher_cert_text: z.string().optional(),
     image_url: z.string().optional(),
+    sort_order: z.coerce.number().default(99),
 });
 
-type Category = { id: number; slug: string; name_he: string; name_en: string; sort_order: number };
+type Category = { id: string; slug: string; name_he: string; name_en: string; sort_order: number };
 type Product = z.infer<typeof ProductSchema> & { id: string; created_at: string; updated_at: string };
 
 // Helper to get category details
 async function getCategoryData() {
     const cats = await getAllEntities<Category>('category');
-    const catMap = new Map<number, Category>();
-    cats.forEach(c => catMap.set(Number(c.id), c));
+    const catMap = new Map<string, Category>();
+    cats.forEach(c => catMap.set(c.id, c));
     return { cats, catMap };
 }
 
@@ -67,7 +68,7 @@ router.get('/', async (req, res) => {
         const { catMap } = await getCategoryData();
 
         let filtered = products.map(p => {
-            const c = catMap.get(Number(p.category_id));
+            const c = catMap.get(String(p.category_id));
             return {
                 ...p,
                 category_name_he: c?.name_he || '',
@@ -120,7 +121,9 @@ router.post('/', authenticateJWT, requireAdmin, validate(ProductSchema), async (
     try {
         const id = uuidv4();
         const now = new Date().toISOString();
-        const newProduct: Product = { ...b, id, created_at: now, updated_at: now };
+        const prods = await getAllEntities<Product>('product');
+        const nextOrder = prods.length > 0 ? Math.max(...prods.map(p => p.sort_order || 0)) + 1 : 1;
+        const newProduct: Product = { ...b, id, sort_order: nextOrder, created_at: now, updated_at: now };
 
         await saveEntity('product', id, newProduct);
         await redis.lpush(`audit_log:product:${id}`, JSON.stringify({ action: 'create', new_value: newProduct, performed_by: req.userId, date: now }));

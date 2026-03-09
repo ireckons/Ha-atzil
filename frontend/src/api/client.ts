@@ -47,11 +47,12 @@ export interface Product {
     description_en?: string;
     price_nis: number;
     weight_options: WeightOption[];
-    unit: 'kg' | 'unit' | 'portion';
+    unit: 'kg' | '100g' | 'g' | 'liter' | 'unit' | 'portion';
     is_available: boolean;
     is_kosher: boolean;
     kosher_cert_text?: string;
     image_url?: string;
+    sort_order?: number;
 }
 
 export interface Category {
