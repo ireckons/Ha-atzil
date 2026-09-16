@@ -19,6 +19,8 @@ app.set('trust proxy', 1);
 const defaultOrigins = [
     'http://localhost:5173',
     'http://localhost:3000',
+    'https://haatzil.com',
+    'https://www.haatzil.com',
     // Allow any ha-atzil frontend on Cloud Run
     /^https:\/\/ha-atzil-760765313327.*\.run\.app$/
 ];

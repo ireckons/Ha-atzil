@@ -37,7 +37,7 @@ export default function HomePage() {
                         {/* Box without hardcoded black background or height clamps */}
                         <div className="relative w-full rounded-sm overflow-hidden flex items-center justify-center shadow-2xl shadow-[#C8102E]/60 border border-[#C8102E]/30">
                             <img
-                                src="/images/what_to_choose.png"
+                                src="/images/what_to_choose.webp"
                                 alt="Premium Meat Cuts"
                                 className="w-full h-auto object-contain"
                             />
@@ -52,7 +52,7 @@ export default function HomePage() {
                     {/* Left: Image block */}
                     <div className="hidden md:block border max-w-lg mx-auto border-white/20 rounded-sm overflow-hidden shadow-2xl pb-0 w-full">
                         <img
-                            src="/images/premium_cuts.jpg"
+                            src="/images/premium_cuts.webp"
                             alt="Premium Cuts"
                             className="w-full h-[350px] object-cover object-center opacity-85 hover:opacity-100 transition-opacity duration-300 contrast-125"
                         />
@@ -221,7 +221,7 @@ export default function HomePage() {
                 <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-10">
                     {/* Brand */}
                     <div>
-                        <img src="/logo-haatzil.jpeg" alt="האציל Logo" className="h-16 mb-4 object-contain" />
+                        <img src="/logo-haatzil.webp" alt="האציל Logo" className="h-16 mb-4 object-contain" />
                         <p className="text-white/35 text-[12px] leading-relaxed mb-4">
                             {t('home.footer_desc')}
                         </p>
@@ -318,7 +318,7 @@ const featuredCuts = [
 ];
 
 const perks = [
-    { img: '/images/perks/fresh.jpg', id: 'fresh' },
-    { img: '/images/perks/kosher.jpg', id: 'kosher' },
-    { img: '/images/perks/experience.jpg', id: 'exp' },
+    { img: '/images/perks/fresh.webp', id: 'fresh' },
+    { img: '/images/perks/kosher.webp', id: 'kosher' },
+    { img: '/images/perks/experience.webp', id: 'exp' },
 ];

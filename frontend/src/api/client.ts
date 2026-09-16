@@ -37,7 +37,7 @@ export interface WeightOption {
 
 export interface Product {
     id: string;
-    category_id: string;
+    category_id: string | number;
     category_name_he: string;
     category_name_en: string;
     category_slug: string;

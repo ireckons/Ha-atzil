@@ -91,7 +91,7 @@ export default function HeroParallax() {
                         {/* Main "Ha-atzil" Logo */}
                         <div className="absolute top-[2px] w-full flex justify-center z-20 pointer-events-none px-4 md:px-0">
                             <img
-                                src="/logo-haatzil.jpeg"
+                                src="/logo-haatzil.webp"
                                 alt="האציל Logo"
                                 className="w-full max-w-[320px] md:max-w-none h-[210px] md:h-[250px] object-contain mix-blend-lighten opacity-95 contrast-125 scale-[1.375]"
                             />

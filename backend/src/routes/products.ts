@@ -209,7 +209,8 @@ router.post('/import/csv', authenticateJWT, requireAdmin, upload.single('file'),
             const id = uuidv4();
             const product: Product = {
                 id,
-                category_id: Number(row.category_id),
+                category_id: String(row.category_id),
+                sort_order: 99,
                 name_he: row.name_he,
                 name_en: row.name_en,
                 description_he: row.description_he,
